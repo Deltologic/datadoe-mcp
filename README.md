@@ -7,6 +7,7 @@
 [![Amazon Ads API](https://img.shields.io/badge/Amazon-Ads%20API-232F3E?style=flat-square)](https://advertising.amazon.com/API/docs)
 [![MCP Server](https://img.shields.io/badge/MCP-Model%20Context%20Protocol-8A2BE2?style=flat-square)](https://modelcontextprotocol.io/)
 [![AI clients supported](https://img.shields.io/badge/AI%20clients-6%2B%20supported-D97757?style=flat-square)](#quick-setup-per-ai-client)
+[![smithery badge](https://smithery.ai/badge/jakopv007/datadoe-mcp)](https://smithery.ai/servers/jakopv007/datadoe-mcp)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=flat-square)](LICENSE)
 
 🔗 [Start a free trial](https://www.datadoe.com/connect/amazon/mcp) · 📘 [Documentation](https://app.datadoe.com/hub/docs) · 📊 [Amazon data schema](https://app.datadoe.com/hub/data-scheme) · 🎥 [Video demo](https://www.youtube.com/watch?v=9YQd7M2dMyY)
