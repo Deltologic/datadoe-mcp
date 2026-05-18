@@ -45,6 +45,8 @@ That's it. DataDoe runs the MCP server on hosted infrastructure, so your team do
 
 Building your own Amazon SP-API integration typically requires SP-API developer registration, OAuth refresh-token flow, marketplace-specific endpoints, throttling logic, and 2-4 weeks of Amazon approval. DataDoe takes care of all of that. You get a single authenticated MCP URL, and SKU-level Amazon data - orders, sales, ads spend, traffic, inventory, listings, returns, settlements, brand analytics, catalog - comes back as structured tool responses or downloadable CSV and JSON exports.
 
+![DataDoe MCP Banner](/assets/datadoe-mcp-banner.png)
+
 ## Who is DataDoe MCP for?
 
 - **Amazon sellers (FBA, FBM, multi-marketplace)** - get instant answers from your own seller data without context-switching to Seller Central.
