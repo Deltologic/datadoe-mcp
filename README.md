@@ -10,7 +10,7 @@ It supports all major MCP clients and servers, including popular chat apps like 
 DataDoe MCP turns your Amazon Seller and Vendor data into a live, AI-ready data source.
 Instead of exporting CSVs or maintaining your own SP-API and Ads API pipelines, connect once and let your AI agent pull SKU-level sales, ads, inventory, and traffic data on demand, in natural language. Connect your Amazon accounts, plug DataDoe MCP into your AI client, and ship insights and apps in minutes instead of weeks.
 
-![Claude with DataDoe](https://app.datadoe.com/hub-files/mcp/datadoe/overview-hero.png)
+Claude with DataDoe
 
 ## What can I do with DataDoe MCP?
 
@@ -25,7 +25,7 @@ Once DataDoe MCP is connected, it becomes a live data layer for your AI agent. H
 
 Learn more in our video demo:
 
-[![DataDoe MCP video demo](https://img.youtube.com/vi/9YQd7M2dMyY/hqdefault.jpg)](https://www.youtube.com/watch?v=9YQd7M2dMyY)
+[DataDoe MCP video demo](https://www.youtube.com/watch?v=9YQd7M2dMyY)
 
 ## What data can I use with DataDoe MCP?
 
@@ -68,11 +68,11 @@ If your MCP client isn't listed, add DataDoe MCP as a generic remote server usin
 
 ---
 
-### How to start and connect locally
+### How to start and connect locally (for indexing and listing)
 
 > This server is just a scheme of the actual DataDoe MCP server made for exposing DataDoe MCP to various MCP registries.
 > It is a No-Op server, it does not do anything beside exposing the schema of DataDoe MCP.
-> If you want to use DataDoe MCP, learn how to set it up here: https://app.datadoe.com/hub/docs/data-doe-mcp/overview.
+> If you want to use DataDoe MCP, learn how to set it up here: [https://app.datadoe.com/hub/docs/data-doe-mcp/overview](https://app.datadoe.com/hub/docs/data-doe-mcp/overview).
 
 #### 1. Install dependencies
 
