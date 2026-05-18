@@ -1,0 +1,28 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "com.datadoe/amazon-seller-mcp",
+  "title": "DataDoe MCP",
+  "description": "Hosted Amazon Seller and Vendor MCP server for Claude, ChatGPT, Cursor, Codex, Gemini, and GitHub Copilot. Live Amazon SP-API and Amazon Ads API data exposed through MCP tools (orders, sales, ads, inventory, listings, catalog, finance, traffic), with DataDoe handling SP-API developer registration, OAuth, and rate limits.",
+  "version": "0.1.0",
+  "websiteUrl": "https://www.datadoe.com/connect/amazon/mcp",
+  "repository": {
+    "id": "1242545912",
+    "url": "https://github.com/Deltologic/datadoe-mcp",
+    "source": "github"
+  },
+  "remotes": [
+    {
+      "type": "streamable-http",
+      "url": "https://mcp.datadoe.com/mcp/v1",
+      "headers": [
+        {
+          "name": "datadoe-mcp-key",
+          "description": "DataDoe MCP API key. Create one at https://app.datadoe.com/integrations/mcp",
+          "isRequired": true,
+          "isSecret": true,
+          "placeholder": "<YOUR_DATADOE_MCP_KEY>"
+        }
+      ]
+    }
+  ]
+}
