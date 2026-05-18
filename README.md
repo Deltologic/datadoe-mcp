@@ -1,5 +1,7 @@
 # DataDoe MCP
 
+> See this page also in [our official docs](https://app.datadoe.com/hub/docs/data-doe-mcp/overview).
+
 ## What is DataDoe MCP?
 
 DataDoe MCP is a tool that allows you to use DataDoe features in your AI agents, assistants, and applications.
