@@ -40,8 +40,8 @@ export interface McpToolDefinition {
 
 export const MCP_SERVER_NAME = 'DataDoe MCP' as const;
 export const MCP_SERVER_DESCRIPTION =
-    'DataDoe is one place to connect, view, analyze, and work with Amazon data.' as const;
-export const MCP_SERVER_VERSION = '0.0.1' as const;
+    'DataDoe is one place to connect, analyze, and act on Amazon data: query Seller Central, Vendor Central, and Amazon Ads data, then run write Actions like updating listings, managing orders, and optimizing Amazon Ads campaigns.' as const;
+export const MCP_SERVER_VERSION = '0.2.0' as const;
 export const MCP_SERVER_WEBSITE_URL = 'https://app.datadoe.com/integrations/mcp' as const;
 
 export const PublicFilterOperators = [
@@ -213,6 +213,93 @@ export const DatadoeUserDocsPageInputSchema: z.ZodType<DatadoeUserDocsPageInput>
     })
     .strict();
 
+export const ActionTypes = [
+    'AMAZON_LISTINGS_UPDATE',
+    'AMAZON_ORDERS_CANCEL',
+    'AMAZON_ORDERS_CONFIRM_SHIPMENT',
+    'AMAZON_ADS_CAMPAIGNS_ADD',
+    'AMAZON_ADS_CAMPAIGNS_REMOVE',
+    'AMAZON_ADS_CAMPAIGNS_UPDATE',
+    'AMAZON_ADS_AD_GROUPS_ADD',
+    'AMAZON_ADS_AD_GROUPS_REMOVE',
+    'AMAZON_ADS_AD_GROUPS_UPDATE',
+    'AMAZON_ADS_TARGETS_ADD',
+    'AMAZON_ADS_TARGETS_REMOVE',
+    'AMAZON_ADS_TARGETS_UPDATE',
+    'AMAZON_ADS_ADS_ADD',
+    'AMAZON_ADS_ADS_REMOVE',
+    'AMAZON_ADS_ADS_UPDATE',
+    'AMAZON_ADS_AD_ASSOCIATIONS_ADD',
+    'AMAZON_ADS_AD_ASSOCIATIONS_REMOVE',
+    'AMAZON_ADS_AD_ASSOCIATIONS_UPDATE',
+    'AMAZON_ADS_CAMPAIGNS_FIND',
+    'AMAZON_ADS_AD_GROUPS_FIND',
+    'AMAZON_ADS_TARGETS_FIND',
+    'AMAZON_ADS_ADS_FIND',
+    'AMAZON_ADS_AD_ASSOCIATIONS_FIND'
+] as const;
+export type ActionType = (typeof ActionTypes)[number];
+
+export const ActionStatuses = [
+    'PENDING',
+    'IN_PROGRESS',
+    'WAITING_EXTERNAL_PROCESSING',
+    'COMPLETED',
+    'PARTIALLY_COMPLETED',
+    'COMPLETED_WITH_ISSUES',
+    'ERROR',
+    'BLOCKED_NO_TOKENS',
+    'BLOCKED_INVALID_INPUT',
+    'VALIDATED',
+    'CANCELED'
+] as const;
+
+export const ActionCreators = ['API', 'MCP', 'SYSTEM'] as const;
+
+export const ActionsDetailsSchemaGetInputSchema = z
+    .object({
+        type: z.enum(ActionTypes).describe('Action type to retrieve the details payload schema for.')
+    })
+    .strict();
+
+export const ActionsStartInputSchema = z
+    .object({
+        type: z
+            .enum(ActionTypes)
+            .describe('Type of the action to start. The details field must match this action type.'),
+        sellerOrVendorId: ZodUUID,
+        details: z
+            .record(z.string(), z.unknown())
+            .describe(
+                'Action payload, specific to the action type. Retrieve the exact schema with actions_details_schema_get.'
+            ),
+        dryRun: z
+            .boolean()
+            .optional()
+            .describe('When true, the action is validated without being executed.')
+    })
+    .strict();
+
+export const ActionsGetInputSchema = z
+    .object({
+        actionId: ZodUUID
+    })
+    .strict();
+
+export const ActionsListInputSchema = z
+    .object({
+        page: z.number().int().min(1).optional().describe('Page number, starting at 1.'),
+        pageSize: z.number().int().min(1).max(5).optional().describe('Page size, max 5.'),
+        statuses: z.array(z.enum(ActionStatuses)).min(1).optional(),
+        types: z.array(z.enum(ActionTypes)).min(1).optional(),
+        creators: z.array(z.enum(ActionCreators)).min(1).optional(),
+        createdAtFrom: z.iso.datetime().optional(),
+        createdAtTo: z.iso.datetime().optional(),
+        updatedAtFrom: z.iso.datetime().optional(),
+        updatedAtTo: z.iso.datetime().optional()
+    })
+    .strict();
+
 export const GENERIC_MCP_TOOL_RESPONSE_SCHEMA = buildMcpToolResponseSchema();
 export const EXPORT_MCP_TOOL_RESPONSE_SCHEMA = buildMcpToolResponseSchema(ExportResultsSchema);
 
@@ -221,6 +308,13 @@ const READONLY_ANNOTATIONS = {
     idempotentHint: true,
     openWorldHint: false,
     readOnlyHint: true
+} as const;
+
+const WRITE_ACTION_ANNOTATIONS = {
+    destructiveHint: true,
+    idempotentHint: false,
+    openWorldHint: true,
+    readOnlyHint: false
 } as const;
 
 const NOOP_GENERIC_DATA = {} as const;
@@ -509,11 +603,97 @@ function createExportsMcpToolDefinitions(): readonly McpToolDefinition[] {
     ] as const;
 }
 
+function createActionsMcpToolDefinitions(): readonly McpToolDefinition[] {
+    return [
+        {
+            name: 'actions_details_schema_get',
+            title: 'Get action details payload schema',
+            description:
+                'Returns the JSON Schema of the details payload required to start an action of the given type. Use it to build a valid payload before calling actions_start.',
+            inputSchema: ActionsDetailsSchemaGetInputSchema,
+            outputSchema: GENERIC_MCP_TOOL_RESPONSE_SCHEMA,
+            execute: (input: unknown): Promise<McpToolCallResult> =>
+                executeWithErrorHandling(
+                    'actions_details_schema_get',
+                    async (): Promise<McpToolCallResult> => {
+                        ActionsDetailsSchemaGetInputSchema.parse(input);
+                        return toMcpToolSuccessResult({
+                            toolName: 'actions_details_schema_get',
+                            summary:
+                                'DataDoe MCP facade is a no-op server for actions_details_schema_get.',
+                            data: NOOP_GENERIC_DATA,
+                            outputSchema: GENERIC_MCP_TOOL_RESPONSE_SCHEMA
+                        });
+                    }
+                ),
+            annotations: READONLY_ANNOTATIONS
+        },
+        {
+            name: 'actions_start',
+            title: 'Start (or validate) an action on Amazon',
+            description:
+                'Starts an action that changes the connected Amazon Seller or Vendor account (e.g. update listings, cancel orders, confirm shipments, manage Amazon Ads). Requires the action type, a sellerOrVendorId (from sellers_and_vendors_list), and a details payload matching the action type (see actions_details_schema_get). Set dryRun=true to validate the payload without executing. Returns an action id; poll actions_get for status and result.',
+            inputSchema: ActionsStartInputSchema,
+            outputSchema: GENERIC_MCP_TOOL_RESPONSE_SCHEMA,
+            execute: (input: unknown): Promise<McpToolCallResult> =>
+                executeWithErrorHandling('actions_start', async (): Promise<McpToolCallResult> => {
+                    ActionsStartInputSchema.parse(input);
+                    return toMcpToolSuccessResult({
+                        toolName: 'actions_start',
+                        summary: 'DataDoe MCP facade is a no-op server for actions_start.',
+                        data: NOOP_GENERIC_DATA,
+                        outputSchema: GENERIC_MCP_TOOL_RESPONSE_SCHEMA
+                    });
+                }),
+            annotations: WRITE_ACTION_ANNOTATIONS
+        },
+        {
+            name: 'actions_get',
+            title: 'Get action status and result',
+            description:
+                'Returns the current status and result of a single action by id. Poll this after actions_start until the action reaches a terminal status, then read the result field.',
+            inputSchema: ActionsGetInputSchema,
+            outputSchema: GENERIC_MCP_TOOL_RESPONSE_SCHEMA,
+            execute: (input: unknown): Promise<McpToolCallResult> =>
+                executeWithErrorHandling('actions_get', async (): Promise<McpToolCallResult> => {
+                    ActionsGetInputSchema.parse(input);
+                    return toMcpToolSuccessResult({
+                        toolName: 'actions_get',
+                        summary: 'DataDoe MCP facade is a no-op server for actions_get.',
+                        data: NOOP_GENERIC_DATA,
+                        outputSchema: GENERIC_MCP_TOOL_RESPONSE_SCHEMA
+                    });
+                }),
+            annotations: READONLY_ANNOTATIONS
+        },
+        {
+            name: 'actions_list',
+            title: 'List past actions',
+            description:
+                'Returns paginated action history for the organization. Supports filtering by status, type, creator (API/MCP/SYSTEM), and createdAt/updatedAt ranges. Max page size is 5.',
+            inputSchema: ActionsListInputSchema,
+            outputSchema: GENERIC_MCP_TOOL_RESPONSE_SCHEMA,
+            execute: (input: unknown): Promise<McpToolCallResult> =>
+                executeWithErrorHandling('actions_list', async (): Promise<McpToolCallResult> => {
+                    ActionsListInputSchema.parse(input);
+                    return toMcpToolSuccessResult({
+                        toolName: 'actions_list',
+                        summary: 'DataDoe MCP facade is a no-op server for actions_list.',
+                        data: NOOP_GENERIC_DATA,
+                        outputSchema: GENERIC_MCP_TOOL_RESPONSE_SCHEMA
+                    });
+                }),
+            annotations: READONLY_ANNOTATIONS
+        }
+    ] as const;
+}
+
 export function createMcpToolDefinitions(): readonly McpToolDefinition[] {
     return [
         ...createDocsMcpToolDefinitions(),
         ...createUtilityMcpToolDefinitions(),
-        ...createExportsMcpToolDefinitions()
+        ...createExportsMcpToolDefinitions(),
+        ...createActionsMcpToolDefinitions()
     ] as const;
 }
 
