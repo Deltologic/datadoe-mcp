@@ -141,19 +141,28 @@ DataDoe MCP exposes the following tools to your AI client:
 
 | Tool | Category | What it does |
 |---|---|---|
-| `sellers_and_vendors_list` | Account | Lists every Amazon Seller Central and Vendor Central account connected to your DataDoe organization, with marketplace, region, and Amazon Ads account info. |
+| `sellers_and_vendors_list` | Account | Lists Amazon sellers and vendors connected to your DataDoe organization, with pagination and optional filters by name and marketplace country code. |
 | `organization_and_subscription_details_get` | Account | Returns your DataDoe organization profile and active subscription plan. |
 | `exports_sources_get` | Data | Searches DataDoe's catalog of pre-built Amazon data export templates (orders, sales and traffic, ads performance, inventory, listings, settlements, returns, brand analytics, and more). |
 | `exports_create` | Data | Creates an Amazon data export from any source. Supports SQL-like filters, GROUP BY, aggregations (sum / avg / count / countDistinct / min / max), date intervals (DAY / WEEK / MONTH), pagination, and CSV or JSON output. |
 | `exports_get` | Data | Returns status and metadata for an in-flight or completed export job. |
-| `exports_raw_url_get` | Data | Returns a one-time presigned download URL for a completed export. |
+| `exports_raw_url_get` | Data | Returns a one-time download URL served by the DataDoe MCP server for a completed export. |
 | `exports_raw_download` | Data | Returns the raw export content (CSV or JSON) inline in the tool response. |
+| `exports_delete` | Data | Deletes an export by its ID. |
+| `files_create` | Files | Creates and uploads a utility file (listing or A+ images) as base64-encoded content. |
+| `files_list` | Files | Lists utility files for the organization with pagination and filters. |
+| `files_get` | Files | Returns metadata for a utility file by id. |
+| `files_download_url_get` | Files | Returns a one-time download URL for an uploaded file. |
+| `files_delete` | Files | Deletes a utility file and its stored object when present. |
 | `datadoe_user_docs_table_of_contents_get` | Docs | Returns the table of contents of the DataDoe user documentation, useful when an agent needs to look up features or capabilities on demand. |
 | `datadoe_user_docs_page_get` | Docs | Returns the full content of a named DataDoe documentation page. |
 | `actions_details_schema_get` | Actions | Returns the JSON Schema of the `details` payload required to start a given Action type. |
 | `actions_start` | Actions | Starts an Action that changes your Amazon account (listings, orders, Amazon Ads). Set `dryRun=true` to validate without executing. Returns an action id. |
 | `actions_get` | Actions | Returns the status and `result` of an Action by id; poll after `actions_start`. |
 | `actions_list` | Actions | Returns paginated Action history, filterable by status, type, creator, and date. |
+| `extensions_get` | Extensions | Returns all Memories and Skills added by the user. |
+| `extensions_memories_create` | Extensions | Creates a Memory for the user or organization. |
+| `extensions_memories_edit` | Extensions | Updates a Memory for the user or organization. |
 
 ---
 

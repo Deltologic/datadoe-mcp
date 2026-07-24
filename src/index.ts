@@ -41,7 +41,7 @@ export interface McpToolDefinition {
 export const MCP_SERVER_NAME = 'DataDoe MCP' as const;
 export const MCP_SERVER_DESCRIPTION =
     'DataDoe is one place to connect, analyze, and act on Amazon data: query Seller Central, Vendor Central, and Amazon Ads data, then run write Actions like updating listings, managing orders, and optimizing Amazon Ads campaigns.' as const;
-export const MCP_SERVER_VERSION = '0.2.0' as const;
+export const MCP_SERVER_VERSION = '0.3.0' as const;
 export const MCP_SERVER_WEBSITE_URL = 'https://app.datadoe.com/integrations/mcp' as const;
 
 export const PublicFilterOperators = [
@@ -118,7 +118,14 @@ export const ExportFilterGroupSchema = z
     })
     .strict();
 
-export const MCP_EXPORT_MAX_ROW_LIMIT = 2_500 as const;
+export const MCP_EXPORT_MAX_ROW_LIMIT = 3_500 as const;
+export const MCP_PUBLIC_RESOURCE_ACCESS_TTL_MINUTES = 15 as const;
+export const MCP_SELLERS_AND_VENDORS_MAX_PAGE_SIZE = 10 as const;
+export const MCP_SELLERS_AND_VENDORS_DEFAULT_PAGE_SIZE = 10 as const;
+export const MCP_FILES_CREATE_MAX_SIZE_MEGABYTES = 4 as const;
+export const EXTENSION_MEMORY_TYPES = ['ORGANIZATION', 'PERSONAL'] as const;
+export const MEMORY_NAME_MAX_LENGTH = 128 as const;
+export const MEMORY_CONTENT_MAX_LENGTH = 16_384 as const;
 
 export const ExportsCreateInputSchema = z
     .object({
@@ -177,6 +184,12 @@ export const ExportsRawDownloadInputSchema = z
     })
     .strict();
 
+export const ExportsDeleteInputSchema = z
+    .object({
+        exportId: ZodUUID
+    })
+    .strict();
+
 export const ReportStatusValues = [
     'PENDING',
     'IN_PROGRESS',
@@ -213,10 +226,92 @@ export const DatadoeUserDocsPageInputSchema: z.ZodType<DatadoeUserDocsPageInput>
     })
     .strict();
 
+export const SellersAndVendorsListInputSchema = z
+    .object({
+        page: z.coerce.number().int().min(1).default(1).optional(),
+        pageSize: z.coerce
+            .number()
+            .int()
+            .min(1)
+            .max(MCP_SELLERS_AND_VENDORS_MAX_PAGE_SIZE)
+            .default(MCP_SELLERS_AND_VENDORS_DEFAULT_PAGE_SIZE)
+            .optional(),
+        query: z.string().trim().max(256).optional(),
+        marketplaceCountryCode: z.string().trim().length(2).optional()
+    })
+    .strict();
+
+export const FilesCreateInputSchema = z
+    .object({
+        name: z.string().trim().min(1).max(256),
+        group: z.enum(['LISTING_IMAGES', 'APLUS_IMAGES']),
+        type: z.enum(['PNG', 'TIFF', 'JPG']),
+        sellerOrVendorId: z.uuid(),
+        ttlHours: z.coerce.number().int().min(1).max(720).optional(),
+        contentBase64: z.string().trim().min(1)
+    })
+    .strict();
+
+export const FilesListInputSchema = z
+    .object({
+        group: z.enum(['LISTING_IMAGES']).optional(),
+        page: z.coerce.number().int().min(1).default(1).optional(),
+        pageSize: z.coerce.number().int().min(1).max(100).default(25).optional(),
+        query: z.string().trim().max(256).optional(),
+        statuses: z
+            .array(z.enum(['WAITING_FOR_UPLOAD', 'UPLOADED', 'EXPIRED', 'DELETED']))
+            .optional(),
+        types: z.array(z.enum(['PNG', 'TIFF', 'JPG'])).optional(),
+        sources: z.array(z.enum(['API', 'MCP', 'DATA'])).optional(),
+        sellerOrVendorIds: z.array(z.uuid()).optional()
+    })
+    .strict();
+
+export const FilesGetInputSchema = z
+    .object({
+        fileId: z.uuid()
+    })
+    .strict();
+
+export const FilesDeleteInputSchema = FilesGetInputSchema;
+export const FilesDownloadUrlGetInputSchema = FilesGetInputSchema;
+
+export const ExtensionsMemoriesCreateInputSchema = z
+    .object({
+        memoryType: z.enum(EXTENSION_MEMORY_TYPES),
+        name: z.string().trim().min(1).max(MEMORY_NAME_MAX_LENGTH),
+        content: z.string().min(1).max(MEMORY_CONTENT_MAX_LENGTH)
+    })
+    .strict();
+
+export const ExtensionsMemoriesEditInputSchema = z
+    .object({
+        memoryType: z.enum(EXTENSION_MEMORY_TYPES),
+        memoryId: ZodUUID,
+        content: z.string().min(1).max(MEMORY_CONTENT_MAX_LENGTH)
+    })
+    .strict();
+
 export const ActionTypes = [
     'AMAZON_LISTINGS_UPDATE',
+    'AMAZON_LISTINGS_DETAILS_UPDATE',
+    'AMAZON_LISTINGS_FIND',
+    'AMAZON_LISTINGS_FEES_ESTIMATE',
+    'AMAZON_LISTINGS_PRODUCT_TYPES_FIND',
+    'AMAZON_LISTINGS_PRODUCT_TYPE_SUGGEST',
+    'AMAZON_LISTINGS_PRODUCT_TYPE_DEFINITION_FIND',
     'AMAZON_ORDERS_CANCEL',
     'AMAZON_ORDERS_CONFIRM_SHIPMENT',
+    'AMAZON_ORDERS_SOLICITATION_FEEDBACK_SEND',
+    'AMAZON_APLUS_CONTENT_ADD',
+    'AMAZON_APLUS_CONTENT_UPDATE',
+    'AMAZON_APLUS_CONTENT_FIND',
+    'AMAZON_APLUS_CONTENT_ASINS_UPDATE',
+    'AMAZON_APLUS_CONTENT_ASINS_FIND',
+    'AMAZON_APLUS_CONTENT_VALIDATE',
+    'AMAZON_APLUS_CONTENT_PUBLISH',
+    'AMAZON_APLUS_CONTENT_SUSPEND',
+    'AMAZON_APLUS_CONTENT_PUBLISH_RECORDS_FIND',
     'AMAZON_ADS_CAMPAIGNS_ADD',
     'AMAZON_ADS_CAMPAIGNS_REMOVE',
     'AMAZON_ADS_CAMPAIGNS_UPDATE',
@@ -236,7 +331,10 @@ export const ActionTypes = [
     'AMAZON_ADS_AD_GROUPS_FIND',
     'AMAZON_ADS_TARGETS_FIND',
     'AMAZON_ADS_ADS_FIND',
-    'AMAZON_ADS_AD_ASSOCIATIONS_FIND'
+    'AMAZON_ADS_AD_ASSOCIATIONS_FIND',
+    'AMAZON_ADS_PORTFOLIOS_ADD',
+    'AMAZON_ADS_PORTFOLIOS_UPDATE',
+    'AMAZON_ADS_PORTFOLIOS_FIND'
 ] as const;
 export type ActionType = (typeof ActionTypes)[number];
 
@@ -262,21 +360,26 @@ export const ActionsDetailsSchemaGetInputSchema = z
     })
     .strict();
 
-export const ActionsStartInputSchema = z
+export const ActionStartToolDeclaredInputSchema = z
     .object({
         type: z
             .enum(ActionTypes)
-            .describe('Type of the action to start. The details field must match this action type.'),
-        sellerOrVendorId: ZodUUID,
-        details: z
-            .record(z.string(), z.unknown())
             .describe(
-                'Action payload, specific to the action type. Retrieve the exact schema with actions_details_schema_get.'
+                'Type of the action to start. Details field schema must match the action type.'
             ),
+        sellerOrVendorId: ZodUUID.describe(
+            'UUID of the Seller or Vendor whose Amazon account the action will target.'
+        ),
         dryRun: z
             .boolean()
             .optional()
-            .describe('When true, the action is validated without being executed.')
+            .default(false)
+            .describe('When set to true, action will be validated without being executed.'),
+        details: z
+            .record(z.string(), z.unknown())
+            .describe(
+                'Action request details for the selected type. Retrieve the exact JSON Schema with the actions_details_schema_get tool before calling actions_start.'
+            )
     })
     .strict();
 
@@ -288,8 +391,8 @@ export const ActionsGetInputSchema = z
 
 export const ActionsListInputSchema = z
     .object({
-        page: z.number().int().min(1).optional().describe('Page number, starting at 1.'),
-        pageSize: z.number().int().min(1).max(5).optional().describe('Page size, max 5.'),
+        page: z.coerce.number().int().min(1).default(1).optional(),
+        pageSize: z.coerce.number().int().min(1).max(5).default(5).optional(),
         statuses: z.array(z.enum(ActionStatuses)).min(1).optional(),
         types: z.array(z.enum(ActionTypes)).min(1).optional(),
         creators: z.array(z.enum(ActionCreators)).min(1).optional(),
@@ -310,7 +413,7 @@ const READONLY_ANNOTATIONS = {
     readOnlyHint: true
 } as const;
 
-const WRITE_ACTION_ANNOTATIONS = {
+const WRITABLE_ANNOTATIONS = {
     destructiveHint: true,
     idempotentHint: false,
     openWorldHint: true,
@@ -399,292 +502,266 @@ async function executeWithErrorHandling(
     }
 }
 
+function createNoOpTool(params: {
+    readonly name: string;
+    readonly title: string;
+    readonly description: string;
+    readonly inputSchema: z.ZodType;
+    readonly outputSchema: z.ZodType;
+    readonly annotations: ToolAnnotations;
+    readonly data?: unknown;
+}): McpToolDefinition {
+    return {
+        name: params.name,
+        title: params.title,
+        description: params.description,
+        inputSchema: params.inputSchema,
+        outputSchema: params.outputSchema,
+        execute: (input: unknown): Promise<McpToolCallResult> =>
+            executeWithErrorHandling(params.name, async (): Promise<McpToolCallResult> => {
+                params.inputSchema.parse(input);
+                return toMcpToolSuccessResult({
+                    toolName: params.name,
+                    summary: `DataDoe MCP facade is a no-op server for ${params.name}.`,
+                    data: params.data ?? NOOP_GENERIC_DATA,
+                    outputSchema: params.outputSchema
+                });
+            }),
+        annotations: params.annotations
+    };
+}
+
 function createDocsMcpToolDefinitions(): readonly McpToolDefinition[] {
     return [
-        {
+        createNoOpTool({
             name: DATADOE_USER_DOCS_TABLE_OF_CONTENTS_TOOL_NAME,
             title: 'Get DataDoe user documentation table of contents',
             description: 'Returns the list of page names in the DataDoe user documentation.',
             inputSchema: EmptyInputSchema,
             outputSchema: GENERIC_MCP_TOOL_RESPONSE_SCHEMA,
-            execute: (input: unknown): Promise<McpToolCallResult> =>
-                executeWithErrorHandling(
-                    DATADOE_USER_DOCS_TABLE_OF_CONTENTS_TOOL_NAME,
-                    async (): Promise<McpToolCallResult> => {
-                        EmptyInputSchema.parse(input);
-                        return toMcpToolSuccessResult({
-                            toolName: DATADOE_USER_DOCS_TABLE_OF_CONTENTS_TOOL_NAME,
-                            summary:
-                                'DataDoe MCP facade is a no-op server for datadoe_user_docs_table_of_contents_get.',
-                            data: NOOP_GENERIC_DATA,
-                            outputSchema: GENERIC_MCP_TOOL_RESPONSE_SCHEMA
-                        });
-                    }
-                ),
             annotations: READONLY_ANNOTATIONS
-        },
-        {
+        }),
+        createNoOpTool({
             name: DATADOE_USER_DOCS_PAGE_TOOL_NAME,
             title: 'Get DataDoe user documentation page',
             description:
                 'Returns a DataDoe user documentation page content by page name, which can be used to answer questions about DataDoe features, pricing, and capabilities.',
             inputSchema: DatadoeUserDocsPageInputSchema,
             outputSchema: GENERIC_MCP_TOOL_RESPONSE_SCHEMA,
-            execute: (input: unknown): Promise<McpToolCallResult> =>
-                executeWithErrorHandling(
-                    DATADOE_USER_DOCS_PAGE_TOOL_NAME,
-                    async (): Promise<McpToolCallResult> => {
-                        DatadoeUserDocsPageInputSchema.parse(input);
-                        return toMcpToolSuccessResult({
-                            toolName: DATADOE_USER_DOCS_PAGE_TOOL_NAME,
-                            summary:
-                                'DataDoe MCP facade is a no-op server for datadoe_user_docs_page_get.',
-                            data: NOOP_GENERIC_DATA,
-                            outputSchema: GENERIC_MCP_TOOL_RESPONSE_SCHEMA
-                        });
-                    }
-                ),
             annotations: READONLY_ANNOTATIONS
-        }
+        })
     ] as const;
 }
 
 function createUtilityMcpToolDefinitions(): readonly McpToolDefinition[] {
     return [
-        {
+        createNoOpTool({
             name: 'sellers_and_vendors_list',
             title: 'List organization sellers and vendors',
-            description: `Lists every Amazon seller and vendor connected to the caller's DataDoe organization. Returns a list of objects, each with: a unique ID (UUID; required input for exports_sources_get and exports_create), a user-chosen display name, the Amazon marketplace (one country/region per seller, e.g. amazon.co.uk, amazon.de), the connection type (Seller Central or Vendor Central), and whether an Amazon Ads connection is attached. Most operations in DataDoe require at least one Seller or Vendor ID.`,
-            inputSchema: EmptyInputSchema,
+            description: `Lists Amazon sellers and vendors connected to the caller's DataDoe organization. Returns a paginated list (default page size ${MCP_SELLERS_AND_VENDORS_DEFAULT_PAGE_SIZE}, max ${MCP_SELLERS_AND_VENDORS_MAX_PAGE_SIZE}) of objects, each with: a unique ID (UUID; required input for exports_sources_get and exports_create), a user-chosen display name, the Amazon marketplace ID plus its country code and country name, the connection type (Seller Central or Vendor Central), and whether an Amazon Ads connection is attached. Optional filters: query (case-insensitive name search) and marketplaceCountryCode (two-letter country code, e.g. US, PL). Most operations in DataDoe require at least one Seller or Vendor ID.`,
+            inputSchema: SellersAndVendorsListInputSchema,
             outputSchema: GENERIC_MCP_TOOL_RESPONSE_SCHEMA,
-            execute: (input: unknown): Promise<McpToolCallResult> =>
-                executeWithErrorHandling('sellers_and_vendors_list', async (): Promise<McpToolCallResult> => {
-                    EmptyInputSchema.parse(input);
-                    return toMcpToolSuccessResult({
-                        toolName: 'sellers_and_vendors_list',
-                        summary: 'DataDoe MCP facade is a no-op server for sellers_and_vendors_list.',
-                        data: NOOP_GENERIC_DATA,
-                        outputSchema: GENERIC_MCP_TOOL_RESPONSE_SCHEMA
-                    });
-                }),
             annotations: READONLY_ANNOTATIONS
-        },
-        {
+        }),
+        createNoOpTool({
             name: 'organization_and_subscription_details_get',
             title: 'Get organization and subscription details',
             description: 'Returns organization profile and plan details.',
             inputSchema: EmptyInputSchema,
             outputSchema: GENERIC_MCP_TOOL_RESPONSE_SCHEMA,
-            execute: (input: unknown): Promise<McpToolCallResult> =>
-                executeWithErrorHandling(
-                    'organization_and_subscription_details_get',
-                    async (): Promise<McpToolCallResult> => {
-                        EmptyInputSchema.parse(input);
-                        return toMcpToolSuccessResult({
-                            toolName: 'organization_and_subscription_details_get',
-                            summary:
-                                'DataDoe MCP facade is a no-op server for organization_and_subscription_details_get.',
-                            data: NOOP_GENERIC_DATA,
-                            outputSchema: GENERIC_MCP_TOOL_RESPONSE_SCHEMA
-                        });
-                    }
-                ),
             annotations: READONLY_ANNOTATIONS
-        }
+        })
     ] as const;
 }
 
 function createExportsMcpToolDefinitions(): readonly McpToolDefinition[] {
     return [
-        {
+        createNoOpTool({
             name: 'exports_sources_get',
             title: 'List export sources for sellers and vendors',
             description:
-                'Searches export source templates that your selected seller or vendor can use to create exports. Requires sellerOrVendorIds retrieved from the sellers_and_vendors_list tool and a query to narrow the result set. The response includes matching sources plus a recommendedSources list with the best starting points.',
+                'Searches export source templates that your selected seller or vendor can use to create exports. Requires sellerOrVendorIds retrieved from the sellers_and_vendors_list tool and a query to narrow the result set. The response includes matching sources plus a recommendedSources list with the best starting points. Each source includes enabled: false when a user disabled the table for your organization in DataDoe settings; exports cannot be created from disabled sources. Sources may include dataAvailability with intraday or real-time update details.',
             inputSchema: ExportsGetSourcesInputSchema,
             outputSchema: GENERIC_MCP_TOOL_RESPONSE_SCHEMA,
-            execute: (input: unknown): Promise<McpToolCallResult> =>
-                executeWithErrorHandling('exports_sources_get', async (): Promise<McpToolCallResult> => {
-                    ExportsGetSourcesInputSchema.parse(input);
-                    return toMcpToolSuccessResult({
-                        toolName: 'exports_sources_get',
-                        summary: 'DataDoe MCP facade is a no-op server for exports_sources_get.',
-                        data: NOOP_GENERIC_DATA,
-                        outputSchema: GENERIC_MCP_TOOL_RESPONSE_SCHEMA
-                    });
-                }),
             annotations: READONLY_ANNOTATIONS
-        },
-        {
+        }),
+        createNoOpTool({
             name: 'exports_create',
             title: 'Create a new export',
-            description: `Creates an export job that runs a structured query against DataDoe's Amazon dataset for one or more sellers/vendors and produces a downloadable file (CSV or JSON). Required inputs: sellerOrVendorIds (from sellers_and_vendors_list), sourceId and columns (from exports_sources_get - each source exposes its own column set), and outputType (CSV or JSON). Optional inputs shape the query like SQL: filters (WHERE - applied to raw rows before aggregation, with and/or combinators and per-rule operators including =, >, in, between, contains, null, etc.), groupBy and aggregations (GROUP BY + sum/avg/count/min/max with optional aliases), from/to (inclusive date range on the source's primary date column), dateInterval (DAY/WEEK/MONTH - collapses a date group-by to that bucket), orderByColumn + orderByDirection, and limit/skip (pagination; limit is capped at ${MCP_EXPORT_MAX_ROW_LIMIT} rows per export). Returns an export id and a status. Exports run asynchronously; status transitions from PENDING/PROCESSING to COMPLETED or FAILED. Poll exports_get to track status, then read the result with exports_raw_download (inline content) or exports_raw_url_get (presigned URL). If a query would naturally exceed ${MCP_EXPORT_MAX_ROW_LIMIT} rows, narrow it via higher-level aggregation, filters, or top-N ordering, or paginate with skip. Column names and source schemas are defined per source - see exports_sources_get and the public DataDoe API reference at https://www.datadoe.com/hub/data-scheme. For easier analysis, the tool may add utility columns to the resulting Export.`,
+            description: `Creates an export job that runs a structured query against DataDoe's Amazon dataset for one or more sellers/vendors and produces a downloadable file (CSV or JSON). Required inputs: sellerOrVendorIds (from sellers_and_vendors_list), sourceId and columns (from exports_sources_get — each source exposes its own column set), and outputType (CSV or JSON). Optional inputs shape the query like SQL: filters (WHERE — applied to raw rows before aggregation, with and/or combinators and per-rule operators including =, >, in, between, contains, null, etc.), groupBy and aggregations (GROUP BY + sum/avg/count/min/max with optional aliases), from/to (inclusive date range on the source's primary date column), dateInterval (DAY/WEEK/MONTH — collapses a date group-by to that bucket), orderByColumn + orderByDirection, and limit/skip (pagination; limit is capped at ${MCP_EXPORT_MAX_ROW_LIMIT} rows per export). Returns an export id and a status. Exports run asynchronously; status transitions from PENDING/PROCESSING to COMPLETED or FAILED. Completed exports expire 24 hours after generation. Poll exports_get to track status, then read the result with exports_raw_download (inline content) or exports_raw_url_get (presigned URL). If a query would naturally exceed ${MCP_EXPORT_MAX_ROW_LIMIT} rows, narrow it via higher-level aggregation, filters, or top-N ordering, or paginate with skip. Column names and source schemas are defined per source - see exports_sources_get and the public DataDoe API reference at https://datadoe.com/hub/data-scheme. For easier analysis, the tool may add unitily columns to the resulting Export.`,
             inputSchema: ExportsCreateInputSchema,
             outputSchema: EXPORT_MCP_TOOL_RESPONSE_SCHEMA,
-            execute: (input: unknown): Promise<McpToolCallResult> =>
-                executeWithErrorHandling('exports_create', async (): Promise<McpToolCallResult> => {
-                    ExportsCreateInputSchema.parse(input);
-                    return toMcpToolSuccessResult({
-                        toolName: 'exports_create',
-                        summary: 'DataDoe MCP facade is a no-op server for exports_create.',
-                        data: NOOP_EXPORT_RESULT,
-                        outputSchema: EXPORT_MCP_TOOL_RESPONSE_SCHEMA
-                    });
-                }),
             annotations: {
                 destructiveHint: false,
                 idempotentHint: false,
                 openWorldHint: false,
                 readOnlyHint: false
-            }
-        },
-        {
+            },
+            data: NOOP_EXPORT_RESULT
+        }),
+        createNoOpTool({
             name: 'exports_get',
             title: 'Get export job details by ID',
             description:
-                'Returns status and details for one export job. Use this to check if your export is still processing or ready for download.',
+                'Returns status and details for one export job. Use this to check if your export is still processing or ready for download. Completed exports expire 24 hours after generation.',
             inputSchema: ExportsGetInputSchema,
             outputSchema: EXPORT_MCP_TOOL_RESPONSE_SCHEMA,
-            execute: (input: unknown): Promise<McpToolCallResult> =>
-                executeWithErrorHandling('exports_get', async (): Promise<McpToolCallResult> => {
-                    ExportsGetInputSchema.parse(input);
-                    return toMcpToolSuccessResult({
-                        toolName: 'exports_get',
-                        summary: 'DataDoe MCP facade is a no-op server for exports_get.',
-                        data: NOOP_EXPORT_RESULT,
-                        outputSchema: EXPORT_MCP_TOOL_RESPONSE_SCHEMA
-                    });
-                }),
-            annotations: READONLY_ANNOTATIONS
-        },
-        {
+            annotations: READONLY_ANNOTATIONS,
+            data: NOOP_EXPORT_RESULT
+        }),
+        createNoOpTool({
             name: 'exports_raw_url_get',
-            title: 'Get one-time raw export download URL (advanced)',
-            description:
-                'Returns a presigned download URL for the export file. URL is valid for 60 seconds and intended for clients that prefer direct download over inline content.',
+            title: 'Get raw export download URL (advanced)',
+            description: `Returns a one-time download URL served by the DataDoe MCP server for a completed export. Send a GET request to the URL to receive a redirect to the file. The URL is valid for ${String(MCP_PUBLIC_RESOURCE_ACCESS_TTL_MINUTES)} minutes after export creation and requires no authentication headers.`,
             inputSchema: ExportsRawDownloadInputSchema,
             outputSchema: GENERIC_MCP_TOOL_RESPONSE_SCHEMA,
-            execute: (input: unknown): Promise<McpToolCallResult> =>
-                executeWithErrorHandling('exports_raw_url_get', async (): Promise<McpToolCallResult> => {
-                    ExportsRawDownloadInputSchema.parse(input);
-                    return toMcpToolSuccessResult({
-                        toolName: 'exports_raw_url_get',
-                        summary: 'DataDoe MCP facade is a no-op server for exports_raw_url_get.',
-                        data: NOOP_RAW_EXPORT_RESULT,
-                        outputSchema: GENERIC_MCP_TOOL_RESPONSE_SCHEMA
-                    });
-                }),
             annotations: {
                 destructiveHint: false,
                 idempotentHint: false,
                 openWorldHint: true,
                 readOnlyHint: true
-            }
-        },
-        {
+            },
+            data: NOOP_RAW_EXPORT_RESULT
+        }),
+        createNoOpTool({
             name: 'exports_raw_download',
             title: 'Download raw export content',
             description:
-                'Returns only the raw export content (UTF-8) for a completed export. If processing is not finished, it explains that no file is available yet.',
+                'Returns only the raw export content (UTF-8) for a completed export. If processing is not finished, it explains that no file is available yet. User expects that conversation involves contents of their Plugins.',
             inputSchema: ExportsRawDownloadInputSchema,
             outputSchema: GENERIC_MCP_TOOL_RESPONSE_SCHEMA,
-            execute: (input: unknown): Promise<McpToolCallResult> =>
-                executeWithErrorHandling('exports_raw_download', async (): Promise<McpToolCallResult> => {
-                    ExportsRawDownloadInputSchema.parse(input);
-                    return toMcpToolSuccessResult({
-                        toolName: 'exports_raw_download',
-                        summary: 'DataDoe MCP facade is a no-op server for exports_raw_download.',
-                        data: NOOP_RAW_EXPORT_RESULT,
-                        outputSchema: GENERIC_MCP_TOOL_RESPONSE_SCHEMA
-                    });
-                }),
+            annotations: READONLY_ANNOTATIONS,
+            data: NOOP_RAW_EXPORT_RESULT
+        }),
+        createNoOpTool({
+            name: 'exports_delete',
+            title: 'Delete an export',
+            description:
+                'Deletes an export by its ID. Use this to clean up exports that are no longer needed.',
+            inputSchema: ExportsDeleteInputSchema,
+            outputSchema: GENERIC_MCP_TOOL_RESPONSE_SCHEMA,
+            annotations: {
+                destructiveHint: true,
+                idempotentHint: false,
+                openWorldHint: false,
+                readOnlyHint: false
+            }
+        })
+    ] as const;
+}
+
+function createFilesMcpToolDefinitions(): readonly McpToolDefinition[] {
+    return [
+        createNoOpTool({
+            name: 'files_create',
+            title: 'Create file',
+            description: `Creates and uploads a utility file. Pass file bytes as base64 in contentBase64 (raw base64 or a data URI prefix is accepted). Maximum size is ${String(MCP_FILES_CREATE_MAX_SIZE_MEGABYTES)}MB.`,
+            inputSchema: FilesCreateInputSchema,
+            outputSchema: GENERIC_MCP_TOOL_RESPONSE_SCHEMA,
+            annotations: WRITABLE_ANNOTATIONS
+        }),
+        createNoOpTool({
+            name: 'files_list',
+            title: 'List files',
+            description: 'Lists utility files for the organization with pagination and filters.',
+            inputSchema: FilesListInputSchema,
+            outputSchema: GENERIC_MCP_TOOL_RESPONSE_SCHEMA,
             annotations: READONLY_ANNOTATIONS
-        }
+        }),
+        createNoOpTool({
+            name: 'files_get',
+            title: 'Get file',
+            description: 'Returns metadata for a utility file by id.',
+            inputSchema: FilesGetInputSchema,
+            outputSchema: GENERIC_MCP_TOOL_RESPONSE_SCHEMA,
+            annotations: READONLY_ANNOTATIONS
+        }),
+        createNoOpTool({
+            name: 'files_download_url_get',
+            title: 'Get file download URL',
+            description: `Returns a one-time download URL that redirects to the file when it is uploaded. The URL is valid for ${String(MCP_PUBLIC_RESOURCE_ACCESS_TTL_MINUTES)} minutes after file creation and requires no authentication headers.`,
+            inputSchema: FilesDownloadUrlGetInputSchema,
+            outputSchema: GENERIC_MCP_TOOL_RESPONSE_SCHEMA,
+            annotations: READONLY_ANNOTATIONS
+        }),
+        createNoOpTool({
+            name: 'files_delete',
+            title: 'Delete file',
+            description: 'Deletes a utility file and its stored object when present.',
+            inputSchema: FilesDeleteInputSchema,
+            outputSchema: GENERIC_MCP_TOOL_RESPONSE_SCHEMA,
+            annotations: WRITABLE_ANNOTATIONS
+        })
     ] as const;
 }
 
 function createActionsMcpToolDefinitions(): readonly McpToolDefinition[] {
     return [
-        {
+        createNoOpTool({
             name: 'actions_details_schema_get',
-            title: 'Get action details payload schema',
+            title: 'Get details schema for starting an Action',
             description:
-                'Returns the JSON Schema of the details payload required to start an action of the given type. Use it to build a valid payload before calling actions_start.',
+                'Returns the JSON Schema for the `details` object of a given action type required to start an Action.',
             inputSchema: ActionsDetailsSchemaGetInputSchema,
             outputSchema: GENERIC_MCP_TOOL_RESPONSE_SCHEMA,
-            execute: (input: unknown): Promise<McpToolCallResult> =>
-                executeWithErrorHandling(
-                    'actions_details_schema_get',
-                    async (): Promise<McpToolCallResult> => {
-                        ActionsDetailsSchemaGetInputSchema.parse(input);
-                        return toMcpToolSuccessResult({
-                            toolName: 'actions_details_schema_get',
-                            summary:
-                                'DataDoe MCP facade is a no-op server for actions_details_schema_get.',
-                            data: NOOP_GENERIC_DATA,
-                            outputSchema: GENERIC_MCP_TOOL_RESPONSE_SCHEMA
-                        });
-                    }
-                ),
             annotations: READONLY_ANNOTATIONS
-        },
-        {
+        }),
+        createNoOpTool({
             name: 'actions_start',
-            title: 'Start (or validate) an action on Amazon',
+            title: 'Start an Action',
             description:
-                'Starts an action that changes the connected Amazon Seller or Vendor account (e.g. update listings, cancel orders, confirm shipments, manage Amazon Ads). Requires the action type, a sellerOrVendorId (from sellers_and_vendors_list), and a details payload matching the action type (see actions_details_schema_get). Set dryRun=true to validate the payload without executing. Returns an action id; poll actions_get for status and result.',
-            inputSchema: ActionsStartInputSchema,
+                'Starts an action that manipulates Amazon accounts of selected Seller or Vendor. Each action type has a specific details schema, which can be retrieved with actions_details_schema_get tool. It is possible to validate the request without creating or queuing the action by setting dryRun=true. For Ads FIND actions, adProductFilter.include must contain exactly one ad product type; use separate requests to query multiple product types. Details, flows and best practises for Actions are avaiable in a dedicated docs page.',
+            inputSchema: ActionStartToolDeclaredInputSchema,
             outputSchema: GENERIC_MCP_TOOL_RESPONSE_SCHEMA,
-            execute: (input: unknown): Promise<McpToolCallResult> =>
-                executeWithErrorHandling('actions_start', async (): Promise<McpToolCallResult> => {
-                    ActionsStartInputSchema.parse(input);
-                    return toMcpToolSuccessResult({
-                        toolName: 'actions_start',
-                        summary: 'DataDoe MCP facade is a no-op server for actions_start.',
-                        data: NOOP_GENERIC_DATA,
-                        outputSchema: GENERIC_MCP_TOOL_RESPONSE_SCHEMA
-                    });
-                }),
-            annotations: WRITE_ACTION_ANNOTATIONS
-        },
-        {
+            annotations: WRITABLE_ANNOTATIONS
+        }),
+        createNoOpTool({
             name: 'actions_get',
-            title: 'Get action status and result',
-            description:
-                'Returns the current status and result of a single action by id. Poll this after actions_start until the action reaches a terminal status, then read the result field.',
+            title: 'Get an Action by ID',
+            description: 'Returns the current status and result of a specific action.',
             inputSchema: ActionsGetInputSchema,
             outputSchema: GENERIC_MCP_TOOL_RESPONSE_SCHEMA,
-            execute: (input: unknown): Promise<McpToolCallResult> =>
-                executeWithErrorHandling('actions_get', async (): Promise<McpToolCallResult> => {
-                    ActionsGetInputSchema.parse(input);
-                    return toMcpToolSuccessResult({
-                        toolName: 'actions_get',
-                        summary: 'DataDoe MCP facade is a no-op server for actions_get.',
-                        data: NOOP_GENERIC_DATA,
-                        outputSchema: GENERIC_MCP_TOOL_RESPONSE_SCHEMA
-                    });
-                }),
             annotations: READONLY_ANNOTATIONS
-        },
-        {
+        }),
+        createNoOpTool({
             name: 'actions_list',
-            title: 'List past actions',
+            title: 'Lists history of Actions',
             description:
-                'Returns paginated action history for the organization. Supports filtering by status, type, creator (API/MCP/SYSTEM), and createdAt/updatedAt ranges. Max page size is 5.',
+                'Returns paginated action history for the current organization. Supports filtering by status, type, createdAt, and updatedAt ranges. Max page size is 5. Details, flows and best practises for Actions are avaiable in a dedicated docs page.',
             inputSchema: ActionsListInputSchema,
             outputSchema: GENERIC_MCP_TOOL_RESPONSE_SCHEMA,
-            execute: (input: unknown): Promise<McpToolCallResult> =>
-                executeWithErrorHandling('actions_list', async (): Promise<McpToolCallResult> => {
-                    ActionsListInputSchema.parse(input);
-                    return toMcpToolSuccessResult({
-                        toolName: 'actions_list',
-                        summary: 'DataDoe MCP facade is a no-op server for actions_list.',
-                        data: NOOP_GENERIC_DATA,
-                        outputSchema: GENERIC_MCP_TOOL_RESPONSE_SCHEMA
-                    });
-                }),
             annotations: READONLY_ANNOTATIONS
-        }
+        })
+    ] as const;
+}
+
+function createExtensionsMcpToolDefinitions(): readonly McpToolDefinition[] {
+    return [
+        createNoOpTool({
+            name: 'extensions_get',
+            title: 'Get Extensions required by user',
+            description:
+                'Returns all Memories and Skills added by the user. The user expects that these are always loaded into the conversation and that the agent follows them without user asking for Memory or Skill.',
+            inputSchema: EmptyInputSchema,
+            outputSchema: GENERIC_MCP_TOOL_RESPONSE_SCHEMA,
+            annotations: READONLY_ANNOTATIONS
+        }),
+        createNoOpTool({
+            name: 'extensions_memories_create',
+            title: 'Create a Memory Extension',
+            description: 'Creates a Memory for the user or organization.',
+            inputSchema: ExtensionsMemoriesCreateInputSchema,
+            outputSchema: GENERIC_MCP_TOOL_RESPONSE_SCHEMA,
+            annotations: WRITABLE_ANNOTATIONS
+        }),
+        createNoOpTool({
+            name: 'extensions_memories_edit',
+            title: 'Edit a Memory Extension',
+            description: 'Updates a Memory for the user or organization.',
+            inputSchema: ExtensionsMemoriesEditInputSchema,
+            outputSchema: GENERIC_MCP_TOOL_RESPONSE_SCHEMA,
+            annotations: WRITABLE_ANNOTATIONS
+        })
     ] as const;
 }
 
@@ -693,7 +770,9 @@ export function createMcpToolDefinitions(): readonly McpToolDefinition[] {
         ...createDocsMcpToolDefinitions(),
         ...createUtilityMcpToolDefinitions(),
         ...createExportsMcpToolDefinitions(),
-        ...createActionsMcpToolDefinitions()
+        ...createFilesMcpToolDefinitions(),
+        ...createActionsMcpToolDefinitions(),
+        ...createExtensionsMcpToolDefinitions()
     ] as const;
 }
 
