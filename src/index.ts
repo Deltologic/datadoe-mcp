@@ -41,7 +41,7 @@ export interface McpToolDefinition {
 export const MCP_SERVER_NAME = 'DataDoe MCP' as const;
 export const MCP_SERVER_DESCRIPTION =
     'DataDoe is one place to connect, analyze, and act on Amazon data: query Seller Central, Vendor Central, and Amazon Ads data, then run write Actions like updating listings, managing orders, and optimizing Amazon Ads campaigns.' as const;
-export const MCP_SERVER_VERSION = '0.3.0' as const;
+export const MCP_SERVER_VERSION = '0.4.0' as const;
 export const MCP_SERVER_WEBSITE_URL = 'https://app.datadoe.com/integrations/mcp' as const;
 
 export const PublicFilterOperators = [
@@ -72,6 +72,13 @@ export type PublicCombinator = (typeof PublicCombinators)[number];
 export const EmptyInputSchema = z.object({}).strict();
 const ZodUUID = z.string().min(36).max(36).describe('UUID of the entity.').readonly();
 
+export const MCP_EXPORT_SOURCES_MAX_PAGE_SIZE = 8 as const;
+export const MCP_EXPORT_SOURCES_DEFAULT_PAGE_SIZE = 5 as const;
+export const MCP_EXPORT_LIST_MAX_PAGE_SIZE = 25 as const;
+export const MCP_EXPORT_LIST_DEFAULT_PAGE_SIZE = 25 as const;
+export const PUBLIC_EXPORT_UTILITY_COLUMNS_NOTICE =
+    'Each export includes default utility columns that identify the seller or vendor and marketplace of each row. You do not need to request those columns.' as const;
+
 export const ExportsGetSourcesInputSchema = z
     .object({
         sellerOrVendorIds: z.array(ZodUUID).min(1).max(32),
@@ -82,7 +89,15 @@ export const ExportsGetSourcesInputSchema = z
             .max(256)
             .describe(
                 'Full-text search query across source names, table names, descriptions, and columns.'
-            )
+            ),
+        page: z.coerce.number().int().min(1).default(1).optional(),
+        pageSize: z.coerce
+            .number()
+            .int()
+            .min(1)
+            .max(MCP_EXPORT_SOURCES_MAX_PAGE_SIZE)
+            .default(MCP_EXPORT_SOURCES_DEFAULT_PAGE_SIZE)
+            .optional()
     })
     .strict();
 export type ExportsGetSourcesToolInput = z.infer<typeof ExportsGetSourcesInputSchema>;
@@ -97,7 +112,11 @@ const ZodExportColumn = z
 export const ExportAggregationSchema = z
     .object({
         column: ZodExportColumn,
-        aggregation: z.enum(['count', 'countDistinct', 'sum', 'avg', 'min', 'max']),
+        aggregation: z
+            .enum(['count', 'countDistinct', 'sum', 'avg', 'min', 'max'])
+            .describe(
+                'sum requires a numeric column. min, max, and avg accept numeric or date/datetime columns. count/countDistinct accept any column.'
+            ),
         alias: z.string().min(2).max(128).nullable().optional()
     })
     .strict();
@@ -118,12 +137,28 @@ export const ExportFilterGroupSchema = z
     })
     .strict();
 
-export const MCP_EXPORT_MAX_ROW_LIMIT = 3_500 as const;
+export const MCP_EXPORT_MAX_ROW_LIMIT = 5_000 as const;
 export const MCP_PUBLIC_RESOURCE_ACCESS_TTL_MINUTES = 15 as const;
 export const MCP_SELLERS_AND_VENDORS_MAX_PAGE_SIZE = 10 as const;
 export const MCP_SELLERS_AND_VENDORS_DEFAULT_PAGE_SIZE = 10 as const;
-export const MCP_FILES_CREATE_MAX_SIZE_MEGABYTES = 4 as const;
-export const EXTENSION_MEMORY_TYPES = ['ORGANIZATION', 'PERSONAL'] as const;
+export const MCP_FILES_CREATE_MAX_SIZE_MEGABYTES = 0.5 as const;
+export const MCP_MAX_COGS_UPSERT_ITEMS = 25 as const;
+export const MCP_MAX_VENDOR_CODE_UPSERT_ITEMS = 25 as const;
+export const PLUGIN_MEMORY_TYPES = ['ORGANIZATION', 'PERSONAL'] as const;
+export const MEMORY_TYPES = [
+    'BUSINESS_INFORMATION',
+    'BUSINESS_GOAL',
+    'BUSINESS_KNOW_HOW',
+    'BRAND_INFORMATION',
+    'KPI_DEFINITION',
+    'AGENT_MEMORY',
+    'AGENT_RULE',
+    'AGENT_SOUL',
+    'AGENT_IDENTITY',
+    'USER_INFO'
+] as const;
+export const PLUGIN_SKILL_ELEMENT_TYPES = ['BODY', 'SCRIPT', 'REFERENCE', 'ASSET'] as const;
+export const SKILL_PATH_MAX_LENGTH = 512 as const;
 export const MEMORY_NAME_MAX_LENGTH = 128 as const;
 export const MEMORY_CONTENT_MAX_LENGTH = 16_384 as const;
 
@@ -135,14 +170,21 @@ export const ExportsCreateInputSchema = z
             .array(ZodExportColumn)
             .min(1)
             .max(128)
-            .describe('Selected output fields. Can include source columns and aggregation aliases.'),
-        from: z.iso.date().optional().describe(
-            'Start date for the export. Required if the source has a date column.'
-        ),
+            .describe(
+                `Selected output fields. Can include source columns and aggregation aliases. ${PUBLIC_EXPORT_UTILITY_COLUMNS_NOTICE}`
+            ),
+        from: z.iso
+            .date()
+            .optional()
+            .describe(
+                'Start date for the export. Only allowed when the source has a date column; required together with to for those sources.'
+            ),
         to: z.iso
             .date()
             .optional()
-            .describe('End date for the export. Required if the source has a date column.'),
+            .describe(
+                'End date for the export. Only allowed when the source has a date column; required together with from for those sources.'
+            ),
         filters: ExportFilterGroupSchema.optional().describe(
             'Filters applied to the export. Each filter is applied to raw rows before aggregation like SQL WHERE clause.'
         ),
@@ -157,7 +199,9 @@ export const ExportsCreateInputSchema = z
             .int()
             .min(1)
             .max(MCP_EXPORT_MAX_ROW_LIMIT)
-            .describe('Sets maximum number of rows to return.'),
+            .describe(
+                `Sets maximum number of rows to return. Capped at ${String(MCP_EXPORT_MAX_ROW_LIMIT)} rows per export.`
+            ),
         skip: z
             .number()
             .int()
@@ -177,6 +221,21 @@ export const ExportsGetInputSchema = z
         exportId: ZodUUID
     })
     .strict();
+
+export const ExportsListInputSchema = z
+    .object({
+        page: z.coerce.number().int().min(1).default(1).optional(),
+        pageSize: z.coerce
+            .number()
+            .int()
+            .min(1)
+            .max(MCP_EXPORT_LIST_MAX_PAGE_SIZE)
+            .default(MCP_EXPORT_LIST_DEFAULT_PAGE_SIZE)
+            .optional(),
+        exportIds: z.array(ZodUUID).min(1).max(10).optional()
+    })
+    .strict();
+export type ExportsListToolInput = z.infer<typeof ExportsListInputSchema>;
 
 export const ExportsRawDownloadInputSchema = z
     .object({
@@ -248,13 +307,19 @@ export const FilesCreateInputSchema = z
         type: z.enum(['PNG', 'TIFF', 'JPG']),
         sellerOrVendorId: z.uuid(),
         ttlHours: z.coerce.number().int().min(1).max(720).optional(),
-        contentBase64: z.string().trim().min(1)
+        contentBase64: z
+            .string()
+            .trim()
+            .min(1)
+            .describe(
+                `File content as base64-encoded string. File size must be less than ${String(MCP_FILES_CREATE_MAX_SIZE_MEGABYTES)}MB.`
+            )
     })
     .strict();
 
 export const FilesListInputSchema = z
     .object({
-        group: z.enum(['LISTING_IMAGES']).optional(),
+        group: z.enum(['LISTING_IMAGES', 'APLUS_IMAGES']).optional(),
         page: z.coerce.number().int().min(1).default(1).optional(),
         pageSize: z.coerce.number().int().min(1).max(100).default(25).optional(),
         query: z.string().trim().max(256).optional(),
@@ -262,7 +327,7 @@ export const FilesListInputSchema = z
             .array(z.enum(['WAITING_FOR_UPLOAD', 'UPLOADED', 'EXPIRED', 'DELETED']))
             .optional(),
         types: z.array(z.enum(['PNG', 'TIFF', 'JPG'])).optional(),
-        sources: z.array(z.enum(['API', 'MCP', 'DATA'])).optional(),
+        sources: z.array(z.enum(['API', 'MCP', 'DATA', 'UI'])).optional(),
         sellerOrVendorIds: z.array(z.uuid()).optional()
     })
     .strict();
@@ -276,27 +341,118 @@ export const FilesGetInputSchema = z
 export const FilesDeleteInputSchema = FilesGetInputSchema;
 export const FilesDownloadUrlGetInputSchema = FilesGetInputSchema;
 
-export const ExtensionsMemoriesCreateInputSchema = z
+export const PluginsMemoriesCreateInputSchema = z
     .object({
-        memoryType: z.enum(EXTENSION_MEMORY_TYPES),
+        memoryType: z
+            .enum(PLUGIN_MEMORY_TYPES)
+            .describe('ORGANIZATION for shared org plugins, PERSONAL for the authenticated user.'),
+        type: z.enum(MEMORY_TYPES).describe('Plugin kind of this Memory.'),
         name: z.string().trim().min(1).max(MEMORY_NAME_MAX_LENGTH),
         content: z.string().min(1).max(MEMORY_CONTENT_MAX_LENGTH)
     })
     .strict();
 
-export const ExtensionsMemoriesEditInputSchema = z
+export const PluginsMemoriesEditInputSchema = z
     .object({
-        memoryType: z.enum(EXTENSION_MEMORY_TYPES),
+        memoryType: z
+            .enum(PLUGIN_MEMORY_TYPES)
+            .describe('ORGANIZATION for shared org plugins, PERSONAL for the authenticated user.'),
         memoryId: ZodUUID,
         content: z.string().min(1).max(MEMORY_CONTENT_MAX_LENGTH)
+    })
+    .strict();
+
+export const PluginsSkillsGetInputSchema = z
+    .object({
+        skillId: ZodUUID,
+        elementType: z
+            .enum(PLUGIN_SKILL_ELEMENT_TYPES)
+            .describe(
+                'BODY returns SKILL.md. SCRIPT, REFERENCE, and ASSET return a supporting file by path.'
+            ),
+        elementName: z
+            .string()
+            .trim()
+            .min(1)
+            .max(SKILL_PATH_MAX_LENGTH)
+            .nullable()
+            .optional()
+            .describe('Required for SCRIPT, REFERENCE, and ASSET. Omit or null for BODY.')
+    })
+    .strict();
+
+export const PluginsFilesGetInputSchema = z
+    .object({
+        fileId: ZodUUID.describe('File plugin id returned by plugins_get.')
+    })
+    .strict();
+
+const CogsUpsertRowSchema = z
+    .object({
+        asin: z.string().min(1),
+        sku: z.string().min(1),
+        costCurrency: z.string().min(1),
+        fromDate: z.iso.date(),
+        costItemValue: z.number(),
+        costItemShippingValue: z.number(),
+        itemSupplierName: z.string().max(128).optional()
+    })
+    .strict();
+
+export const CogsUpsertToolInputSchema = z
+    .object({
+        sellerOrVendorId: ZodUUID,
+        cogsToUpsert: z.array(CogsUpsertRowSchema).min(1).max(MCP_MAX_COGS_UPSERT_ITEMS)
+    })
+    .strict();
+
+export const CogsDeleteToolInputSchema = z
+    .object({
+        sellerOrVendorId: ZodUUID,
+        from: z.iso.date().optional(),
+        to: z.iso.date().optional(),
+        sku: z.string().min(1).optional(),
+        asin: z.string().min(1).optional()
+    })
+    .strict();
+
+const VendorCodeUpsertRowSchema = z
+    .object({
+        asin: z.string().min(1).optional(),
+        sku: z.string().min(1).optional(),
+        vendorCode: z.string().min(1)
+    })
+    .strict()
+    .refine((value): boolean => Boolean(value.asin) !== Boolean(value.sku), {
+        message: 'Exactly one of asin or sku must be provided.'
+    });
+
+export const VendorCodeUpsertToolInputSchema = z
+    .object({
+        sellerOrVendorId: ZodUUID,
+        vendorCodesToUpsert: z
+            .array(VendorCodeUpsertRowSchema)
+            .min(1)
+            .max(MCP_MAX_VENDOR_CODE_UPSERT_ITEMS)
+    })
+    .strict();
+
+export const VendorCodeDeleteToolInputSchema = z
+    .object({
+        sellerOrVendorId: ZodUUID,
+        sku: z.string().min(1).optional(),
+        asin: z.string().min(1).optional()
     })
     .strict();
 
 export const ActionTypes = [
     'AMAZON_LISTINGS_UPDATE',
     'AMAZON_LISTINGS_DETAILS_UPDATE',
+    'AMAZON_LISTINGS_CREATE',
     'AMAZON_LISTINGS_FIND',
     'AMAZON_LISTINGS_FEES_ESTIMATE',
+    'AMAZON_LISTINGS_FEATURED_PRICE_ESTIMATE',
+    'AMAZON_LISTINGS_COMPETITIVE_SUMMARY_FIND',
     'AMAZON_LISTINGS_PRODUCT_TYPES_FIND',
     'AMAZON_LISTINGS_PRODUCT_TYPE_SUGGEST',
     'AMAZON_LISTINGS_PRODUCT_TYPE_DEFINITION_FIND',
@@ -580,7 +736,7 @@ function createExportsMcpToolDefinitions(): readonly McpToolDefinition[] {
             name: 'exports_sources_get',
             title: 'List export sources for sellers and vendors',
             description:
-                'Searches export source templates that your selected seller or vendor can use to create exports. Requires sellerOrVendorIds retrieved from the sellers_and_vendors_list tool and a query to narrow the result set. The response includes matching sources plus a recommendedSources list with the best starting points. Each source includes enabled: false when a user disabled the table for your organization in DataDoe settings; exports cannot be created from disabled sources. Sources may include dataAvailability with intraday or real-time update details.',
+                'Searches export source templates that your selected seller or vendor can use to create exports. Requires sellerOrVendorIds retrieved from the sellers_and_vendors_list tool and a query to narrow the result set. Supports pagination via page and pageSize (default 5, max 8). The response includes matching sources plus a recommendedSources list with the best starting points, and meta with totalResults and hasNextPage when more matches exist. Each source includes enabled: false when a user disabled the table for your organization in DataDoe settings; exports cannot be created from disabled sources. Sources may include dataAvailability with intraday or real-time update details.',
             inputSchema: ExportsGetSourcesInputSchema,
             outputSchema: GENERIC_MCP_TOOL_RESPONSE_SCHEMA,
             annotations: READONLY_ANNOTATIONS
@@ -588,7 +744,7 @@ function createExportsMcpToolDefinitions(): readonly McpToolDefinition[] {
         createNoOpTool({
             name: 'exports_create',
             title: 'Create a new export',
-            description: `Creates an export job that runs a structured query against DataDoe's Amazon dataset for one or more sellers/vendors and produces a downloadable file (CSV or JSON). Required inputs: sellerOrVendorIds (from sellers_and_vendors_list), sourceId and columns (from exports_sources_get — each source exposes its own column set), and outputType (CSV or JSON). Optional inputs shape the query like SQL: filters (WHERE — applied to raw rows before aggregation, with and/or combinators and per-rule operators including =, >, in, between, contains, null, etc.), groupBy and aggregations (GROUP BY + sum/avg/count/min/max with optional aliases), from/to (inclusive date range on the source's primary date column), dateInterval (DAY/WEEK/MONTH — collapses a date group-by to that bucket), orderByColumn + orderByDirection, and limit/skip (pagination; limit is capped at ${MCP_EXPORT_MAX_ROW_LIMIT} rows per export). Returns an export id and a status. Exports run asynchronously; status transitions from PENDING/PROCESSING to COMPLETED or FAILED. Completed exports expire 24 hours after generation. Poll exports_get to track status, then read the result with exports_raw_download (inline content) or exports_raw_url_get (presigned URL). If a query would naturally exceed ${MCP_EXPORT_MAX_ROW_LIMIT} rows, narrow it via higher-level aggregation, filters, or top-N ordering, or paginate with skip. Column names and source schemas are defined per source - see exports_sources_get and the public DataDoe API reference at https://datadoe.com/hub/data-scheme. For easier analysis, the tool may add unitily columns to the resulting Export.`,
+            description: `Creates an export job that runs a structured query against DataDoe's Amazon dataset for one or more sellers/vendors and produces a downloadable file (CSV or JSON). Required inputs: sellerOrVendorIds (from sellers_and_vendors_list), sourceId and columns (from exports_sources_get — each source exposes its own column set), and outputType (CSV or JSON). Optional inputs shape the query like SQL: filters (WHERE — applied to raw rows before aggregation, with and/or combinators and per-rule operators including =, >, in, between, contains, null, etc.), groupBy and aggregations (GROUP BY + sum on numeric columns, min/max/avg on numeric or date/datetime columns, count/countDistinct, with optional aliases), from/to (inclusive date range on the source's date column — only allowed when the source has a date column; otherwise use filters on a time column), dateInterval (DAY/WEEK/MONTH — collapses a date group-by to that bucket), orderByColumn + orderByDirection, and limit/skip (pagination; limit is capped at ${MCP_EXPORT_MAX_ROW_LIMIT} rows per export). Returns an export id and a status. Exports run asynchronously; status transitions from PENDING/PROCESSING to COMPLETED or FAILED. Completed exports expire 24 hours after generation. Poll exports_get to track status, then read the result with exports_raw_download (inline content) or exports_raw_url_get (presigned URL). If a query would naturally exceed ${MCP_EXPORT_MAX_ROW_LIMIT} rows, narrow it via higher-level aggregation, filters, or top-N ordering, or paginate with skip. Column names and source schemas are defined per source - see exports_sources_get and the public DataDoe API reference at https://datadoe.com/hub/data-scheme. ${PUBLIC_EXPORT_UTILITY_COLUMNS_NOTICE}`,
             inputSchema: ExportsCreateInputSchema,
             outputSchema: EXPORT_MCP_TOOL_RESPONSE_SCHEMA,
             annotations: {
@@ -608,6 +764,15 @@ function createExportsMcpToolDefinitions(): readonly McpToolDefinition[] {
             outputSchema: EXPORT_MCP_TOOL_RESPONSE_SCHEMA,
             annotations: READONLY_ANNOTATIONS,
             data: NOOP_EXPORT_RESULT
+        }),
+        createNoOpTool({
+            name: 'exports_list',
+            title: 'List export jobs',
+            description:
+                'Lists export jobs for the organization, ordered by most recently created first. Supports pagination via page and pageSize (max 25). Optionally filter by up to 10 exportIds. Use exports_get for a single export and exports_create to start a new one.',
+            inputSchema: ExportsListInputSchema,
+            outputSchema: GENERIC_MCP_TOOL_RESPONSE_SCHEMA,
+            annotations: READONLY_ANNOTATIONS
         }),
         createNoOpTool({
             name: 'exports_raw_url_get',
@@ -655,7 +820,7 @@ function createFilesMcpToolDefinitions(): readonly McpToolDefinition[] {
         createNoOpTool({
             name: 'files_create',
             title: 'Create file',
-            description: `Creates and uploads a utility file. Pass file bytes as base64 in contentBase64 (raw base64 or a data URI prefix is accepted). Maximum size is ${String(MCP_FILES_CREATE_MAX_SIZE_MEGABYTES)}MB.`,
+            description: `Creates and uploads a utility file. Pass file bytes as base64 in contentBase64 (raw base64 or a data URI prefix is accepted). Maximum accpeted image size is ${String(MCP_FILES_CREATE_MAX_SIZE_MEGABYTES)}MB. DataDoe API allows for full-size files upload.`,
             inputSchema: FilesCreateInputSchema,
             outputSchema: GENERIC_MCP_TOOL_RESPONSE_SCHEMA,
             annotations: WRITABLE_ANNOTATIONS
@@ -735,32 +900,108 @@ function createActionsMcpToolDefinitions(): readonly McpToolDefinition[] {
     ] as const;
 }
 
-function createExtensionsMcpToolDefinitions(): readonly McpToolDefinition[] {
+function createCogsMcpToolDefinitions(): readonly McpToolDefinition[] {
     return [
         createNoOpTool({
-            name: 'extensions_get',
-            title: 'Get Extensions required by user',
+            name: 'cogs_upsert',
+            title: 'Upsert COGS',
             description:
-                'Returns all Memories and Skills added by the user. The user expects that these are always loaded into the conversation and that the agent follows them without user asking for Memory or Skill.',
+                'Creates or updates cost-of-goods-sold (COGS) rows for a seller or vendor. Each row is keyed by asin, sku, costCurrency, and fromDate - upserting a row with a matching key updates its values.',
+            inputSchema: CogsUpsertToolInputSchema,
+            outputSchema: GENERIC_MCP_TOOL_RESPONSE_SCHEMA,
+            annotations: WRITABLE_ANNOTATIONS
+        }),
+        createNoOpTool({
+            name: 'cogs_delete',
+            title: 'Delete COGS',
+            description:
+                'Deletes COGS rows for a seller or vendor. sellerOrVendorId is required; from, to, sku, and asin are optional filters that narrow the rows deleted within that seller or vendor.',
+            inputSchema: CogsDeleteToolInputSchema,
+            outputSchema: GENERIC_MCP_TOOL_RESPONSE_SCHEMA,
+            annotations: {
+                destructiveHint: true,
+                idempotentHint: false,
+                openWorldHint: false,
+                readOnlyHint: false
+            }
+        })
+    ] as const;
+}
+
+function createVendorCodesMcpToolDefinitions(): readonly McpToolDefinition[] {
+    return [
+        createNoOpTool({
+            name: 'vendor_code_upsert',
+            title: 'Upsert Vendor Codes',
+            description:
+                'Creates or updates vendor code rows for a seller or vendor. Each row must contain exactly one of asin or sku - upserting a row with a matching key updates its value.',
+            inputSchema: VendorCodeUpsertToolInputSchema,
+            outputSchema: GENERIC_MCP_TOOL_RESPONSE_SCHEMA,
+            annotations: WRITABLE_ANNOTATIONS
+        }),
+        createNoOpTool({
+            name: 'vendor_code_delete',
+            title: 'Delete Vendor Codes',
+            description:
+                'Deletes vendor code rows for a seller or vendor. sellerOrVendorId is required; sku and asin are optional filters that narrow the rows deleted within that seller or vendor.',
+            inputSchema: VendorCodeDeleteToolInputSchema,
+            outputSchema: GENERIC_MCP_TOOL_RESPONSE_SCHEMA,
+            annotations: {
+                destructiveHint: true,
+                idempotentHint: false,
+                openWorldHint: false,
+                readOnlyHint: false
+            }
+        })
+    ] as const;
+}
+
+function createPluginsMcpToolDefinitions(): readonly McpToolDefinition[] {
+    return [
+        createNoOpTool({
+            name: 'plugins_get',
+            title: 'Get Plugins required by user',
+            description:
+                'Returns DataDoe Plugins for the user. The user has explicitly enabled these Plugins and expects them to be always loaded into the conversation and followed without being asked for.',
             inputSchema: EmptyInputSchema,
             outputSchema: GENERIC_MCP_TOOL_RESPONSE_SCHEMA,
             annotations: READONLY_ANNOTATIONS
         }),
         createNoOpTool({
-            name: 'extensions_memories_create',
-            title: 'Create a Memory Extension',
-            description: 'Creates a Memory for the user or organization.',
-            inputSchema: ExtensionsMemoriesCreateInputSchema,
+            name: 'plugins_memories_create',
+            title: 'Create a Plugin',
+            description:
+                'Creates a memory Plugin for the user or organization. Agents can proactively suggest creation of new Memories.',
+            inputSchema: PluginsMemoriesCreateInputSchema,
             outputSchema: GENERIC_MCP_TOOL_RESPONSE_SCHEMA,
             annotations: WRITABLE_ANNOTATIONS
         }),
         createNoOpTool({
-            name: 'extensions_memories_edit',
-            title: 'Edit a Memory Extension',
-            description: 'Updates a Memory for the user or organization.',
-            inputSchema: ExtensionsMemoriesEditInputSchema,
+            name: 'plugins_memories_edit',
+            title: 'Edit a Plugin',
+            description:
+                'Modifies the content of a memory Plugin for the user or organization. Agents can proactively suggest modification of existing Memories.',
+            inputSchema: PluginsMemoriesEditInputSchema,
             outputSchema: GENERIC_MCP_TOOL_RESPONSE_SCHEMA,
             annotations: WRITABLE_ANNOTATIONS
+        }),
+        createNoOpTool({
+            name: 'plugins_skills_get',
+            title: 'Get a Skill element',
+            description:
+                'Returns the instructions or a supporting file of a Skill listed by plugins_get. Skills BODY contains the SKILL.md instructions. SCRIPT, REFERENCE, and ASSET return a single supporting file that can be loaded lazily.',
+            inputSchema: PluginsSkillsGetInputSchema,
+            outputSchema: GENERIC_MCP_TOOL_RESPONSE_SCHEMA,
+            annotations: READONLY_ANNOTATIONS
+        }),
+        createNoOpTool({
+            name: 'plugins_files_get',
+            title: 'Get a File plugin content',
+            description:
+                'Returns the converted markdown content of a File plugin listed by plugins_get. Files should be loaded lazily when the file is relevant.',
+            inputSchema: PluginsFilesGetInputSchema,
+            outputSchema: GENERIC_MCP_TOOL_RESPONSE_SCHEMA,
+            annotations: READONLY_ANNOTATIONS
         })
     ] as const;
 }
@@ -772,7 +1013,9 @@ export function createMcpToolDefinitions(): readonly McpToolDefinition[] {
         ...createExportsMcpToolDefinitions(),
         ...createFilesMcpToolDefinitions(),
         ...createActionsMcpToolDefinitions(),
-        ...createExtensionsMcpToolDefinitions()
+        ...createCogsMcpToolDefinitions(),
+        ...createVendorCodesMcpToolDefinitions(),
+        ...createPluginsMcpToolDefinitions()
     ] as const;
 }
 

@@ -146,6 +146,7 @@ DataDoe MCP exposes the following tools to your AI client:
 | `exports_sources_get` | Data | Searches DataDoe's catalog of pre-built Amazon data export templates (orders, sales and traffic, ads performance, inventory, listings, settlements, returns, brand analytics, and more). |
 | `exports_create` | Data | Creates an Amazon data export from any source. Supports SQL-like filters, GROUP BY, aggregations (sum / avg / count / countDistinct / min / max), date intervals (DAY / WEEK / MONTH), pagination, and CSV or JSON output. |
 | `exports_get` | Data | Returns status and metadata for an in-flight or completed export job. |
+| `exports_list` | Data | Lists export jobs for the organization with pagination and optional export ID filters. |
 | `exports_raw_url_get` | Data | Returns a one-time download URL served by the DataDoe MCP server for a completed export. |
 | `exports_raw_download` | Data | Returns the raw export content (CSV or JSON) inline in the tool response. |
 | `exports_delete` | Data | Deletes an export by its ID. |
@@ -160,9 +161,15 @@ DataDoe MCP exposes the following tools to your AI client:
 | `actions_start` | Actions | Starts an Action that changes your Amazon account (listings, orders, Amazon Ads). Set `dryRun=true` to validate without executing. Returns an action id. |
 | `actions_get` | Actions | Returns the status and `result` of an Action by id; poll after `actions_start`. |
 | `actions_list` | Actions | Returns paginated Action history, filterable by status, type, creator, and date. |
-| `extensions_get` | Extensions | Returns all Memories and Skills added by the user. |
-| `extensions_memories_create` | Extensions | Creates a Memory for the user or organization. |
-| `extensions_memories_edit` | Extensions | Updates a Memory for the user or organization. |
+| `cogs_upsert` | COGS | Creates or updates cost-of-goods-sold rows for a seller or vendor. |
+| `cogs_delete` | COGS | Deletes COGS rows for a seller or vendor with optional filters. |
+| `vendor_code_upsert` | Vendor codes | Creates or updates vendor code rows for a seller or vendor. |
+| `vendor_code_delete` | Vendor codes | Deletes vendor code rows for a seller or vendor with optional filters. |
+| `plugins_get` | Plugins | Returns enabled DataDoe Plugins (Memories, Skills, and Files) for the user. |
+| `plugins_memories_create` | Plugins | Creates a memory Plugin for the user or organization. |
+| `plugins_memories_edit` | Plugins | Updates a memory Plugin for the user or organization. |
+| `plugins_skills_get` | Plugins | Returns a Skill element (SKILL.md or supporting file) listed by plugins_get. |
+| `plugins_files_get` | Plugins | Returns converted markdown content for a File plugin listed by plugins_get. |
 
 ---
 
