@@ -3,7 +3,7 @@
   "name": "com.datadoe/amazon-seller-mcp",
   "title": "DataDoe MCP",
   "description": "Hosted Amazon Seller & Vendor MCP server: query live SP-API & Amazon Ads data and run write Actions (update listings, manage orders, optimize Amazon Ads). Works with Claude, ChatGPT, Cursor, Codex, Gemini, Copilot, n8n, and more.",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "websiteUrl": "https://www.datadoe.com/connect/amazon/mcp",
   "repository": {
     "id": "1242545912",
