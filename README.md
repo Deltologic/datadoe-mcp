@@ -98,9 +98,10 @@ Actions let your AI agent make changes on your connected Amazon Seller Central, 
 
 What your agent can do:
 
-- **Listings** - update the title, bullet points, description, generic keyword, item-type keyword, and images (`AMAZON_LISTINGS_UPDATE`), and update prices for Seller Central accounts (`AMAZON_LISTINGS_PRICING_UPDATE`).
-- **Orders** - cancel an order item with a reason (`AMAZON_ORDERS_CANCEL`) or confirm shipment and upload tracking (`AMAZON_ORDERS_CONFIRM_SHIPMENT`).
-- **Amazon Ads** - add, update, remove, and find campaigns, ad groups, targets, ads, and ad associations across Sponsored Products, Brands, Display, TV, and Amazon DSP.
+- **Listings** - update the title, bullet points, description, generic keyword, item-type keyword, and images (`AMAZON_LISTINGS_UPDATE`), update prices for Seller Central accounts (`AMAZON_LISTINGS_PRICING_UPDATE`), and preview a listing write with the matching `*_VERIFY` Action before submitting it.
+- **Orders** - cancel an order item, confirm shipment, buy shipping, solicit a review, message the buyer, or search current orders (`AMAZON_ORDERS_FIND`) and order metrics (`AMAZON_ORDERS_GET_METRICS`).
+- **Vendor Central** - acknowledge purchase orders, submit shipments, and retrieve labels, packing slips, and transaction status.
+- **Amazon Ads** - add, update, remove, and find campaigns, ad groups, targets, ads, ad associations, and Sponsored Products bid rules across Sponsored Products, Brands, Display, TV, and Amazon DSP.
 
 How it works - the agent runs each Action through these MCP tools:
 
@@ -142,6 +143,11 @@ DataDoe MCP exposes the following tools to your AI client:
 | Tool | Category | What it does |
 |---|---|---|
 | `sellers_and_vendors_list` | Account | Lists Amazon sellers and vendors connected to your DataDoe organization, with account type, marketplace, and connection details. |
+| `sellers_and_vendors_get` | Account | Returns one seller or vendor, including whether a connection needs reauthorization. |
+| `sellers_and_vendors_rename` | Account | Renames a seller or vendor. Names are unique within the organization. |
+| `sellers_and_vendors_invitation_create` | Account | Creates a one-time link to connect a new Amazon account or reconnect an existing one. |
+| `sellers_and_vendors_invitations_get` | Account | Lists pending invitations, or returns one invitation and its status. |
+| `sellers_and_vendors_invitation_revoke` | Account | Revokes a pending invitation so its link can no longer be used. |
 | `organization_and_subscription_details_get` | Account | Returns your DataDoe organization profile, subscription plan, billing health, and AI Token balances. |
 | `exports_sources_get` | Data | Searches DataDoe's catalog of Amazon data export sources (orders, sales and traffic, ads performance, inventory, listings, settlements, returns, brand analytics, and more) by keyword. |
 | `exports_source_get` | Data | Returns the columns (paginated) and metadata of one export source, including whether a date period is required. |
@@ -151,14 +157,14 @@ DataDoe MCP exposes the following tools to your AI client:
 | `exports_raw_url_get` | Data | Returns a download URL for a completed export, valid until 15 minutes after the export was created. |
 | `exports_raw_download` | Data | Returns the raw export content (CSV or JSON) inline in the tool response. |
 | `exports_delete` | Data | Deletes an export by its ID. |
-| `files_create` | Files | Creates and uploads a utility file (listing or A+ images) as base64-encoded content. |
+| `files_create` | Files | Creates and uploads a utility file (listing images, A+ images, or order-message files) as base64-encoded content. |
 | `files_list` | Files | Lists utility files for the organization with pagination and filters. |
 | `files_get` | Files | Returns metadata for a utility file by id. |
 | `files_download_url_get` | Files | Returns a download URL for an uploaded file, valid until 15 minutes after the file was created. |
 | `files_delete` | Files | Deletes a utility file and its stored object when present. |
 | `datadoe_user_docs_table_of_contents_get` | Docs | Returns the table of contents of the DataDoe user documentation, useful when an agent needs to look up features or capabilities on demand. |
 | `datadoe_user_docs_page_get` | Docs | Returns the full content of a named DataDoe documentation page. |
-| `actions_details_schema_get` | Actions | Returns the JSON Schema of the `details` payload, the access mode (READ or WRITE), and the start tool for a given Action type. |
+| `actions_details_schema_get` | Actions | Returns the JSON Schema of the `details` payload, the access mode (READ or WRITE), whether that Action type is enabled, and the start tool. |
 | `actions_start` | Actions | Starts a READ or WRITE Action on your Amazon account (listings, orders, A+ Content, Multi-Channel Fulfillment, Amazon Ads). Set `dryRun=true` to validate without executing. Returns an action id. |
 | `actions_get` | Actions | Returns the status and `result` of an Action by id; poll after `actions_start`. |
 | `actions_list` | Actions | Returns paginated Action history, filterable by status, type, creator, and date. |
@@ -166,10 +172,10 @@ DataDoe MCP exposes the following tools to your AI client:
 | `cogs_delete` | COGS | Deletes COGS rows for a Seller Central account with optional filters. |
 | `vendor_code_upsert` | Vendor codes | Creates or updates vendor code rows for an account with a Vendor Central connection. |
 | `vendor_code_delete` | Vendor codes | Deletes vendor code rows for an account with a Vendor Central connection, with optional filters. |
-| `sqp_asins_get` | SQP | Returns the Search Query Performance (SQP) ASIN list of a Seller Central account. |
-| `sqp_asins_add` | SQP | Adds up to 25 ASINs per call to the SQP list of a Seller Central account. |
-| `sqp_asins_remove` | SQP | Removes up to 25 ASINs per call from the SQP list of a Seller Central account. |
-| `plugins_get` | Plugins | Returns enabled DataDoe Plugins (Memories, Skills, and Files) for the user. |
+| `sqp_asins_get` | SQP | Returns the Search Query Performance (SQP) ASIN list of a Seller Central account. DataDoe stores up to 252 ASINs. |
+| `sqp_asins_add` | SQP | Adds up to 252 ASINs per call to the SQP list of a Seller Central account. |
+| `sqp_asins_remove` | SQP | Removes up to 252 ASINs per call from the SQP list of a Seller Central account. |
+| `plugins_get` | Plugins | Returns the Memories and Skills saved in the organization, plus ready Files for the user. |
 | `plugins_memories_create` | Plugins | Creates a memory Plugin for the user or organization. |
 | `plugins_memories_edit` | Plugins | Updates a memory Plugin for the user or organization. |
 | `plugins_memories_delete` | Plugins | Deletes a memory Plugin for the user or organization. |
@@ -179,13 +185,18 @@ DataDoe MCP exposes the following tools to your AI client:
 | `amc_workflows_create` | AMC | Creates an AMC workflow (SQL with optional Daily or Weekly schedules) without running it. |
 | `amc_workflows_update` | AMC | Updates the SQL and/or schedules of an AMC workflow. |
 | `amc_workflows_delete` | AMC | Deletes an AMC workflow and its schedules. |
-| `amc_query_validate` | AMC | Dry-runs a workflow or raw SQL against Amazon without starting an execution. |
-| `amc_query_start` | AMC | Starts an on-demand AMC query from a workflow or raw SQL. |
+| `amc_query_validate` | AMC | Dry-runs a workflow, raw SQL, or a query template against Amazon without starting an execution. |
+| `amc_query_start` | AMC | Starts an on-demand AMC query from a workflow, raw SQL, or a query template. |
 | `amc_query_cancel` | AMC | Cancels a pending or running AMC query. |
 | `amc_query_results_find` | AMC | Lists AMC query result history with filters. |
 | `amc_query_result_get` | AMC | Returns one AMC query result, including short-lived download URLs when it is available. |
 | `amc_schema_find` | AMC | Reads the live AMC schema: a table index, or the fields of one data source. |
 | `amc_operation_get` | AMC | Returns the status of an asynchronous AMC operation, such as a workflow change or an uncertain query start. |
+| `amc_query_templates_find` | AMC | Lists ready-made AMC query templates and, when an account is selected, whether that account can run each one. |
+| `amc_query_template_get` | AMC | Returns one AMC query template, including its SQL. |
+| `datadoe_support_ticket_create` | Support | Sends a support request to the DataDoe team. |
+| `datadoe_support_ticket_check` | Support | Reads a support request and any reply. Poll about once an hour. |
+| `datadoe_support_ticket_update` | Support | Adds more information to an existing support request. |
 
 Amazon Marketing Cloud (AMC) tools are available by request only and are listed by the live server only after access is granted. See [Amazon Marketing Cloud](https://www.datadoe.com/hub/docs/datadoe-features/amc).
 
