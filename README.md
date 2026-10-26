@@ -11,7 +11,7 @@
 [![smithery badge](https://smithery.ai/badge/jakopv007/datadoe-mcp)](https://smithery.ai/servers/jakopv007/datadoe-mcp)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=flat-square)](LICENSE)
 
-🔗 [Start a free trial](https://www.datadoe.com/connect/amazon/mcp) · 📘 [Documentation](https://www.datadoe.com/hub/docs) · ⚡ [Actions](https://www.datadoe.com/hub/docs/datadoe-features/actions) · 📊 [Amazon data schema](https://www.datadoe.com/hub/data-scheme) · 🎥 [Video demo](https://www.youtube.com/watch?v=9YQd7M2dMyY)
+🔗 [Start a 14-day free trial](https://www.datadoe.com/connect/amazon/mcp) · 📘 [Documentation](https://www.datadoe.com/hub/docs) · ⚡ [Actions](https://www.datadoe.com/hub/docs/datadoe-features/actions) · 📊 [Amazon data schema](https://www.datadoe.com/hub/data-scheme) · 🎥 [Video demo](https://www.youtube.com/watch?v=9YQd7M2dMyY)
 
 ---
 
@@ -69,6 +69,7 @@ Building your own Amazon SP-API integration typically requires SP-API developer 
 - ✅ **SKU-level resolution** - drill into individual ASINs, parent listings, marketplaces, time periods, ad campaigns, keyword reports, settlements, returns.
 - ✅ **Multi-marketplace, multi-account** - one MCP server covers every Amazon marketplace (US, UK, DE, FR, IT, ES, CA, AU, JP, MX, and more) across Seller Central and Vendor Central.
 - ✅ **AI-native by design** - `exports_create` accepts SQL-like filter groups, GROUP BY, aggregations, and date intervals, so your AI agent can build complex reports from one tool call.
+- ✅ **One plan, one price** - $97/month with a 14-day free trial. See [pricing](https://www.datadoe.com/pricing).
 - ✅ **Read and write** - with [Actions](#actions-write-to-amazon), your agent doesn't just report, it updates listings, manages orders, and optimizes Amazon Ads, with a `dryRun` validation step and per-type controls.
 - ✅ **Always-on hosted infrastructure** - DataDoe manages SP-API rate limits, token rotation, and ongoing maintenance.
 
@@ -292,7 +293,7 @@ Full documentation root: [www.datadoe.com/hub/docs](https://www.datadoe.com/hub/
 
 ## What Amazon data is available?
 
-DataDoe MCP exposes every Amazon data table available in DataDoe, including:
+DataDoe MCP exposes every Amazon data table available in DataDoe, 130+ tables across Seller Central, Vendor Central and Amazon Ads, including:
 
 - **Orders & sales**: order line items, order performance, sales and traffic, refunds
 - **Amazon Ads**: campaigns, ad groups, keywords, search terms, sponsored products / brands / display, ACoS / ROAS / impression-share metrics
@@ -313,7 +314,7 @@ To avoid confusion when evaluating Amazon MCP servers:
 
 - ❌ **Not a self-hosted MCP server.** DataDoe MCP is hosted at `mcp.datadoe.com`. This GitHub repository is the schema facade used to publish DataDoe MCP to public MCP registries (Official MCP Registry, mcpservers.org, glama.ai, mcpmarket.com, Cline, smithery.ai, and others).
 - ❌ **Not an SP-API wrapper you operate yourself.** DataDoe owns the SP-API developer registration, OAuth flow, refresh-token rotation, marketplace endpoints, and rate-limit handling. You bring your Amazon account; we handle the rest.
-- ❌ **Not a free open-source server.** DataDoe MCP requires a DataDoe subscription. For a free self-hosted alternative, see the community Amazon MCP servers indexed at [mcpservers.org](https://mcpservers.org/).
+- ❌ **Not a free open-source server.** DataDoe MCP is part of a DataDoe subscription: $97/month, with a 14-day free trial.
 
 ---
 
@@ -333,7 +334,7 @@ To avoid confusion when evaluating Amazon MCP servers:
 
 ## License
 
-[MIT](LICENSE). The DataDoe MCP schema facade in this repository is open-source. The hosted MCP server, DataDoe application, and DataDoe infrastructure are proprietary and operated by Deltologic.
+[MIT](LICENSE). The DataDoe MCP schema facade in this repository is open-source. The hosted MCP server, DataDoe application, and DataDoe infrastructure are proprietary and provided by DataDoe, Inc.
 
 ---
 
@@ -384,4 +385,4 @@ If your client supports environment-based workspace paths, you can usually swap 
 
 ---
 
-DataDoe is operated by [Deltologic](https://github.com/Deltologic) · [datadoe.com](https://www.datadoe.com/)
+DataDoe is a product of DataDoe, Inc. · [datadoe.com](https://www.datadoe.com/)
