@@ -1,0 +1,13 @@
+{
+  "name": "datadoe",
+  "version": "1.0.0",
+  "description": "DataDoe: Amazon Seller Central, Vendor Central and Amazon Ads data for Gemini CLI, with Actions to update listings, orders and ad campaigns. Set DATADOE_MCP_KEY to your key from app.datadoe.com/integrations/mcp.",
+  "mcpServers": {
+    "datadoe": {
+      "httpUrl": "https://mcp.datadoe.com/mcp/v1",
+      "headers": {
+        "datadoe-mcp-key": "$DATADOE_MCP_KEY"
+      }
+    }
+  }
+}

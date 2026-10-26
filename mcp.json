@@ -1,0 +1,7 @@
+{
+  "mcpServers": {
+    "datadoe": {
+      "url": "https://mcp.datadoe.com/mcp/v1"
+    }
+  }
+}
