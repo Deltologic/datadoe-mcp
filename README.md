@@ -1,227 +1,192 @@
-# Amazon Seller MCP Server - DataDoe
+# Amazon Seller MCP Server by DataDoe
 
-> **Hosted Amazon Seller Central & Vendor Central MCP server with read and write access.** Connect Claude, ChatGPT, Cursor, Codex, Gemini, and GitHub Copilot to live Amazon SP-API and Amazon Ads API data, then let your AI agent act on it: update listings, manage orders, and optimize Amazon Ads campaigns. DataDoe handles the SP-API developer approval, OAuth, and rate limits so your AI agent starts working in under a minute.
+> **Hosted Amazon Seller Central, Vendor Central and Amazon Ads MCP server with read and write access.** Connect Claude, ChatGPT, Cursor, Codex, Gemini and other AI tools to your live Amazon data. Then let your AI agent act on it: update listings, manage orders and optimize Amazon Ads campaigns. DataDoe handles Amazon API approval, sign-in and rate limits for you.
+
+[![Book a demo](https://img.shields.io/badge/See%20DataDoe%20in%20action-Book%20a%20demo%20call-0A66C2?style=for-the-badge)](https://click.deltologic.com/raffy-calendar)
 
 [![Amazon Seller & Vendor](https://img.shields.io/badge/Amazon-Seller%20%26%20Vendor-FF9900?style=flat-square)](https://www.datadoe.com/)
 [![SP-API Selling Partner API](https://img.shields.io/badge/SP--API-Selling%20Partner-FF6F00?style=flat-square)](https://developer-docs.amazon.com/sp-api/)
 [![Amazon Ads API](https://img.shields.io/badge/Amazon-Ads%20API-232F3E?style=flat-square)](https://advertising.amazon.com/API/docs)
 [![MCP Server](https://img.shields.io/badge/MCP-Model%20Context%20Protocol-8A2BE2?style=flat-square)](https://modelcontextprotocol.io/)
-[![Read and Write](https://img.shields.io/badge/Amazon-Read%20%2B%20Write-2EA043?style=flat-square)](#actions-write-to-amazon)
-[![AI clients supported](https://img.shields.io/badge/AI%20clients-20%2B%20guides-D97757?style=flat-square)](#quick-setup-per-ai-client)
+[![Read and Write](https://img.shields.io/badge/Amazon-Read%20%2B%20Write-2EA043?style=flat-square)](#actions-act-on-your-amazon-account)
+[![AI clients supported](https://img.shields.io/badge/AI%20clients-25%2B%20guides-D97757?style=flat-square)](#step-by-step-guides-for-your-ai-tool)
+[![AI skills](https://img.shields.io/badge/AI%20skills-ready--made-6E40C9?style=flat-square)](https://github.com/Deltologic/datadoe-ai-skills)
 [![smithery badge](https://smithery.ai/badge/jakopv007/datadoe-mcp)](https://smithery.ai/servers/jakopv007/datadoe-mcp)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=flat-square)](LICENSE)
 
-🔗 [Start a 14-day free trial](https://www.datadoe.com/connect/amazon/mcp) · 📘 [Documentation](https://www.datadoe.com/hub/docs) · ⚡ [Actions](https://www.datadoe.com/hub/docs/datadoe-features/actions) · 📊 [Amazon data schema](https://www.datadoe.com/hub/data-scheme) · 🎥 [Video demo](https://www.youtube.com/watch?v=9YQd7M2dMyY)
+> 📅 **Want to see DataDoe in action?** [Book a demo call](https://click.deltologic.com/raffy-calendar) and we will show you how DataDoe works with your AI tools and your Amazon accounts.
 
----
-
-## 🚀 Quick start
-
-1. Sign up at [DataDoe](https://www.datadoe.com/connect/amazon/mcp) and connect your Amazon Seller Central or Vendor Central account.
-2. Create a DataDoe MCP API key in [DataDoe MCP Integrations](https://app.datadoe.com/integrations/mcp).
-3. Paste the config below into your AI client (Claude, Cursor, Codex, Gemini, GitHub Copilot, ChatGPT, or any MCP-capable tool):
-
-   ```json
-   {
-     "mcpServers": {
-       "datadoe": {
-         "url": "https://mcp.datadoe.com/mcp/v1",
-         "headers": {
-           "datadoe-mcp-key": "<YOUR_DATADOE_MCP_KEY>"
-         }
-       }
-     }
-   }
-   ```
-
-4. Ask your AI agent: *"Show my top 10 ASINs by revenue last month across all Amazon marketplaces."*
-
-That's it. DataDoe runs the MCP server on hosted infrastructure, so your team doesn't need to deploy anything locally or wait for Amazon SP-API developer approval.
+🔗 [Start a 14-day free trial](https://www.datadoe.com/connect/amazon/mcp) · 📘 [Documentation](https://www.datadoe.com/hub/docs) · 📊 [Data scheme](https://www.datadoe.com/hub/data-scheme) · ⚡ [Actions](https://www.datadoe.com/hub/actions) · 🔔 [Webhooks](https://www.datadoe.com/hub/webhooks) · 🧠 [AI skills](https://github.com/Deltologic/datadoe-ai-skills) · 🎥 [Video demo](https://www.youtube.com/watch?v=9YQd7M2dMyY)
 
 ---
 
 ## What is DataDoe MCP?
 
-**DataDoe MCP** is a hosted [Model Context Protocol (MCP)](https://modelcontextprotocol.io/) server for **Amazon sellers, vendors, and agencies**. It exposes your live Amazon Selling Partner API (SP-API) and Amazon Ads API data through MCP tools that work with Claude, ChatGPT, Cursor, Codex CLI, Gemini CLI, GitHub Copilot, Claude Desktop, n8n, NanoClaw, and any other MCP-capable client.
+**DataDoe** connects your Amazon Seller Central, Vendor Central and Amazon Ads accounts and keeps your data up to date in ready-to-use tables. **DataDoe MCP** gives AI tools access to that data through the [Model Context Protocol (MCP)](https://modelcontextprotocol.io/), the standard way for AI assistants to connect to other services.
 
-DataDoe MCP gives your AI agent two layers over your Amazon account:
+Once connected, your AI assistant can:
 
-- **A read layer** - SKU-level orders, sales, ads spend, traffic, inventory, listings, returns, settlements, brand analytics, and catalog, returned as structured tool responses or downloadable CSV and JSON exports.
-- **A write layer (Actions)** - your agent can change your Amazon account through the SP-API and Amazon Ads API: update listings, cancel orders, confirm shipments, and manage Amazon Ads campaigns, ad groups, targets, and ads.
+- answer questions about sales, profit, ads, inventory, traffic, returns, settlements and more, for each SKU and marketplace
+- build reports and dashboards, such as weekly briefings, profit and loss (P&L) statements, reconciliations and ad reviews
+- make changes on Amazon with [Actions](#actions-act-on-your-amazon-account), such as updating listings, managing orders and shipments, and optimizing Amazon Ads
 
-Building your own Amazon SP-API integration typically requires SP-API developer registration, OAuth refresh-token flow, marketplace-specific endpoints, throttling logic, and 2-4 weeks of Amazon approval. DataDoe takes care of all of that. You get a single authenticated MCP URL for both reading and acting on your Amazon data.
+You can test every change before it runs. Each Action type stays off until you turn it on in DataDoe settings.
 
-![DataDoe MCP - Amazon Seller Central, Vendor Central, and Amazon Ads data for AI agents via SP-API](/assets/datadoe-mcp-banner.png)
+You do not need to install anything or write code. DataDoe runs the MCP server for you at `https://mcp.datadoe.com/mcp/v1`.
+
+![DataDoe MCP with Amazon Seller Central, Vendor Central and Amazon Ads data for AI agents through the SP-API](/assets/datadoe-mcp-banner.png)
+
+## Get started in three steps
+
+1. Start a [14-day free trial of DataDoe](https://www.datadoe.com/connect/amazon/mcp) and connect your Amazon accounts.
+2. Add DataDoe to your AI tool:
+    - in Claude or ChatGPT, add a connector with the URL `https://mcp.datadoe.com/mcp/v1` and sign in to DataDoe without a key, as the [Claude guide](https://www.datadoe.com/hub/docs/datadoe-mcp/claude) and [ChatGPT guide](https://www.datadoe.com/hub/docs/datadoe-mcp/chatgpt) show
+    - in any other AI tool, follow its [step-by-step guide](#step-by-step-guides-for-your-ai-tool), which says whether you sign in or use a key from the [MCP integrations page](https://app.datadoe.com/integrations/mcp)
+3. Ask a question, for example *"Show my top 10 ASINs by revenue last month across all Amazon marketplaces."*
 
 ## Who is DataDoe MCP for?
 
-- **Amazon sellers (FBA, FBM, multi-marketplace)** - get instant answers from your own seller data without context-switching to Seller Central.
-- **Amazon agencies** managing multiple client accounts - query across every connected Seller Central / Vendor Central account from one MCP server.
-- **Vendors with Vendor Central** - read 1P data alongside 3P data with the same tools.
-- **AI builders and developers** - ship Amazon-aware AI agents, dashboards, and internal tools without writing your own SP-API integration.
-- **Operations teams** - automate recurring reports via Claude Code, Cursor, n8n, or any MCP-capable workflow tool.
+- Amazon sellers get answers from their own data without opening Seller Central, whether they use Fulfillment by Amazon (FBA), fulfill orders themselves (FBM) or sell in many marketplaces.
+- Amazon vendors read Vendor Central data with the same tools as Seller Central data.
+- Agencies work with all the client accounts they connected in one place.
+- Operations and finance teams automate recurring reports and alerts.
+- AI builders and developers build agents, apps and dashboards on Amazon data without their own Amazon API integration.
 
-## Why use DataDoe MCP?
-
-- ✅ **No SP-API approval needed** - DataDoe handles SP-API developer registration, OAuth, refresh tokens, and rate limits on your behalf.
-- ✅ **30-second setup** - paste the MCP URL and your API key into your AI client config. DataDoe runs the server on hosted infrastructure.
-- ✅ **20+ documented integrations** out of the box: Claude, ChatGPT, Cursor, Codex, Gemini CLI, GitHub Copilot, n8n, CrewAI, the Claude & OpenAI Agent SDKs, Excel / Word / PowerPoint via Claude, and any other MCP-capable client.
-- ✅ **SKU-level resolution** - drill into individual ASINs, parent listings, marketplaces, time periods, ad campaigns, keyword reports, settlements, returns.
-- ✅ **Multi-marketplace, multi-account** - one MCP server covers every Amazon marketplace (US, UK, DE, FR, IT, ES, CA, AU, JP, MX, and more) across Seller Central and Vendor Central.
-- ✅ **AI-native by design** - `exports_create` accepts SQL-like filter groups, GROUP BY, aggregations, and date intervals, so your AI agent can build complex reports from one tool call.
-- ✅ **One plan, one price** - $97/month with a 14-day free trial. See [pricing](https://www.datadoe.com/pricing).
-- ✅ **Read and write** - with [Actions](#actions-write-to-amazon), your agent doesn't just report, it updates listings, manages orders, and optimizes Amazon Ads, with a `dryRun` validation step and per-type controls.
-- ✅ **Always-on hosted infrastructure** - DataDoe manages SP-API rate limits, token rotation, and ongoing maintenance.
-
-## What can you ask DataDoe MCP?
-
-Example questions your AI agent can answer with DataDoe MCP connected:
+## What can you ask?
 
 - *"What were my top 20 ASINs by revenue last month across all Amazon marketplaces?"*
-- *"Reconcile my Amazon settlements against orders for Q1, and show any discrepancies."*
-- *"Which Amazon Ads campaigns had ACoS over 40% last week, and what was their total spend?"*
-- *"Show inventory units at risk of stocking out in the next 14 days."*
-- *"Build me a daily KPI dashboard with sales, traffic, and ad spend for the last 90 days."*
-- *"Which search terms in my PPC reports drove the most clicks but zero conversions?"*
-- *"Pull every Amazon return for SKU ABC-123 in the last 60 days and summarize the return reasons."*
-- *"Compare my brand analytics search term share-of-voice month over month."*
+- *"Reconcile my Amazon settlements against orders for Q1 and show any differences."*
+- *"Which Amazon Ads campaigns had ACoS over 40% last week, and what did they spend?"*
+- *"Which products will run out of stock in the next 14 days?"*
+- *"Which search terms got the most clicks but no sales?"*
+- *"What is my real profit per SKU after fees, ads and product costs?"*
 
-And with **Actions** enabled, your agent can act on what it finds:
+With Actions turned on, your AI agent can also act on what it finds:
 
-- *"Raise the daily budget on my top-ACoS Sponsored Products campaign by 20%."*
 - *"Pause every campaign with ACoS over 50% last week."*
-- *"Update the price of SKU ABC-123 to 19.99 and refresh its bullet points."*
+- *"Add the search terms that wasted the most money as negative keywords."*
+- *"Update the bullet points of SKU ABC-123."*
 - *"Confirm shipment for order 123-4567890-1234567 with UPS tracking 1Z999..."*
 
-## Actions: write to Amazon
+## Ready-made AI skills
 
-Actions let your AI agent make changes on your connected Amazon Seller Central, Vendor Central, and Amazon Ads accounts through the SP-API and Amazon Ads API. Every Action is recorded and auditable.
+Skip the prompt writing. The [DataDoe AI Skills repository](https://github.com/Deltologic/datadoe-ai-skills) has ready-made skills for common jobs, such as weekly sales briefings, profit reports, wasted ad spend checks, restock alerts, listing audits and Buy Box checks. Some skills can also apply changes. They always run a test first and wait for your approval.
 
-What your agent can do:
-
-- **Listings** - update the title, bullet points, description, generic keyword, item-type keyword, and images (`AMAZON_LISTINGS_UPDATE`), update prices for Seller Central accounts (`AMAZON_LISTINGS_PRICING_UPDATE`), and preview a listing write with the matching `*_VERIFY` Action before submitting it.
-- **Orders** - cancel an order item, confirm shipment, buy shipping, solicit a review, message the buyer, or search current orders (`AMAZON_ORDERS_FIND`) and order metrics (`AMAZON_ORDERS_GET_METRICS`).
-- **Vendor Central** - acknowledge purchase orders, submit shipments, and retrieve labels, packing slips, and transaction status.
-- **Amazon Ads** - add, update, remove, and find campaigns, ad groups, targets, ads, ad associations, and Sponsored Products bid rules across Sponsored Products, Brands, Display, TV, and Amazon DSP.
-
-How it works - the agent runs each Action through these MCP tools:
-
-1. `actions_details_schema_get` - get the payload schema for the Action type.
-2. `actions_start` with `dryRun=true` - validate the payload without executing.
-3. `actions_start` - run the Action and get an action id.
-4. `actions_get` - poll until it completes, then read the `result`.
-
-Use `actions_list` to review past Actions (filter by status, type, creator, and date).
-
-Action types are disabled by default and enabled per type in [Settings > Actions](https://app.datadoe.com/settings?tab=actions). When a type is disabled, `actions_start` rejects live runs but still allows `dryRun` validation.
-
-Example `details` payload for `AMAZON_LISTINGS_UPDATE`:
-
-```json
-{
-  "type": "AMAZON_LISTINGS_UPDATE",
-  "sellerOrVendorId": "<SELLER_OR_VENDOR_UUID>",
-  "dryRun": true,
-  "details": {
-    "changes": [
-      {
-        "sku": "ABC-123",
-        "language_tag": "en_US",
-        "name": "Stainless Steel Water Bottle 750ml",
-        "bulletPoints": ["Keeps drinks cold for 24 hours", "Leak-proof lid"]
-      }
-    ]
-  }
-}
-```
-
-Running an Action costs 3 AI Tokens for up to 100 changes, plus 1 AI Token per additional 100 changes. See the [Actions docs](https://www.datadoe.com/hub/docs/datadoe-features/actions) for the full catalog and payload schemas.
-
-## Available MCP tools
-
-DataDoe MCP exposes the following tools to your AI client:
-
-| Tool | Category | What it does |
-|---|---|---|
-| `sellers_and_vendors_list` | Account | Lists Amazon sellers and vendors connected to your DataDoe organization, with account type, marketplace, and connection details. |
-| `sellers_and_vendors_get` | Account | Returns one seller or vendor, including whether a connection needs reauthorization. |
-| `sellers_and_vendors_rename` | Account | Renames a seller or vendor. Names are unique within the organization. |
-| `sellers_and_vendors_invitation_create` | Account | Creates a one-time link to connect a new Amazon account or reconnect an existing one. |
-| `sellers_and_vendors_invitations_get` | Account | Lists pending invitations, or returns one invitation and its status. |
-| `sellers_and_vendors_invitation_revoke` | Account | Revokes a pending invitation so its link can no longer be used. |
-| `organization_and_subscription_details_get` | Account | Returns your DataDoe organization profile, subscription plan, billing health, and AI Token balances. |
-| `exports_sources_get` | Data | Searches DataDoe's catalog of Amazon data export sources (orders, sales and traffic, ads performance, inventory, listings, settlements, returns, brand analytics, and more) by keyword. |
-| `exports_source_get` | Data | Returns the columns (paginated) and metadata of one export source, including whether a date period is required. |
-| `exports_create` | Data | Creates an Amazon data export from any source. Supports SQL-like filters, HAVING, GROUP BY, aggregations (sum / avg / count / countDistinct / min / max), date intervals (DAY / WEEK / MONTH), pagination, and CSV or JSON output. |
-| `exports_get` | Data | Returns status and metadata for an in-flight or completed export job. |
-| `exports_list` | Data | Lists export jobs for the organization with pagination and optional export ID filters. |
-| `exports_raw_url_get` | Data | Returns a download URL for a completed export, valid until 15 minutes after the export was created. |
-| `exports_raw_download` | Data | Returns the raw export content (CSV or JSON) inline in the tool response. |
-| `exports_delete` | Data | Deletes an export by its ID. |
-| `files_create` | Files | Creates and uploads a utility file (listing images, A+ images, or order-message files) as base64-encoded content. |
-| `files_list` | Files | Lists utility files for the organization with pagination and filters. |
-| `files_get` | Files | Returns metadata for a utility file by id. |
-| `files_download_url_get` | Files | Returns a download URL for an uploaded file, valid until 15 minutes after the file was created. |
-| `files_delete` | Files | Deletes a utility file and its stored object when present. |
-| `datadoe_user_docs_table_of_contents_get` | Docs | Returns the table of contents of the DataDoe user documentation, useful when an agent needs to look up features or capabilities on demand. |
-| `datadoe_user_docs_page_get` | Docs | Returns the full content of a named DataDoe documentation page. |
-| `actions_details_schema_get` | Actions | Returns the JSON Schema of the `details` payload, the access mode (READ or WRITE), whether that Action type is enabled, and the start tool. |
-| `actions_start` | Actions | Starts a READ or WRITE Action on your Amazon account (listings, orders, A+ Content, Multi-Channel Fulfillment, Amazon Ads). Set `dryRun=true` to validate without executing. Returns an action id. |
-| `actions_get` | Actions | Returns the status and `result` of an Action by id; poll after `actions_start`. |
-| `actions_list` | Actions | Returns paginated Action history, filterable by status, type, creator, and date. |
-| `cogs_upsert` | COGS | Creates or updates cost-of-goods-sold rows for a Seller Central account. |
-| `cogs_delete` | COGS | Deletes COGS rows for a Seller Central account with optional filters. |
-| `vendor_code_upsert` | Vendor codes | Creates or updates vendor code rows for an account with a Vendor Central connection. |
-| `vendor_code_delete` | Vendor codes | Deletes vendor code rows for an account with a Vendor Central connection, with optional filters. |
-| `sqp_asins_get` | SQP | Returns the Search Query Performance (SQP) ASIN list of a Seller Central account. DataDoe stores up to 252 ASINs. |
-| `sqp_asins_add` | SQP | Adds up to 252 ASINs per call to the SQP list of a Seller Central account. |
-| `sqp_asins_remove` | SQP | Removes up to 252 ASINs per call from the SQP list of a Seller Central account. |
-| `plugins_get` | Plugins | Returns the Memories and Skills saved in the organization, plus ready Files for the user. |
-| `plugins_memories_create` | Plugins | Creates a memory Plugin for the user or organization. |
-| `plugins_memories_edit` | Plugins | Updates a memory Plugin for the user or organization. |
-| `plugins_memories_delete` | Plugins | Deletes a memory Plugin for the user or organization. |
-| `plugins_skills_get` | Plugins | Returns a Skill element (SKILL.md or supporting file) listed by plugins_get. |
-| `plugins_files_get` | Plugins | Returns converted markdown content for a File plugin listed by plugins_get. |
-| `amc_workflows_find` | AMC | Lists live Amazon Marketing Cloud (AMC) workflows with their schedules and state hash. |
-| `amc_workflows_create` | AMC | Creates an AMC workflow (SQL with optional Daily or Weekly schedules) without running it. |
-| `amc_workflows_update` | AMC | Updates the SQL and/or schedules of an AMC workflow. |
-| `amc_workflows_delete` | AMC | Deletes an AMC workflow and its schedules. |
-| `amc_query_validate` | AMC | Dry-runs a workflow, raw SQL, or a query template against Amazon without starting an execution. |
-| `amc_query_start` | AMC | Starts an on-demand AMC query from a workflow, raw SQL, or a query template. |
-| `amc_query_cancel` | AMC | Cancels a pending or running AMC query. |
-| `amc_query_results_find` | AMC | Lists AMC query result history with filters. |
-| `amc_query_result_get` | AMC | Returns one AMC query result, including short-lived download URLs when it is available. |
-| `amc_schema_find` | AMC | Reads the live AMC schema: a table index, or the fields of one data source. |
-| `amc_operation_get` | AMC | Returns the status of an asynchronous AMC operation, such as a workflow change or an uncertain query start. |
-| `amc_query_templates_find` | AMC | Lists ready-made AMC query templates and, when an account is selected, whether that account can run each one. |
-| `amc_query_template_get` | AMC | Returns one AMC query template, including its SQL. |
-| `datadoe_support_ticket_create` | Support | Sends a support request to the DataDoe team. |
-| `datadoe_support_ticket_check` | Support | Reads a support request and any reply. Poll about once an hour. |
-| `datadoe_support_ticket_update` | Support | Adds more information to an existing support request. |
-
-Amazon Marketing Cloud (AMC) tools are available by request only and are listed by the live server only after access is granted. See [Amazon Marketing Cloud](https://www.datadoe.com/hub/docs/datadoe-features/amc).
-
----
-
-## Quick setup per AI client
-
-The snippets below are the minimum config you need. For step-by-step guides per AI client, see the [Per-client setup guides](#per-client-setup-guides) list at the end of this section.
-
-### Claude.ai · Claude Desktop
-
-Add DataDoe as a custom connector: open **Customize > Connectors**, click **Add**, and paste `https://mcp.datadoe.com/mcp/v1` as the MCP Server URL. Claude signs in to DataDoe with OAuth, so you do not need an API key. See [Using Claude](https://www.datadoe.com/hub/docs/datadoe-mcp/claude).
-
-### Claude Code
+Install a skill with:
 
 ```bash
-claude mcp add datadoe "https://mcp.datadoe.com/mcp/v1" --transport http --header "datadoe-mcp-key: <YOUR_DATADOE_MCP_KEY>"
+npx skills@latest add Deltologic/datadoe-ai-skills --skill SKILL_NAME
 ```
 
-The server name and URL must come before `--header`. You can also omit `--header` and sign in with OAuth by running `/mcp` in Claude Code and choosing **Authenticate**.
+Browse all skills and agents on the [AI agents and skills page in the DataDoe Hub](https://www.datadoe.com/hub/ai-agents-and-skills).
 
-### Cursor
+## What Amazon data is available?
 
-Add to `~/.cursor/mcp.json` (global) or `.cursor/mcp.json` (per project):
+DataDoe MCP can read every table in DataDoe. There are more than 200 tables across Seller Central, Vendor Central and Amazon Ads, including:
+
+- profit and finance data, such as profit by SKU and by day, settlements, fees, reimbursements, payouts and invoices
+- orders and sales data, such as order line items, sales and traffic, returns and refunds
+- Amazon Ads data for Sponsored Products, Brands, Display and Television and for Amazon DSP, such as search terms, targets, budgets, impression share and change history
+- inventory and fulfillment data, such as Fulfillment by Amazon (FBA) inventory, restock recommendations, stranded and aged stock, inbound shipments, Amazon Warehousing and Distribution (AWD) and storage fees
+- listings and catalog data, such as catalog attributes, Buy Box, competitive offers and listing issues
+- Brand Analytics data, such as Search Query Performance, search terms, market basket and repeat purchases
+- Vendor Central data, such as purchase orders, sales, traffic and inventory, forecasts, Direct Fulfillment and margins
+- near real-time events, such as order changes, offer changes, listing status and inventory events
+
+See every table and column in the [interactive data scheme in the DataDoe Hub](https://www.datadoe.com/hub/data-scheme) or in the [data scheme index in this repository](scheme/data-scheme.md), which links to [one page per table](scheme/data-scheme/).
+
+## Actions: act on your Amazon account
+
+Actions let your AI agent read and change your Amazon account through DataDoe. With more than 200 Action types, your AI agent can:
+
+- create, update, check and delete listings, update prices and images, and manage A+ Content
+- find orders, cancel order items, confirm shipments, buy shipping labels and message buyers
+- manage Fulfillment by Amazon (FBA), Multi-Channel Fulfillment, FBA inbound and External Fulfillment shipments
+- acknowledge Vendor Central purchase orders, submit shipments, and get labels and packing slips
+- find, create, update and remove Amazon Ads campaigns, ad groups, targets and ads
+- manage Amazon Ads budget and bid rules, audiences, attribution and recommendations
+- check balances and payouts, and work with Amazon action items
+
+DataDoe protects your account in these ways:
+
+- every Action type stays off until someone in your Organization turns it on in [Actions settings](https://app.datadoe.com/settings?tab=actions)
+- every Action supports a dry run (`dryRun: true`) that checks the request without sending anything to Amazon
+- listing, A+ Content and Multi-Channel Fulfillment changes also have previews that Amazon checks without applying them
+- changes need Read and write access for the account
+- DataDoe records every Action so you can review it later
+
+See every Action type and its fields on the [Actions page in the DataDoe Hub](https://www.datadoe.com/hub/actions), in the [Actions guide](https://www.datadoe.com/hub/docs/datadoe-features/actions) or in the [Actions list in this repository](scheme/actions.md). The [Action scheme file](scheme/actions.json) has the full JSON Schema of each Action.
+
+How an AI agent runs an Action:
+
+1. Call `actions_details_schema_get` to get the fields the Action needs.
+2. Call `actions_start` with `dryRun: true` to check the request.
+3. Call `actions_start` to run the Action.
+4. Call `actions_get` to check the result.
+
+## Webhooks
+
+DataDoe can also send events to your own systems as they happen, for example order updates, offer changes, listing status changes and inventory events. Use webhooks to start automations or keep your enterprise resource planning (ERP) or warehouse system in sync.
+
+Read the [webhooks guide](https://www.datadoe.com/hub/docs/datadoe-features/webhooks), see [all webhook messages in the DataDoe Hub](https://www.datadoe.com/hub/webhooks) or open the [webhook scheme in this repository](scheme/webhooks.json).
+
+## Pricing
+
+DataDoe MCP is part of every DataDoe subscription. It costs $97 per month, with a 14-day free trial for new Organizations. Exports, Actions, webhooks and Amazon Marketing Cloud (AMC) queries use AI Tokens from your monthly balance. See [Subscription and pricing](https://www.datadoe.com/hub/docs/basics/subscription-pricing).
+
+## Step-by-step guides for your AI tool
+
+Start with the [DataDoe MCP overview](https://www.datadoe.com/hub/docs/datadoe-mcp/overview).
+
+### Chat assistants
+
+- [Claude](https://www.datadoe.com/hub/docs/datadoe-mcp/claude)
+- [ChatGPT](https://www.datadoe.com/hub/docs/datadoe-mcp/chatgpt)
+- [Grok](https://www.datadoe.com/hub/docs/datadoe-mcp/grok)
+- [Genspark](https://www.datadoe.com/hub/docs/datadoe-mcp/genspark)
+- [Glama](https://www.datadoe.com/hub/docs/datadoe-mcp/glama-chat)
+- [Littlebird](https://www.datadoe.com/hub/docs/datadoe-mcp/littlebird)
+- [Superhuman](https://www.datadoe.com/hub/docs/datadoe-mcp/superhuman)
+
+### Office apps
+
+- [Excel with Claude](https://www.datadoe.com/hub/docs/datadoe-mcp/excel)
+- [PowerPoint with Claude](https://www.datadoe.com/hub/docs/datadoe-mcp/powerpoint)
+- [Word with Claude](https://www.datadoe.com/hub/docs/datadoe-mcp/word)
+
+### Coding agents and code editors
+
+- [Claude Code](https://www.datadoe.com/hub/docs/datadoe-mcp/claude-code)
+- [Codex](https://www.datadoe.com/hub/docs/datadoe-mcp/codex) and [Codex Sites](https://www.datadoe.com/hub/docs/datadoe-mcp/codex-sites)
+- [Cursor](https://www.datadoe.com/hub/docs/datadoe-mcp/cursor)
+- [Antigravity](https://www.datadoe.com/hub/docs/datadoe-mcp/antigravity)
+- [Gemini CLI](https://www.datadoe.com/hub/docs/datadoe-mcp/gemini-cli)
+- [VS Code](https://www.datadoe.com/hub/docs/datadoe-mcp/vs-code)
+- [OpenCode](https://www.datadoe.com/hub/docs/datadoe-mcp/opencode)
+
+### Autonomous agents and automation
+
+- [GrokBot](https://www.datadoe.com/hub/docs/datadoe-mcp/grokbot)
+- [OpenClaw](https://www.datadoe.com/hub/docs/datadoe-mcp/openclaw)
+- [NanoClaw](https://www.datadoe.com/hub/docs/datadoe-mcp/nanoclaw)
+- [Hermes Agent](https://www.datadoe.com/hub/docs/datadoe-mcp/hermes)
+- [n8n](https://www.datadoe.com/hub/docs/datadoe-mcp/n8n)
+- [Gumloop](https://www.datadoe.com/hub/docs/datadoe-mcp/gumloop)
+- [CrewAI](https://www.datadoe.com/hub/docs/datadoe-mcp/crewai)
+- [Glama MCP Inspector](https://www.datadoe.com/hub/docs/datadoe-mcp/glama)
+
+### Agent development kits
+
+- [Claude Agent SDK](https://www.datadoe.com/hub/docs/datadoe-mcp/claude-agents-sdk)
+- [OpenAI Agents SDK](https://www.datadoe.com/hub/docs/datadoe-mcp/openai-agents-sdk)
+
+## Technical setup
+
+This section is for developers and AI tools without a dedicated guide. DataDoe MCP is a remote MCP server with:
+
+- the URL `https://mcp.datadoe.com/mcp/v1`
+- the Streamable HTTP transport, which clients that support only stdio or Server-Sent Events (SSE) can reach through [`mcp-remote`](https://www.npmjs.com/package/mcp-remote)
+- OAuth sign-in where your client supports it, or the header `datadoe-mcp-key: <YOUR_DATADOE_MCP_KEY>` with a key from the [MCP integrations page](https://app.datadoe.com/integrations/mcp)
 
 ```json
 {
@@ -236,9 +201,15 @@ Add to `~/.cursor/mcp.json` (global) or `.cursor/mcp.json` (per project):
 }
 ```
 
-### GitHub Copilot (VS Code)
+Claude Code:
 
-Add to `.vscode/mcp.json` (per project) or your user MCP configuration (**MCP: Open User Configuration**):
+```bash
+claude mcp add datadoe "https://mcp.datadoe.com/mcp/v1" --transport http --header "datadoe-mcp-key: <YOUR_DATADOE_MCP_KEY>"
+```
+
+Put the server name and URL before `--header`. To sign in with OAuth instead, leave out `--header`, run `/mcp` in Claude Code and choose **Authenticate**.
+
+GitHub Copilot in VS Code (`.vscode/mcp.json`):
 
 ```json
 {
@@ -254,126 +225,118 @@ Add to `.vscode/mcp.json` (per project) or your user MCP configuration (**MCP: O
 }
 ```
 
-### Codex CLI · Gemini CLI · ChatGPT · n8n · NanoClaw · any other MCP client
+### Access and security
 
-DataDoe MCP works as a **generic remote MCP server**. Configure your client with:
+Personal MCP keys and OAuth connections follow their owner's roles and access to accounts, Actions and data tables. Service account keys use their own permissions. Read more about [keys and service accounts](https://www.datadoe.com/hub/docs/basics/keys-and-service-accounts) and [roles and permissions](https://www.datadoe.com/hub/docs/basics/roles-and-permissions).
 
-- **URL**: `https://mcp.datadoe.com/mcp/v1`
-- **Transport**: HTTP Streamable
-- **Auth header**: `datadoe-mcp-key: <YOUR_DATADOE_MCP_KEY>` (create a key in [DataDoe MCP Integrations](https://app.datadoe.com/integrations/mcp))
+To read personal data, also called personally identifiable information (PII), a user needs the **Access PII data** permission, and the Organization needs Amazon PII access.
 
-### Per-client setup guides
+If your Organization uses its own domain prefix, copy the full server URL from the [MCP integrations page](https://app.datadoe.com/integrations/mcp).
 
-For step-by-step setup guides per AI client, see the dedicated DataDoe documentation pages:
+## Available MCP tools
 
-- [Using Claude](https://www.datadoe.com/hub/docs/datadoe-mcp/claude)
-- [Using ChatGPT](https://www.datadoe.com/hub/docs/datadoe-mcp/chatgpt)
-- [Using Claude Code](https://www.datadoe.com/hub/docs/datadoe-mcp/claude-code)
-- [Using Claude Agent SDK](https://www.datadoe.com/hub/docs/datadoe-mcp/claude-agents-sdk)
-- [Using Codex](https://www.datadoe.com/hub/docs/datadoe-mcp/codex)
-- [Using Codex Sites](https://www.datadoe.com/hub/docs/datadoe-mcp/codex-sites)
-- [Using CrewAI](https://www.datadoe.com/hub/docs/datadoe-mcp/crewai)
-- [Using Cursor](https://www.datadoe.com/hub/docs/datadoe-mcp/cursor)
-- [Using Excel + Claude](https://www.datadoe.com/hub/docs/datadoe-mcp/excel)
-- [Using Gemini CLI](https://www.datadoe.com/hub/docs/datadoe-mcp/gemini-cli)
-- [Using Gumloop](https://www.datadoe.com/hub/docs/datadoe-mcp/gumloop)
-- [Using Hermes Agent](https://www.datadoe.com/hub/docs/datadoe-mcp/hermes)
-- [Using n8n](https://www.datadoe.com/hub/docs/datadoe-mcp/n8n)
-- [Using NanoClaw](https://www.datadoe.com/hub/docs/datadoe-mcp/nanoclaw)
-- [Using OpenAI Agents SDK](https://www.datadoe.com/hub/docs/datadoe-mcp/openai-agents-sdk)
-- [Using OpenClaw](https://www.datadoe.com/hub/docs/datadoe-mcp/openclaw)
-- [Using OpenCode](https://www.datadoe.com/hub/docs/datadoe-mcp/opencode)
-- [Using PowerPoint + Claude](https://www.datadoe.com/hub/docs/datadoe-mcp/powerpoint)
-- [Using VS Code](https://www.datadoe.com/hub/docs/datadoe-mcp/vs-code)
-- [Using Word + Claude](https://www.datadoe.com/hub/docs/datadoe-mcp/word)
+| Tool | Area | What it does |
+|---|---|---|
+| `datadoe_user_docs_table_of_contents_get` | Docs | Lists the pages of the DataDoe documentation. |
+| `datadoe_user_docs_page_get` | Docs | Returns one DataDoe documentation page. |
+| `organization_and_subscription_details_get` | Account | Returns your Organization, plan, billing health and AI Token balances. |
+| `sellers_and_vendors_list` | Accounts | Lists the Amazon Sellers and Vendors connected to DataDoe. |
+| `sellers_and_vendors_get` | Accounts | Returns one Seller or Vendor, including whether you need to reconnect it. |
+| `sellers_and_vendors_rename` | Accounts | Renames a Seller or Vendor. |
+| `sellers_and_vendors_invitation_create` | Accounts | Creates a link to connect a new Amazon account or reconnect one. |
+| `sellers_and_vendors_invitations_get` | Accounts | Lists pending invitations or returns one invitation. |
+| `sellers_and_vendors_invitation_revoke` | Accounts | Revokes a pending invitation. |
+| `exports_sources_get` | Data | Searches DataDoe tables by keyword. |
+| `exports_source_get` | Data | Returns the columns and details of one table. |
+| `exports_create` | Data | Queries a table with filters, grouping, totals and date intervals, and returns CSV or JSON. |
+| `exports_get` | Data | Returns the status of an export. |
+| `exports_list` | Data | Lists exports. |
+| `exports_raw_url_get` | Data | Returns a download link for a completed export. |
+| `exports_raw_download` | Data | Returns the content of a completed export. |
+| `exports_delete` | Data | Deletes an export. |
+| `files_create` | Files | Uploads a file used by Actions, such as a listing image, A+ image or video ad asset. |
+| `files_list` | Files | Lists uploaded files. |
+| `files_get` | Files | Returns details of one file. |
+| `files_download_url_get` | Files | Returns a download link for a file. |
+| `files_delete` | Files | Deletes a file. |
+| `actions_details_schema_get` | Actions | Returns the fields an Action type needs and whether it is enabled. |
+| `actions_start` | Actions | Starts an Action, or tests it with `dryRun: true`. |
+| `actions_acknowledge` | Actions | Releases an Action whose submission to Amazon was uncertain, after you have checked it on Amazon. |
+| `actions_get` | Actions | Returns the status and result of an Action. |
+| `actions_list` | Actions | Lists past Actions. |
+| `cogs_upsert` | Product costs | Adds or updates product costs (COGS) for a Seller Central account. |
+| `cogs_delete` | Product costs | Deletes product costs. |
+| `cogs_missing_list` | Product costs | Lists SKUs sold in the last 30 days without a product cost. |
+| `vendor_code_upsert` | Vendor codes | Adds or updates vendor codes for a Vendor Central account. |
+| `vendor_code_delete` | Vendor codes | Deletes vendor codes. |
+| `vendor_codes_missing_list` | Vendor codes | Lists ASINs sold in the last 30 days without a vendor code. |
+| `kdp_royalty_parameters_upsert` | KDP | Adds or updates royalty parameters for Kindle Direct Publishing books. |
+| `kdp_royalty_parameters_delete` | KDP | Deletes KDP royalty parameters. |
+| `sqp_asins_get` | Search Query Performance | Returns the ASINs tracked in Search Query Performance. |
+| `sqp_asins_add` | Search Query Performance | Adds ASINs to Search Query Performance. |
+| `sqp_asins_remove` | Search Query Performance | Removes ASINs from Search Query Performance. |
+| `plugins_get` | Plugins | Returns saved Memories, Skills and Files. |
+| `plugins_memories_create` | Plugins | Saves a Memory. |
+| `plugins_memories_edit` | Plugins | Edits a Memory. |
+| `plugins_memories_delete` | Plugins | Deletes a Memory. |
+| `plugins_skills_get` | Plugins | Returns a Skill file. |
+| `plugins_files_get` | Plugins | Returns the content of a File. |
+| `amc_workflows_find` | Amazon Marketing Cloud | Lists AMC workflows. |
+| `amc_workflows_create` | Amazon Marketing Cloud | Creates an AMC workflow. |
+| `amc_workflows_update` | Amazon Marketing Cloud | Updates an AMC workflow. |
+| `amc_workflows_delete` | Amazon Marketing Cloud | Deletes an AMC workflow. |
+| `amc_query_validate` | Amazon Marketing Cloud | Checks an AMC query without running it. |
+| `amc_query_start` | Amazon Marketing Cloud | Runs an AMC query. |
+| `amc_query_cancel` | Amazon Marketing Cloud | Cancels an AMC query. |
+| `amc_query_results_find` | Amazon Marketing Cloud | Lists AMC query results. |
+| `amc_query_result_get` | Amazon Marketing Cloud | Returns one AMC query result with download links. |
+| `amc_schema_find` | Amazon Marketing Cloud | Returns AMC tables and fields. |
+| `amc_operation_get` | Amazon Marketing Cloud | Returns the status of an AMC operation. |
+| `amc_query_templates_find` | Amazon Marketing Cloud | Lists ready-made AMC query templates. |
+| `amc_query_template_get` | Amazon Marketing Cloud | Returns one AMC query template. |
+| `datadoe_support_ticket_create` | Support | Sends a request to DataDoe support. |
+| `datadoe_support_ticket_check` | Support | Reads a support request and its reply. |
+| `datadoe_support_ticket_update` | Support | Adds information to a support request. |
 
-Full documentation root: [www.datadoe.com/hub/docs](https://www.datadoe.com/hub/docs)
-
----
-
-## What Amazon data is available?
-
-DataDoe MCP exposes every Amazon data table available in DataDoe, 130+ tables across Seller Central, Vendor Central and Amazon Ads, including:
-
-- **Orders & sales**: order line items, order performance, sales and traffic, refunds
-- **Amazon Ads**: campaigns, ad groups, keywords, search terms, sponsored products / brands / display, ACoS / ROAS / impression-share metrics
-- **Inventory**: FBA inventory, restock recommendations, stranded inventory, age, units at risk
-- **Listings & catalog**: ASIN catalog, product attributes, buy box ownership, variations
-- **Finance**: settlements, fees, reserves, reimbursements, deposits
-- **Returns**: customer returns, return reasons, FBA returns
-- **Brand analytics**: search query performance, market basket, repeat purchase, demographics
-- **Traffic**: sessions, page views, conversion rate, by ASIN, by marketplace
-
-Full schema: [www.datadoe.com/hub/data-scheme](https://www.datadoe.com/hub/data-scheme)
-
----
-
-## What DataDoe MCP is NOT
-
-To avoid confusion when evaluating Amazon MCP servers:
-
-- ❌ **Not a self-hosted MCP server.** DataDoe MCP is hosted at `mcp.datadoe.com`. This GitHub repository is the schema facade used to publish DataDoe MCP to public MCP registries (Official MCP Registry, mcpservers.org, glama.ai, mcpmarket.com, Cline, smithery.ai, and others).
-- ❌ **Not an SP-API wrapper you operate yourself.** DataDoe owns the SP-API developer registration, OAuth flow, refresh-token rotation, marketplace endpoints, and rate-limit handling. You bring your Amazon account; we handle the rest.
-- ❌ **Not a free open-source server.** DataDoe MCP is part of a DataDoe subscription: $97/month, with a 14-day free trial.
-
----
-
-## Documentation & resources
-
-- [DataDoe homepage](https://www.datadoe.com/)
-- [DataDoe documentation](https://www.datadoe.com/hub/docs)
-- [DataDoe Actions (write to Amazon)](https://www.datadoe.com/hub/docs/datadoe-features/actions)
-- [Amazon data schema reference](https://www.datadoe.com/hub/data-scheme)
-- [DataDoe MCP product page](https://www.datadoe.com/connect/amazon/mcp)
-- [DataDoe vs Amazon MCP comparison](https://www.datadoe.com/compare/datadoe-vs-amazon-mcp)
-- [DataDoe MCP video demo](https://www.youtube.com/watch?v=9YQd7M2dMyY)
-- [DataDoe blog: Amazon SP-API, Ads API, and MCP explainers](https://www.datadoe.com/blog)
-- [Create a DataDoe MCP API key](https://app.datadoe.com/integrations/mcp)
-
----
-
-## License
-
-[MIT](LICENSE). The DataDoe MCP schema facade in this repository is open-source. The hosted MCP server, DataDoe application, and DataDoe infrastructure are proprietary and provided by DataDoe, Inc.
+The [tool definitions file](scheme/mcp-tools.json) has the input and output schema of every tool. Amazon Marketing Cloud (AMC) is in beta. Read the [Amazon Marketing Cloud guide](https://www.datadoe.com/hub/docs/datadoe-features/amc).
 
 ---
 
-### How to start and connect locally (for indexing and listing)
+## About this repository
 
-> This server is just a schema facade of the actual DataDoe MCP server, made for exposing DataDoe MCP to various MCP registries.
-> It is a no-op server: it does not do anything beyond exposing the schema of DataDoe MCP.
-> If you want to actually use DataDoe MCP, see the [DataDoe MCP documentation](https://www.datadoe.com/hub/docs).
+This repository is the public schema facade of DataDoe MCP: a copy of everything DataDoe MCP offers, without access to any data. MCP registries, users and AI agents use it to see what DataDoe MCP can do before connecting. DataDoe hosts DataDoe MCP at `mcp.datadoe.com`. This repository does not connect to Amazon.
 
-#### 1. Install dependencies
+This repository contains:
+
+| Path | Contents |
+|---|---|
+| [`scheme/mcp-tools.json`](scheme/mcp-tools.json) | Every tool of the hosted server, as MCP clients see it. |
+| [`scheme/data-scheme.md`](scheme/data-scheme.md), [`scheme/data-scheme/`](scheme/data-scheme/), [`scheme/data-scheme.json`](scheme/data-scheme.json) | Every DataDoe table with its description and columns. |
+| [`scheme/actions.md`](scheme/actions.md), [`scheme/actions.json`](scheme/actions.json) | Every Action type with its limits, result and details schema. |
+| [`scheme/webhooks.json`](scheme/webhooks.json) | Every webhook message type with its fields. |
+| [`src/index.ts`](src/index.ts) | The facade MCP server. |
+
+The facade server:
+
+- lists the same tools as the hosted server
+- answers `exports_sources_get`, `exports_source_get` and `actions_details_schema_get` from the data scheme and Action scheme in `scheme/`
+- offers the data scheme, Action scheme and webhook scheme as MCP resources (`datadoe://scheme/...`)
+- returns an error for every other tool, because it has no access to Amazon data
+
+### Run the facade locally
 
 ```bash
 yarn install
-```
-
-#### 2. Build the local server
-
-```bash
 yarn build
-```
-
-This compiles the TypeScript source into `dist/index.js`.
-
-#### 3. Start the server
-
-```bash
 yarn start
 ```
 
-The server communicates over stdio, so the process is intended to be launched by your MCP client rather than opened in a browser.
-
-#### 4. Connect from an MCP client
-
-For a local setup, point your client at the built entrypoint. A typical `mcp.json` looks like this:
+The server uses stdio, so start it from an MCP client:
 
 ```json
 {
   "mcpServers": {
-    "datadoe": {
+    "datadoe-facade": {
       "command": "node",
       "args": ["/absolute/path/to/datadoe-mcp/dist/index.js"]
     }
@@ -381,7 +344,34 @@ For a local setup, point your client at the built entrypoint. A typical `mcp.jso
 }
 ```
 
-If your client supports environment-based workspace paths, you can usually swap the absolute path for the actual clone location on your machine.
+### Keep the facade up to date
+
+Scripts generate the files in `scheme/`, so do not edit them by hand. To update them:
+
+- run `yarn sync:scheme` to download the data scheme, Actions and webhooks from the public DataDoe API specification
+- set `DATADOE_SPEC_BASE_URL` to read another DataDoe API, such as a local one, for example `DATADOE_SPEC_BASE_URL=http://localhost:3001/api/v1/spec yarn sync:scheme`
+- run `yarn mcp:facade-snapshot <path to this repository>/scheme/mcp-tools.json` from `services` in DataDoe core to update the tools
+- bump the version in `src/index.ts` and `server.json` when you publish changes
+
+---
+
+## Documentation and resources
+
+- [DataDoe homepage](https://www.datadoe.com/)
+- [DataDoe documentation](https://www.datadoe.com/hub/docs)
+- [DataDoe MCP overview](https://www.datadoe.com/hub/docs/datadoe-mcp/overview)
+- [Data scheme](https://www.datadoe.com/hub/data-scheme)
+- [Actions](https://www.datadoe.com/hub/actions) and the [Actions guide](https://www.datadoe.com/hub/docs/datadoe-features/actions)
+- [Webhooks](https://www.datadoe.com/hub/webhooks) and the [Webhooks guide](https://www.datadoe.com/hub/docs/datadoe-features/webhooks)
+- [AI agents and skills](https://www.datadoe.com/hub/ai-agents-and-skills) and the [DataDoe AI Skills repository](https://github.com/Deltologic/datadoe-ai-skills)
+- [DataDoe MCP product page](https://www.datadoe.com/connect/amazon/mcp)
+- [DataDoe vs Amazon MCP comparison](https://www.datadoe.com/compare/datadoe-vs-amazon-mcp)
+- [Video demo](https://www.youtube.com/watch?v=9YQd7M2dMyY)
+- [Book a demo call](https://click.deltologic.com/raffy-calendar)
+
+## License
+
+The schema facade in this repository is open source under the [MIT license](LICENSE). DataDoe, Inc. provides the hosted MCP server, the DataDoe application and DataDoe infrastructure as proprietary software.
 
 ---
 

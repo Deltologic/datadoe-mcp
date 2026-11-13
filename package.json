@@ -1,14 +1,15 @@
 {
   "name": "datadoe-mcp",
   "type": "module",
-  "packageManager": "yarn@4.14.1",
+  "packageManager": "yarn@4.18.0",
   "scripts": {
     "build": "tsc -p tsconfig.json",
-    "start": "node dist/index.js"
+    "check-types": "tsc --noEmit -p tsconfig.json",
+    "start": "node dist/index.js",
+    "sync:scheme": "node scripts/sync-scheme.mjs"
   },
   "dependencies": {
-    "@modelcontextprotocol/sdk": "^1.29.0",
-    "zod": "^4.4.3"
+    "@modelcontextprotocol/sdk": "^1.29.0"
   },
   "devDependencies": {
     "@types/node": "^25.9.0",
