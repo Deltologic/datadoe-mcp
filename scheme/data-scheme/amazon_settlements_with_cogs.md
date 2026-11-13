@@ -1,0 +1,267 @@
+# Settlements & P&L Components
+
+- BigQuery table name: `amazon_settlements_with_cogs`
+- Available in: Seller Central
+- Data scheme index: ../data-scheme.md
+
+Financial events from Amazon Finances. date is the marketplace-local date of the winning transaction posted time (America/Los_Angeles for US and CA). Once released it matches Transaction Release Date; while still deferred it is the local date of the deferred posting, and it can be one day earlier than the UTC posted timestamp near midnight. transaction_posted_date matches the Amazon Transaction report date/time column and is earlier than date for deferred orders. transaction_release_date matches Transaction Release Date and equals date once released. shipping_promotion_rebate is the order shipping promotion, a rebate to the customer and not an Amazon fee; promotion_fee holds the same values and is kept for backward compatibility. settlement_type REFUND is a money event, not a warehouse return. ORDER rows use order-date COGS; REFUND rows use return-receipt-date COGS (0 when no return). COGS is stored negative. All columns other than "total" express a single type of cost/fee/income. Expenses are negative values (standardize this when comparing with other tables). total_non_principal_amount is total minus item_price in the payout sign. total_fees holds the same value and will be removed on 2026-10-31. marketplace_facilitator_vat / refund_marketplace_facilitator_vat are MarketplaceFacilitatorVAT-* ItemWithheldTax lines (EU/UK); US MarketplaceFacilitatorTax-* stays in item_withheld_tax / refund_item_withheld_tax. fba_inbound_transportation_fee and fba_inbound_transportation_program_fee are the base fee amounts from Amazon Finances. When Amazon reports tax on those fees separately, that tax is in item_tax. DataDoe does not estimate this tax by dividing the fee. Settlement report base fee amounts stay on the fee column, and settlement report tax on fee lines map to item_tax. There is no dedicated Lightning Deal Fee column because Finances does not distinguish Lightning from Best Deal; those amounts are in deal_participation_fee. Refund Customer Return - Not Received is not available from Finances. Merchant-fulfilled Buy Shipping label fees (LabmanLabelPurchase / LabmanLabelReturn / LabmanLabelChargeBack) attach to the order SKU when that order has a single SKU in the Amazon order report. Amazon settlement start, settlement end, and deposit timestamps are not columns on this table. They are on the raw finances transactions table when a settlement report header matches the settlement ID. The deposit timestamp is the time Amazon starts the funds transfer, not the time the money arrives at the bank.
+
+- Source type: `SELLER_CENTRAL`
+- Source ID: `732dac689a6545697c2f2e36c61b2c9e93187053bcce2999914183c6f490df27`
+- Requires a date period: yes
+- Contains PII: no
+- Premium table: no
+- User-managed: no
+- Default dataset: yes
+- Rows count towards billing: yes
+- Hub: https://www.datadoe.com/hub/data-scheme?source=SELLER_CENTRAL&table=732dac689a6545697c2f2e36c61b2c9e93187053bcce2999914183c6f490df27
+
+## Fetch periods
+
+- `INITIAL` (365 days)
+- `RECURRING_DAILY` (8 days)
+
+## Data availability
+
+- `INTRADAY` — The daily fetch starts at 2am and rereads 8 days. Fetches also start at 10am and 4pm, including weekends, and reread 2 days, including the current day. US and Canada use Pacific time (America/Los_Angeles) for the 10am and 4pm fetches, including daylight saving. Other marketplaces use their local time zone. Amazon may leave out orders from the last 48 hours. These times are when the fetch starts. Rows appear after Amazon publishes them and after DataDoe finishes processing and export. Refresh: 2am, 10am, 4pm.
+
+## Search aliases
+
+- fees
+- payout
+- settlement
+- disbursement
+
+## Columns (227)
+
+- `marketplace_id` (`TEXT`, required) — Amazon provided ID that represents a specific country where the Seller or Vendor operates.
+- `marketplace_country_code` (`TEXT`, required) — ISO country code for the Amazon marketplace.
+- `marketplace_country_name` (`TEXT`, required) — Human-readable country name for the marketplace (derived from marketplace_id).
+- `seller_or_vendor_id` (`TEXT`, required) — DataDoe account identifier used by MCP/API calls (sellers_and_vendors_list, exports). Not unique in amazon_sellers_and_vendors_context when one account has multiple connection contexts — join that table on connection_context_id instead.
+- `seller_or_vendor_name` (`TEXT`, required) — DataDoe connection context display name for the seller or vendor.
+- `marketplace_seller_id` (`TEXT`, nullable) — Amazon Seller Central seller ID from the connection (connection_seller_id). Null when the connection has no seller ID.
+- `date` (`DATE`, required) — Marketplace-local date of the winning transaction posted time (America/Los_Angeles for US and CA). Once released this is the Transaction Release Date; while deferred it is the local date of the deferred posting. It can be one day earlier than the UTC posted timestamp near midnight, and it may differ from the order date. This column is used for the from/to filters on Export creation.
+- `transaction_posted_date` (`DATE`, required) — Marketplace local date on which Amazon first posted the transaction (deferred posting time for deferred transactions). Matches the date/time column of the Amazon Transaction report. For deferred orders this is earlier than date. US and CA use America/Los_Angeles.
+- `transaction_release_date` (`DATE`, required) — Marketplace local date on which Amazon released the transaction. Matches the Transaction Release Date column of the Amazon Transaction report and equals date once released. Empty while the transaction is still deferred. US and CA use America/Los_Angeles.
+- `sku` (`TEXT`, required)
+- `child_asin` (`TEXT`, required)
+- `settlement_type` (`TEXT`, required) — ORDER, REFUND or OTHER. REFUND is a payout refund money event, not a warehouse return.
+- `transaction_status` (`TEXT`, required) — Amazon transaction status: RELEASED, DEFERRED or DEFERRED_RELEASED. Missing or blank status is treated as RELEASED. A deferred hold and its later release count as one row.
+- `amazon_order_id` (`TEXT`, required)
+- `merchant_order_id` (`TEXT`, required) — Private seller order id.
+- `order_fulfillment_channel` (`TEXT`, required) — The fulfillment channel of the order (Amazon or Merchant).
+- `financial_event_group_id` (`TEXT`, nullable) — Amazon financial event group identifier when available.
+- `settlement_id` (`TEXT`, nullable) — Amazon settlement identifier when available.
+- `order_date` (`DATE`, required) — Date of the order if the row is related to an order. This it prefered column for calculating profit over period of time. May be the same or up to 30 days later than the date of the settlement date. — definition: `min(raw_sp_api_report_orders.amazonOrderId === amazon_settlements_with_cogs.amazon_order_id && raw_sp_api_report_orders.sku === amazon_settlements_with_cogs.sku ? raw_sp_api_report_orders.date : null)`
+- `quantity` (`NUMBER`, required) — Do not SUM(quantity) on REFUND rows as monthly refunded units. For warehouse returns use amazon_returns. For refunded units on the sales-performance timeline use amazon_sales_and_traffic_with_cogs.units_refunded. — definition: `amazon_settlements_with_cogs.settlement_type === 'REFUND' ? (raw_sp_api_report_fba_fulfillment_customer_returns.quantity ?? 0) + (raw_sp_api_report_flat_file_returns_data_by_return_date.returnQuantity ?? 0) : (raw_sp_api_report_orders.quantity ?? 0)`
+- `currency` (`TEXT`, required) — Currency code.
+- `total_fees` (`NUMBER`, required) — Deprecated, will be removed on 2026-10-31. total_non_principal_amount holds the same value. — definition: `(amazon_settlements_with_cogs.total ?? 0) - (amazon_settlements_with_cogs.item_price ?? 0)`
+- `total_non_principal_amount` (`NUMBER`, required) — total minus item_price, in the payout sign: negative means money to Amazon. Includes customer-paid shipping, tax, promotions, reimbursements, advertising, and lost or missing inventory, not only fees. — definition: `(amazon_settlements_with_cogs.total ?? 0) - (amazon_settlements_with_cogs.item_price ?? 0)`
+- `total_selling_fees` (`NUMBER`, required) — Referral fee plus refund commission plus refunded referral fee, in the payout sign. Negative on ORDER rows. REFUND rows add the refunded referral fee (positive, credited back) and the refund commission (negative). amazon_profit_by_date and amazon_profit_by_sku_and_date total_selling_fees use only non-REFUND rows, with the sign flipped. — definition: `(amazon_settlements_with_cogs.referral_fee ?? 0) + (amazon_settlements_with_cogs.refund_commission ?? 0) + (amazon_settlements_with_cogs.refunded_referral_fee ?? 0)`
+- `total` (`NUMBER`, required) — Sum of all amounts in the row. May be a negative number.
+- `fba_per_unit_fulfillment_fee` (`NUMBER`, required)
+- `referral_fee` (`NUMBER`, required)
+- `referral_fee_tax` (`NUMBER`, required) — Tax reported by Amazon within referral_fee, including value added tax (VAT). Uses the settlement cash-flow sign. Zero means no tax amount was reported.
+- `referral_fee_net` (`NUMBER`, required) — referral_fee minus referral_fee_tax, in the settlement cash-flow sign. Excludes only reported tax; no tax rate is assumed.
+- `fba_per_unit_fulfillment_fee_tax` (`NUMBER`, required) — Tax reported by Amazon within the per-unit Fulfillment by Amazon fee. Uses the settlement cash-flow sign. Zero means no tax amount was reported.
+- `fba_per_unit_fulfillment_fee_net` (`NUMBER`, required) — fba_per_unit_fulfillment_fee minus fba_per_unit_fulfillment_fee_tax, in the settlement cash-flow sign.
+- `total_selling_fees_tax` (`NUMBER`, required) — Tax reported by Amazon within referral fees, refunded referral fees and refund commissions. Uses the settlement cash-flow sign.
+- `total_selling_fees_net` (`NUMBER`, required) — total_selling_fees minus total_selling_fees_tax, in the settlement cash-flow sign. Includes fee reversals on REFUND rows.
+- `order_fees_tax` (`NUMBER`, required) — Reported tax included in fees assigned to the order date by the profit tables. Uses the settlement cash-flow sign. Excludes sales tax and tax already excluded from the existing fee total.
+- `posted_fees_tax` (`NUMBER`, required) — Reported tax included in fees assigned to the posting date by the profit tables. Uses the settlement cash-flow sign. Excludes tax already excluded from the existing fee total.
+- `order_fba_fees_tax` (`NUMBER`, required) — Reported tax within order-tied Fulfillment by Amazon fees, in the settlement cash-flow sign.
+- `posted_fba_fees_tax` (`NUMBER`, required) — Reported tax within posting-date Fulfillment by Amazon fees, in the settlement cash-flow sign. Excludes tax already excluded from the existing fee total.
+- `total_fees_tax` (`NUMBER`, required) — order_fees_tax plus posted_fees_tax, in the settlement cash-flow sign. Includes only reported tax within the existing fee total.
+- `total_fees_net` (`NUMBER`, required) — total_fees minus total_fees_tax, in the settlement cash-flow sign. Like total_fees, this also includes non-fee payments. No tax rate is assumed.
+- `fba_storage_fee` (`NUMBER`, required)
+- `missing_from_inbound_clawback` (`NUMBER`, required)
+- `long_term_storage_fee` (`NUMBER`, required)
+- `coupon_redemption_fee` (`NUMBER`, required) — Amazon fee charged per coupon redemption. This is a fee, not the discount given to customers (see promotion_item_price). Distinct from coupon_performance_fee.
+- `coupon_performance_fee` (`NUMBER`, required) — Amazon coupon performance-based fee. This is a fee, not the discount given to customers (see promotion_item_price). Distinct from coupon_redemption_fee.
+- `coupon_participation_fee` (`NUMBER`, required) — Amazon coupon participation fee. This is a fee, not the discount given to customers (see promotion_item_price).
+- `deal_performance_fee` (`NUMBER`, required) — Deal performance-based fee.
+- `deal_participation_fee` (`NUMBER`, required) — Deal participation fee, including Lightning Deal and Best Deal amounts. Finances does not distinguish Lightning from Best Deal.
+- `liquidations_brokerage_fee` (`NUMBER`, required)
+- `compensated_clawback` (`NUMBER`, required)
+- `customer_return_hrr_unit_fee` (`NUMBER`, required)
+- `fba_disposal_fee` (`NUMBER`, required)
+- `subscription_fee` (`NUMBER`, required)
+- `warehouse_damage_exception` (`NUMBER`, required)
+- `adjustment_fba_per_unit_fulfillment_fee` (`NUMBER`, required)
+- `free_replacement_refund_items` (`NUMBER`, required)
+- `warehouse_lost` (`NUMBER`, required)
+- `removal_order_lost` (`NUMBER`, required) — FBA inventory reimbursement when a removal order is marked lost.
+- `warehouse_damage` (`NUMBER`, required)
+- `liquidations_revenue` (`NUMBER`, required)
+- `reversal_reimbursement` (`NUMBER`, required)
+- `missing_from_inbound` (`NUMBER`, required)
+- `item_price` (`NUMBER`, required)
+- `points_granted` (`NUMBER`, required) — Japan marketplace Amazon Points granted on the order. Other marketplaces are 0.
+- `item_shipping_fee` (`NUMBER`, required)
+- `item_tax` (`NUMBER`, required) — Item tax on the sale. Also receives tax Amazon reports separately on inbound transportation fees. Settlement report tax on fee lines for inbound fees map here too.
+- `item_shipping_tax` (`NUMBER`, required)
+- `item_gift_wrap_tax` (`NUMBER`, required)
+- `item_shipping_chargeback` (`NUMBER`, required) — FBA ShippingChargeback from Finances ItemFees: Amazon charges back outbound shipping cost to the seller.
+- `item_digital_services_fee` (`NUMBER`, required) — Digital Services Fee on the original sale (Digital Services Fee / DigitalServicesFee ItemFees). Percentage surcharge Amazon applies to Selling on Amazon and FBA fees to recover digital services taxes in some countries.
+- `item_gift_wrap_fee` (`NUMBER`, required)
+- `item_gift_wrap_chargeback` (`NUMBER`, required)
+- `fba_inbound_convenience_fee` (`NUMBER`, required) — FBA inbound convenience fee. Finances breakdown paths that include InboundConvenienceCharge are placement fees and are not stored here.
+- `warehouse_lost_manual` (`NUMBER`, required)
+- `fee_adjustment` (`NUMBER`, required) — Fulfillment fee adjustments from Finances ServiceFee FulfillmentAdjustment, and settlement transaction type Fee Adjustment. Expenses are negative.
+- `a_to_z_guarantee_refunds` (`NUMBER`, required)
+- `amazon_fees` (`NUMBER`, required) — Sum of all other Amazon account fees.
+- `commingling_vat` (`NUMBER`, required)
+- `marketplace_facilitator_vat` (`NUMBER`, required) — EU/UK MarketplaceFacilitatorVAT-* ItemWithheldTax withheld by Amazon as marketplace facilitator VAT on the sale. US MarketplaceFacilitatorTax-* stays in item_withheld_tax.
+- `liquidations_other` (`NUMBER`, required)
+- `digital_services_fee` (`NUMBER`, required) — Digital Services Fee when the Finances/settlement triple is not a typed Order or Refund ItemFees line (catch-all for DigitalServicesFee). Prefer item_digital_services_fee / refund_digital_services_fee when those are populated.
+- `fba_transportation_fee` (`NUMBER`, required)
+- `item_withheld_tax` (`NUMBER`, required) — ItemWithheldTax on the sale, including US MarketplaceFacilitatorTax-*. EU/UK MarketplaceFacilitatorVAT-* is in marketplace_facilitator_vat.
+- `promotion_item_price` (`NUMBER`, required) — Item and coupon discount on orders (Promotion/Principal). Negative. This is money given to the customer, not an Amazon fee. Refunds of it are in promotion.
+- `promotion_tax_discount` (`NUMBER`, required)
+- `promotion_shipping` (`NUMBER`, required)
+- `promotion_fee` (`NUMBER`, required) — Deprecated name for shipping_promotion_rebate: the order shipping promotion (Promotion/Shipping, ShippingDiscount). Despite the name it is a customer rebate, not an Amazon fee. Use shipping_promotion_rebate. The Amazon promotion fee is in promotion_shipping.
+- `shipping_promotion_rebate` (`NUMBER`, required) — Order shipping promotion (Promotion/Shipping, ShippingDiscount) given to the customer, for example free shipping. Negative. Not an Amazon fee. Same values as promotion_fee. Refunds of it are in refund_shipping_promotion.
+- `order_other` (`NUMBER`, required)
+- `order_retrocharge` (`NUMBER`, required)
+- `cost_of_advertising` (`NUMBER`, required) — Settlement amount Amazon deducted for advertising (ServiceFee, Cost of Advertising). It is 0 when advertising is invoiced separately and not taken from the settlement. Profit uses ad_spend from ads reports, so 0 here is not missing advertising cost. Expenses are negative.
+- `refund_retrocharge` (`NUMBER`, required)
+- `refund_item_withheld_tax` (`NUMBER`, required) — ItemWithheldTax on a refund, including US MarketplaceFacilitatorTax-*. EU/UK MarketplaceFacilitatorVAT-* refunds are in refund_marketplace_facilitator_vat.
+- `refund_marketplace_facilitator_vat` (`NUMBER`, required) — EU/UK MarketplaceFacilitatorVAT-* ItemWithheldTax refunded by Amazon. US MarketplaceFacilitatorTax-* stays in refund_item_withheld_tax.
+- `refund_shipping` (`NUMBER`, required)
+- `refund_shipping_promotion` (`NUMBER`, required) — Refund of the order shipping promotion (shipping_promotion_rebate). Positive when the discount is given back on a refund.
+- `refund_tax` (`NUMBER`, required)
+- `refund_shipping_tax` (`NUMBER`, required)
+- `refund_promotion_tax_discount` (`NUMBER`, required)
+- `refund_remote_fulfillment_credit` (`NUMBER`, required)
+- `refund_restocking_fee` (`NUMBER`, required)
+- `refund_item_gift_wrap_fee` (`NUMBER`, required)
+- `refund_digital_services_fee` (`NUMBER`, required) — Digital Services Fee reversed on a refund (Refund + Digital Services Fee / DigitalServicesFee + ItemFees).
+- `refund_other` (`NUMBER`, required)
+- `refunded_amount` (`NUMBER`, required)
+- `refunded_referral_fee` (`NUMBER`, required)
+- `refund_commission` (`NUMBER`, required)
+- `points_returned` (`NUMBER`, required) — Japan marketplace Amazon Points returned on a refund. Other marketplaces are 0.
+- `points_fee` (`NUMBER`, required) — Japan marketplace Amazon Points fee on a refund. Other marketplaces are 0.
+- `shipping_label_purchase` (`NUMBER`, required) — Merchant-fulfilled Buy Shipping / Amazon label purchase, including postage surcharges and VAT on that purchase. From Finances Adjustment or ShippingService LabmanLabelPurchase and settlement-report “Shipping label purchase”. Expenses are negative. Not delivery_label_amazon_shipping_charges.
+- `shipping_label_purchase_for_return` (`NUMBER`, required) — Return-label postage purchased through Amazon. From Finances Adjustment or ShippingService LabmanLabelReturn and settlement-report “Shipping label purchase for return”. Expenses are negative.
+- `removal_complete` (`NUMBER`, required)
+- `fba_inventory_reimbursement_re_evaluation` (`NUMBER`, required)
+- `fba_inbound_placement_service_fee` (`NUMBER`, required) — FBA inbound placement service fee. Includes Finances ServiceFee rows on InboundConvenienceCharge > FBAInboundConvenienceFee, and settlement transaction type FBA Inbound Placement Service Fee. Expenses are negative.
+- `fba_customer_return_per_unit_fee` (`NUMBER`, required) — Returns processing / FBA customer return per-unit fee.
+- `fba_inbound_transportation_fee` (`NUMBER`, required) — FBA inbound transportation fee, including an Amazon-partnered carrier shipment fee. This is the base amount from Amazon Finances, or the base fee from a settlement report. Tax that Amazon reports separately is in item_tax.
+- `fba_inbound_transportation_program_fee` (`NUMBER`, required) — FBA inbound transportation program fee. This is the base amount from Amazon Finances. Tax that Amazon reports separately is in item_tax.
+- `awd_processing_fee` (`NUMBER`, required)
+- `awd_storage_fee` (`NUMBER`, required)
+- `awd_transportation_fee` (`NUMBER`, required)
+- `awd_processing_fee_discount` (`NUMBER`, required)
+- `awd_storage_fee_discount` (`NUMBER`, required)
+- `awd_transportation_fee_discount` (`NUMBER`, required)
+- `fba_other` (`NUMBER`, required)
+- `sales_tax_service_fee` (`NUMBER`, required) — India Sales Tax Service Fee from settlement report ItemFees.
+- `shipping_hb` (`NUMBER`, required) — India ShippingHB (handling/shipping) amount from the settlement report.
+- `product_tax` (`NUMBER`, required) — Product tax collected on the sale (India and similar marketplaces).
+- `product_tax_discount` (`NUMBER`, required) — Product tax discount / promotion against product_tax.
+- `fixed_closing_fee` (`NUMBER`, required) — Fixed closing fee charged on the order (common on Amazon.in).
+- `fixed_closing_fee_cgst` (`NUMBER`, required) — CGST on the fixed closing fee (India GST split).
+- `fixed_closing_fee_sgst` (`NUMBER`, required) — SGST on the fixed closing fee (India GST split).
+- `fixed_closing_fee_igst` (`NUMBER`, required) — IGST on the fixed closing fee (India GST split).
+- `variable_closing_fee` (`NUMBER`, required) — Variable closing fee on the order (Finances Variable closing fee).
+- `tds_section_194o` (`NUMBER`, required) — India TDS under Income Tax Act section 194-O withheld by Amazon on e-commerce payments.
+- `tcs_igst` (`NUMBER`, required) — India TCS IGST collected by Amazon as e-commerce operator.
+- `tcs_cgst` (`NUMBER`, required) — India TCS CGST collected by Amazon as e-commerce operator.
+- `tcs_sgst` (`NUMBER`, required) — India TCS SGST collected by Amazon as e-commerce operator.
+- `technology_fee` (`NUMBER`, required) — Amazon technology / closing technology fee on the order (India).
+- `technology_fee_igst` (`NUMBER`, required) — IGST on the Amazon technology fee (India).
+- `shipping_tax` (`NUMBER`, required) — Tax on shipping charged to the buyer on the settlement line.
+- `shipping_discount` (`NUMBER`, required) — Shipping discount on the settlement line.
+- `shipping_tax_discount` (`NUMBER`, required) — Tax discount related to a shipping promotion. Excluded from profit total_fees because order shipping tax is already net of this amount.
+- `commission_igst` (`NUMBER`, required) — IGST on Amazon referral/commission (India).
+- `promo_rebates` (`NUMBER`, required) — Promo rebates credited on the settlement.
+- `regulatory_fee` (`NUMBER`, required) — Regulatory fee charged by Amazon (marketplace-specific).
+- `prime_fulfillment_fee` (`NUMBER`, required) — Prime fulfillment fee on seller-fulfilled Prime orders.
+- `prime_service_fee` (`NUMBER`, required) — Amazon Prime service fee charged to the seller.
+- `flexible_customer_financing_fee` (`NUMBER`, required) — Fee for Amazon flexible customer financing / installment programs.
+- `get_paid_faster_fee` (`NUMBER`, required) — Fee for Amazon Get Paid Faster / early disbursement.
+- `low_value_goods_tax_principal` (`NUMBER`, required) — Low-value goods (import) tax on the item principal, typically EU IOSS / similar schemes.
+- `low_value_goods_tax_shipping` (`NUMBER`, required) — Low-value goods tax allocated to shipping.
+- `fba_weight_handling_fee` (`NUMBER`, required) — FBA weight handling fee (India FBA fulfillment component).
+- `fba_weight_handling_fee_cgst` (`NUMBER`, required) — CGST on FBA weight handling fee.
+- `fba_weight_handling_fee_sgst` (`NUMBER`, required) — SGST on FBA weight handling fee.
+- `fba_pick_and_pack_fee` (`NUMBER`, required) — FBA pick and pack fee (India FBA fulfillment component).
+- `fba_pick_and_pack_fee_cgst` (`NUMBER`, required) — CGST on FBA pick and pack fee.
+- `fba_pick_and_pack_fee_sgst` (`NUMBER`, required) — SGST on FBA pick and pack fee.
+- `fba_inbound_pickup_service_fee` (`NUMBER`, required) — FBA inbound pickup service fee for Amazon-collected inbound freight.
+- `fba_prep_fee_labeling` (`NUMBER`, required) — FBA prep fee for labeling services at the fulfillment center.
+- `fba_prep_fee_polybagging` (`NUMBER`, required) — FBA prep fee for polybagging services at the fulfillment center.
+- `fba_grade_and_resell_fee` (`NUMBER`, required) — FBA Grade and Resell program fee on returned inventory.
+- `fba_customer_return_fee` (`NUMBER`, required) — FBA customer return processing fee (ASIN-specific or non per-unit return fee lines). Distinct from fba_customer_return_per_unit_fee.
+- `fba_international_freight_shipping_charge` (`NUMBER`, required) — FBA international freight shipping charge on inbound inventory.
+- `fba_international_freight_duties_and_taxes_charge` (`NUMBER`, required) — Duties and taxes on FBA international inbound freight.
+- `fba_inbound_defect_fee` (`NUMBER`, required) — Fee for inbound shipment defects / noncompliance.
+- `fba_warehouse_prep_fee` (`NUMBER`, required) — FBA warehouse prep fee not covered by labeling/polybagging columns.
+- `fba_removal_complete_cgst` (`NUMBER`, required) — CGST on FBA removal order completion fees.
+- `fba_removal_complete_sgst` (`NUMBER`, required) — SGST on FBA removal order completion fees.
+- `fba_storage_billing_cgst` (`NUMBER`, required) — CGST on FBA storage billing.
+- `fba_storage_billing_sgst` (`NUMBER`, required) — SGST on FBA storage billing.
+- `fba_fulfillment_fee_refund_weight_handling` (`NUMBER`, required) — Refund of FBA weight handling fulfillment fee.
+- `fba_fulfillment_fee_refund_weight_handling_cgst` (`NUMBER`, required) — CGST refund on FBA weight handling fulfillment fee.
+- `fba_fulfillment_fee_refund_weight_handling_sgst` (`NUMBER`, required) — SGST refund on FBA weight handling fulfillment fee.
+- `fba_fulfillment_fee_refund_pick_pack` (`NUMBER`, required) — Refund of FBA pick and pack fulfillment fee.
+- `fba_fulfillment_fee_refund_pick_pack_cgst` (`NUMBER`, required) — CGST refund on FBA pick and pack fulfillment fee.
+- `fba_fulfillment_fee_refund_pick_pack_sgst` (`NUMBER`, required) — SGST refund on FBA pick and pack fulfillment fee.
+- `fba_fulfillment_fee_refund_technology_fee` (`NUMBER`, required) — Refund of FBA technology fee component of fulfillment fees.
+- `fba_fulfillment_fee_refund_technology_fee_igst` (`NUMBER`, required) — IGST refund on FBA technology fee.
+- `fba_inbound_carrier_damage_reimbursement` (`NUMBER`, required) — Reimbursement when Amazon inbound carrier damages inventory.
+- `fba_cs_error_items_reimbursement` (`NUMBER`, required) — Reimbursement for customer-service error items.
+- `fba_removal_order_damaged_reimbursement` (`NUMBER`, required) — Reimbursement when a removal order unit is damaged.
+- `fba_prep_fee_refund` (`NUMBER`, required) — Refund of previously charged FBA prep fees.
+- `awd_mcd_transportation_fee` (`NUMBER`, required) — Amazon Warehousing and Distribution multi-channel distribution transportation fee.
+- `refund_shipping_chargeback` (`NUMBER`, required) — ShippingChargeback reversed on a refund.
+- `refund_product_tax` (`NUMBER`, required) — Product tax refunded to the buyer.
+- `refund_tcs_igst` (`NUMBER`, required) — India TCS IGST reversed on a refund.
+- `refund_fixed_closing_fee` (`NUMBER`, required) — Fixed closing fee reversed on a refund.
+- `refund_commission_igst` (`NUMBER`, required) — IGST on referral/commission reversed on a refund.
+- `vine_enrollment_fee` (`NUMBER`, required) — Amazon Vine enrollment fee.
+- `transparency_invoice_deduction` (`NUMBER`, required) — Amazon Transparency invoice deduction, with the settlement transaction sign.
+- `vine_enrollment_fee_tax` (`NUMBER`, required) — Tax on Amazon Vine enrollment fee.
+- `deal_participation_fee_tax` (`NUMBER`, required) — Tax on Deal participation fee.
+- `deal_performance_fee_tax` (`NUMBER`, required) — Tax on Deal performance-based fee.
+- `coupon_participation_fee_tax` (`NUMBER`, required) — Tax on Coupon participation fee.
+- `coupon_performance_fee_tax` (`NUMBER`, required) — Tax on Coupon performance-based fee.
+- `amazon_easy_ship_charges` (`NUMBER`, required) — Amazon Easy Ship and other merchant-fulfilled postage charged by Amazon, including Finances ServiceFee MfnPostageFee base and tax, and settlement-report Amazon Easy Ship Charges. Expenses are negative.
+- `amazon_easy_ship_weight_handling_reversal` (`NUMBER`, required) — Reversal of Easy Ship weight handling charges.
+- `amazon_easy_ship_weight_handling_reversal_igst` (`NUMBER`, required) — IGST on Easy Ship weight handling reversal.
+- `advertising_refund` (`NUMBER`, required) — Advertising credit or refund posted in Finances (not campaign-dated ad spend).
+- `delivery_label_amazon_shipping_charges` (`NUMBER`, required) — Delivery label purchased through Amazon (settlement-report Amazon Shipping Charges). Not Buy Shipping LabmanLabelPurchase, which is shipping_label_purchase.
+- `shipping_charge_adjustment` (`NUMBER`, required) — Adjustment to previously posted shipping charges, including Buy Shipping LabmanLabelChargeBack from Finances Adjustment or ShippingService and VAT credited on that chargeback. Not a second copy of shipping_label_purchase.
+- `settlement_adjustment` (`NUMBER`, required) — Miscellaneous settlement adjustment posted by Amazon.
+- `mfn_postage_purchase_igst` (`NUMBER`, required) — IGST on merchant-fulfilled postage purchased through Amazon.
+- `payable_to_amazon` (`NUMBER`, required) — Amount payable to Amazon (debt / invoice) on the settlement.
+- `safe_t_reimbursement` (`NUMBER`, required) — Amazon A-to-z / SAFE-T claim reimbursement to the seller.
+- `buyer_recharge` (`NUMBER`, required) — Buyer recharge collected after a prior refund or adjustment.
+- `paid_services_fee` (`NUMBER`, required) — Amazon paid services fee (account-level services).
+- `digital_services_fee_adjustment` (`NUMBER`, required) — Adjustment to a previously posted Digital Services Fee (not the sale/refund line).
+- `incentive_disbursement` (`NUMBER`, required) — Incentive or rebate disbursement credited by Amazon.
+- `promotion_fee_special` (`NUMBER`, required) — Special promotion fee not mapped to promotion_fee / coupon / deal columns.
+- `transfer_micro_deposit` (`NUMBER`, required) — Bank-account verification micro-deposit related to disbursement setup.
+- `cross_account_debt_adjustment` (`NUMBER`, required) — Cross-account debt transfer or adjustment between Amazon seller accounts.
+- `chargeback_refund_principal` (`NUMBER`, required) — Payment chargeback refund of item principal.
+- `chargeback_refund_commission` (`NUMBER`, required) — Payment chargeback refund of referral/commission.
+- `chargeback_refund_tax` (`NUMBER`, required) — Payment chargeback refund of tax.
+- `chargeback_refund_commission_fee` (`NUMBER`, required) — Payment chargeback refund of commission-related fee.
+- `chargeback_refund_withheld_tax` (`NUMBER`, required) — Payment chargeback refund of withheld tax.
+- `chargeback_refund_shipping` (`NUMBER`, required) — Payment chargeback refund of shipping.
+- `chargeback_refund_shipping_tax` (`NUMBER`, required) — Payment chargeback refund of shipping tax.
+- `promotion` (`NUMBER`, required) — Refund of the item and coupon discount (Refund Promotion/Principal). Positive on refunds. The original discount is in promotion_item_price.
+- `goodwill` (`NUMBER`, required)
+- `other` (`NUMBER`, required)
+- `cogs_item_value` (`NUMBER`, required) — Item COGS for this settlement row, stored negative. ORDER: order quantity × unit cost as of order date. REFUND: returned quantity × unit cost as of return receipt date (0 if no matching return). — definition: `0 - ((amazon_cogs.cost_item_value ?? 0) * (amazon_settlements_with_cogs.quantity ?? 0))`
+- `cogs_shipping_value` (`NUMBER`, required) — Shipping COGS for this settlement row, stored negative, using the same quantity and lookup date as cogs_item_value. — definition: `0 - ((amazon_cogs.cost_item_shipping_value ?? 0) * (amazon_settlements_with_cogs.quantity ?? 0))`
+- `cogs_total_value` (`NUMBER`, required) — Sum of cogs_item_value and cogs_shipping_value (negative). — definition: `0 - (((amazon_cogs.cost_item_value ?? 0) + (amazon_cogs.cost_item_shipping_value ?? 0)) * (amazon_settlements_with_cogs.quantity ?? 0))`
+- `cogs_present` (`LOGIC`, required) — True when an uploaded COGS record applies to this row. Zero cost can still be valid. To list SKUs sold in the last 30 days without COGS, use GET /api/v1/cogs/missing or the MCP tool cogs_missing_list.
+- `cogs_currency` (`TEXT`, required) — Currency code for COGS.
+- `item_supplier_name` (`TEXT`, nullable) — Supplier name for the item COGS, if provided in COGS upload.
+
+---
+
+Query live via DataDoe MCP `exports_source_get` (connected accounts only), or request rows with `exports_create`.
