@@ -1,0 +1,2414 @@
+{
+  "messages": [
+    {
+      "messageType": "AMAZON_ORDER_UPDATE",
+      "description": "An Amazon order was created or updated.",
+      "summary": {
+        "description": "Order and seller context used to identify and process the update.",
+        "fields": [
+          {
+            "name": "marketplaceId",
+            "type": "STRING",
+            "optional": false,
+            "description": "Amazon marketplace identifier."
+          },
+          {
+            "name": "marketplaceCountryCode",
+            "type": "STRING",
+            "optional": true,
+            "description": "ISO country code for the marketplace."
+          },
+          {
+            "name": "marketplaceCountryName",
+            "type": "STRING",
+            "optional": true,
+            "description": "Human-readable country name for the marketplace."
+          },
+          {
+            "name": "sellerOrVendorId",
+            "type": "STRING",
+            "optional": false,
+            "description": "DataDoe connection context identifier for the seller or vendor."
+          },
+          {
+            "name": "sellerOrVendorName",
+            "type": "STRING",
+            "optional": true,
+            "description": "DataDoe connection context display name for the seller or vendor."
+          },
+          {
+            "name": "marketplaceSellerId",
+            "type": "STRING",
+            "optional": true,
+            "description": "Amazon Seller Central seller ID from the connection."
+          },
+          {
+            "name": "amazonOrderId",
+            "type": "STRING",
+            "optional": false,
+            "description": "Amazon order identifier."
+          },
+          {
+            "name": "orderPurchasedAtUtc",
+            "type": "STRING",
+            "optional": true,
+            "description": "Order purchase date and time in UTC in ISO-8601 format."
+          },
+          {
+            "name": "amazonOrderStatus",
+            "type": "STRING",
+            "optional": true,
+            "description": "Current Amazon order status."
+          },
+          {
+            "name": "fulfillmentChannel",
+            "type": "STRING",
+            "optional": true,
+            "description": "Order fulfillment channel from Amazon. Enum values: AFN (Amazon Fulfilled Network) or MFN (Merchant Fulfilled Network)."
+          },
+          {
+            "name": "orderItems",
+            "type": "OBJECT_LIST",
+            "optional": true,
+            "description": "Items included in the Amazon order.",
+            "fields": [
+              {
+                "name": "sku",
+                "type": "STRING",
+                "optional": false
+              },
+              {
+                "name": "childAsin",
+                "type": "STRING",
+                "optional": true
+              },
+              {
+                "name": "quantity",
+                "type": "NUMBER",
+                "optional": true
+              },
+              {
+                "name": "itemPriceValue",
+                "type": "NUMBER",
+                "optional": true,
+                "description": "Total value of the line item."
+              }
+            ]
+          }
+        ]
+      },
+      "details": {
+        "description": "Original event data received from Amazon.",
+        "fields": [
+          {
+            "name": "raw",
+            "type": "JSON",
+            "optional": true,
+            "description": "Raw JSON received from Amazon."
+          }
+        ]
+      }
+    },
+    {
+      "messageType": "AMAZON_ORDER_BUYER_INFO_UPDATE",
+      "description": "Buyer or recipient information for an Amazon order was updated.",
+      "summary": {
+        "description": "Order and seller context used to identify the update.",
+        "fields": [
+          {
+            "name": "marketplaceId",
+            "type": "STRING",
+            "optional": false,
+            "description": "Amazon marketplace identifier."
+          },
+          {
+            "name": "marketplaceCountryCode",
+            "type": "STRING",
+            "optional": true,
+            "description": "ISO country code for the marketplace."
+          },
+          {
+            "name": "marketplaceCountryName",
+            "type": "STRING",
+            "optional": true,
+            "description": "Human-readable country name for the marketplace."
+          },
+          {
+            "name": "sellerOrVendorId",
+            "type": "STRING",
+            "optional": false,
+            "description": "DataDoe connection context identifier for the seller or vendor."
+          },
+          {
+            "name": "sellerOrVendorName",
+            "type": "STRING",
+            "optional": true,
+            "description": "DataDoe connection context display name for the seller or vendor."
+          },
+          {
+            "name": "marketplaceSellerId",
+            "type": "STRING",
+            "optional": true,
+            "description": "Amazon Seller Central seller ID from the connection."
+          },
+          {
+            "name": "amazonOrderId",
+            "type": "STRING",
+            "optional": false,
+            "description": "Amazon order identifier."
+          },
+          {
+            "name": "orderPurchasedAtUtc",
+            "type": "STRING",
+            "optional": true,
+            "description": "Order purchase date and time in UTC in ISO-8601 format."
+          },
+          {
+            "name": "amazonOrderStatus",
+            "type": "STRING",
+            "optional": true,
+            "description": "Current Amazon order status."
+          },
+          {
+            "name": "fulfillmentChannel",
+            "type": "STRING",
+            "optional": true,
+            "description": "Order fulfillment channel from Amazon. Enum values: AFN (Amazon Fulfilled Network) or MFN (Merchant Fulfilled Network)."
+          }
+        ]
+      },
+      "details": {
+        "description": "Buyer and recipient information for the Amazon order.",
+        "fields": [
+          {
+            "name": "buyerEmail",
+            "type": "STRING",
+            "optional": true
+          },
+          {
+            "name": "buyerName",
+            "type": "STRING",
+            "optional": true
+          },
+          {
+            "name": "buyerCompanyName",
+            "type": "STRING",
+            "optional": true
+          },
+          {
+            "name": "buyerPurchaseOrderNumber",
+            "type": "STRING",
+            "optional": true
+          },
+          {
+            "name": "recipientName",
+            "type": "STRING",
+            "optional": true
+          },
+          {
+            "name": "recipientCompanyName",
+            "type": "STRING",
+            "optional": true
+          },
+          {
+            "name": "recipientAddressLine1",
+            "type": "STRING",
+            "optional": true
+          },
+          {
+            "name": "recipientAddressLine2",
+            "type": "STRING",
+            "optional": true
+          },
+          {
+            "name": "recipientAddressLine3",
+            "type": "STRING",
+            "optional": true
+          },
+          {
+            "name": "recipientCity",
+            "type": "STRING",
+            "optional": true
+          },
+          {
+            "name": "recipientDistrictOrCounty",
+            "type": "STRING",
+            "optional": true
+          },
+          {
+            "name": "recipientStateOrRegion",
+            "type": "STRING",
+            "optional": true
+          },
+          {
+            "name": "recipientMunicipality",
+            "type": "STRING",
+            "optional": true
+          },
+          {
+            "name": "recipientPostalCode",
+            "type": "STRING",
+            "optional": true
+          },
+          {
+            "name": "recipientCountryCode",
+            "type": "STRING",
+            "optional": true
+          },
+          {
+            "name": "recipientPhone",
+            "type": "STRING",
+            "optional": true
+          },
+          {
+            "name": "recipientAddressType",
+            "type": "STRING",
+            "optional": true
+          },
+          {
+            "name": "recipientExtendedFields",
+            "type": "JSON",
+            "optional": true
+          },
+          {
+            "name": "orderItemsGiftMessages",
+            "type": "JSON",
+            "optional": true
+          },
+          {
+            "name": "orderItemsCustomizedUrls",
+            "type": "JSON",
+            "optional": true
+          }
+        ]
+      }
+    },
+    {
+      "messageType": "AMAZON_ORDER_FULL",
+      "description": "Sent once when an Amazon order reaches an unshipped status and the orders report is available. An order that shipped before DataDoe saw it unshipped is sent once with its shipped status. This is not a real-time event.",
+      "summary": {
+        "description": "Order and seller context used to identify the order.",
+        "fields": [
+          {
+            "name": "marketplaceId",
+            "type": "STRING",
+            "optional": false,
+            "description": "Amazon marketplace identifier."
+          },
+          {
+            "name": "marketplaceCountryCode",
+            "type": "STRING",
+            "optional": true,
+            "description": "ISO country code for the marketplace."
+          },
+          {
+            "name": "marketplaceCountryName",
+            "type": "STRING",
+            "optional": true,
+            "description": "Human-readable country name for the marketplace."
+          },
+          {
+            "name": "sellerOrVendorId",
+            "type": "STRING",
+            "optional": false,
+            "description": "DataDoe connection context identifier for the seller or vendor."
+          },
+          {
+            "name": "sellerOrVendorName",
+            "type": "STRING",
+            "optional": true,
+            "description": "DataDoe connection context display name for the seller or vendor."
+          },
+          {
+            "name": "marketplaceSellerId",
+            "type": "STRING",
+            "optional": true,
+            "description": "Amazon Seller Central seller ID from the connection."
+          },
+          {
+            "name": "amazonOrderId",
+            "type": "STRING",
+            "optional": false,
+            "description": "Amazon order identifier."
+          },
+          {
+            "name": "orderPurchasedAtUtc",
+            "type": "STRING",
+            "optional": true,
+            "description": "Order purchase date and time in UTC in ISO-8601 format."
+          },
+          {
+            "name": "amazonOrderStatus",
+            "type": "STRING",
+            "optional": true,
+            "description": "Current Amazon order status."
+          },
+          {
+            "name": "fulfillmentChannel",
+            "type": "STRING",
+            "optional": true,
+            "description": "Order fulfillment channel from Amazon. Enum values: AFN (Amazon Fulfilled Network) or MFN (Merchant Fulfilled Network)."
+          }
+        ]
+      },
+      "details": {
+        "description": "Full order and line items from the orders report, including COGS when present.",
+        "fields": [
+          {
+            "name": "order",
+            "type": "OBJECT",
+            "optional": false,
+            "description": "Order-level fields from the orders report.",
+            "fields": [
+              {
+                "name": "amazonOrderId",
+                "type": "STRING",
+                "optional": false,
+                "description": "Amazon order identifier."
+              },
+              {
+                "name": "orderPurchasedAtUtc",
+                "type": "STRING",
+                "optional": true,
+                "description": "Order purchase date and time in UTC in ISO-8601 format."
+              },
+              {
+                "name": "amazonOrderStatus",
+                "type": "STRING",
+                "optional": true,
+                "description": "Amazon order status from the orders report."
+              },
+              {
+                "name": "fulfillmentChannel",
+                "type": "STRING",
+                "optional": true,
+                "description": "Order fulfillment channel from the orders report. Enum values: AFN (Amazon Fulfilled Network) or MFN (Merchant Fulfilled Network)."
+              },
+              {
+                "name": "merchantOrderId",
+                "type": "STRING",
+                "optional": true
+              },
+              {
+                "name": "orderDate",
+                "type": "STRING",
+                "optional": true,
+                "description": "Marketplace-local purchase date from the orders report, YYYY-MM-DD."
+              },
+              {
+                "name": "amazonOrderUpdatedAt",
+                "type": "STRING",
+                "optional": true,
+                "description": "Marketplace-local last update date from the orders report, YYYY-MM-DD."
+              },
+              {
+                "name": "salesChannel",
+                "type": "STRING",
+                "optional": true
+              },
+              {
+                "name": "amazonOrderChannel",
+                "type": "STRING",
+                "optional": true,
+                "description": "Order channel. Enum values: MOBILEAPP, WEBSITE, or OTHER."
+              },
+              {
+                "name": "shipServiceLevel",
+                "type": "STRING",
+                "optional": true
+              },
+              {
+                "name": "addressCity",
+                "type": "STRING",
+                "optional": true,
+                "description": "Ship-to city from the orders report. This is not buyer PII."
+              },
+              {
+                "name": "addressState",
+                "type": "STRING",
+                "optional": true,
+                "description": "Ship-to state or region from the orders report. This is not buyer PII."
+              },
+              {
+                "name": "addressCountry",
+                "type": "STRING",
+                "optional": true,
+                "description": "Ship-to country from the orders report. This is not buyer PII."
+              },
+              {
+                "name": "addressPostalCode",
+                "type": "STRING",
+                "optional": true,
+                "description": "Ship-to postal code from the orders report. This is not buyer PII."
+              },
+              {
+                "name": "orderIsBusiness",
+                "type": "BOOL",
+                "optional": true,
+                "description": "Whether Amazon marked the order as a business order."
+              },
+              {
+                "name": "purchaseOrderNumber",
+                "type": "STRING",
+                "optional": true
+              }
+            ]
+          },
+          {
+            "name": "orderItems",
+            "type": "OBJECT_LIST",
+            "optional": false,
+            "description": "Line items from the orders report, including prices and COGS.",
+            "fields": [
+              {
+                "name": "sku",
+                "type": "STRING",
+                "optional": true
+              },
+              {
+                "name": "lineItemNumber",
+                "type": "STRING",
+                "optional": true
+              },
+              {
+                "name": "amazonOrderItemId",
+                "type": "STRING",
+                "optional": true
+              },
+              {
+                "name": "childAsin",
+                "type": "STRING",
+                "optional": true
+              },
+              {
+                "name": "productName",
+                "type": "STRING",
+                "optional": true
+              },
+              {
+                "name": "itemStatus",
+                "type": "STRING",
+                "optional": true
+              },
+              {
+                "name": "quantity",
+                "type": "NUMBER",
+                "optional": true
+              },
+              {
+                "name": "itemPriceValue",
+                "type": "NUMBER",
+                "optional": true,
+                "description": "Total value of the line item."
+              },
+              {
+                "name": "itemPriceCurrency",
+                "type": "STRING",
+                "optional": true
+              },
+              {
+                "name": "itemTaxValue",
+                "type": "NUMBER",
+                "optional": true
+              },
+              {
+                "name": "itemShippingPriceValue",
+                "type": "NUMBER",
+                "optional": true
+              },
+              {
+                "name": "itemShippingTaxValue",
+                "type": "NUMBER",
+                "optional": true
+              },
+              {
+                "name": "itemShipPromotionDiscountValue",
+                "type": "NUMBER",
+                "optional": true
+              },
+              {
+                "name": "giftWrapPriceValue",
+                "type": "NUMBER",
+                "optional": true
+              },
+              {
+                "name": "giftWrapTaxValue",
+                "type": "NUMBER",
+                "optional": true
+              },
+              {
+                "name": "cogsItemValue",
+                "type": "NUMBER",
+                "optional": true,
+                "description": "Item COGS for the line, when a COGS record matches."
+              },
+              {
+                "name": "cogsShippingValue",
+                "type": "NUMBER",
+                "optional": true
+              },
+              {
+                "name": "cogsCurrency",
+                "type": "STRING",
+                "optional": true
+              },
+              {
+                "name": "cogsTotalValue",
+                "type": "NUMBER",
+                "optional": true
+              },
+              {
+                "name": "itemSupplierName",
+                "type": "STRING",
+                "optional": true
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "messageType": "AMAZON_ORDER_FULL_BUYER_INFO",
+      "description": "Sent once when an Amazon order reaches an unshipped status, the orders report is available, and buyer information has been fetched. An order that shipped before then is sent once with its shipped status. This is not a real-time event.",
+      "availabilityNote": "Requires PII access.",
+      "summary": {
+        "description": "Order and seller context used to identify the order.",
+        "fields": [
+          {
+            "name": "marketplaceId",
+            "type": "STRING",
+            "optional": false,
+            "description": "Amazon marketplace identifier."
+          },
+          {
+            "name": "marketplaceCountryCode",
+            "type": "STRING",
+            "optional": true,
+            "description": "ISO country code for the marketplace."
+          },
+          {
+            "name": "marketplaceCountryName",
+            "type": "STRING",
+            "optional": true,
+            "description": "Human-readable country name for the marketplace."
+          },
+          {
+            "name": "sellerOrVendorId",
+            "type": "STRING",
+            "optional": false,
+            "description": "DataDoe connection context identifier for the seller or vendor."
+          },
+          {
+            "name": "sellerOrVendorName",
+            "type": "STRING",
+            "optional": true,
+            "description": "DataDoe connection context display name for the seller or vendor."
+          },
+          {
+            "name": "marketplaceSellerId",
+            "type": "STRING",
+            "optional": true,
+            "description": "Amazon Seller Central seller ID from the connection."
+          },
+          {
+            "name": "amazonOrderId",
+            "type": "STRING",
+            "optional": false,
+            "description": "Amazon order identifier."
+          },
+          {
+            "name": "orderPurchasedAtUtc",
+            "type": "STRING",
+            "optional": true,
+            "description": "Order purchase date and time in UTC in ISO-8601 format."
+          },
+          {
+            "name": "amazonOrderStatus",
+            "type": "STRING",
+            "optional": true,
+            "description": "Current Amazon order status."
+          },
+          {
+            "name": "fulfillmentChannel",
+            "type": "STRING",
+            "optional": true,
+            "description": "Order fulfillment channel from Amazon. Enum values: AFN (Amazon Fulfilled Network) or MFN (Merchant Fulfilled Network)."
+          }
+        ]
+      },
+      "details": {
+        "description": "Full order and line items from the orders report, plus buyer and recipient information.",
+        "fields": [
+          {
+            "name": "order",
+            "type": "OBJECT",
+            "optional": false,
+            "description": "Order-level fields from the orders report.",
+            "fields": [
+              {
+                "name": "amazonOrderId",
+                "type": "STRING",
+                "optional": false,
+                "description": "Amazon order identifier."
+              },
+              {
+                "name": "orderPurchasedAtUtc",
+                "type": "STRING",
+                "optional": true,
+                "description": "Order purchase date and time in UTC in ISO-8601 format."
+              },
+              {
+                "name": "amazonOrderStatus",
+                "type": "STRING",
+                "optional": true,
+                "description": "Amazon order status from the orders report."
+              },
+              {
+                "name": "fulfillmentChannel",
+                "type": "STRING",
+                "optional": true,
+                "description": "Order fulfillment channel from the orders report. Enum values: AFN (Amazon Fulfilled Network) or MFN (Merchant Fulfilled Network)."
+              },
+              {
+                "name": "merchantOrderId",
+                "type": "STRING",
+                "optional": true
+              },
+              {
+                "name": "orderDate",
+                "type": "STRING",
+                "optional": true,
+                "description": "Marketplace-local purchase date from the orders report, YYYY-MM-DD."
+              },
+              {
+                "name": "amazonOrderUpdatedAt",
+                "type": "STRING",
+                "optional": true,
+                "description": "Marketplace-local last update date from the orders report, YYYY-MM-DD."
+              },
+              {
+                "name": "salesChannel",
+                "type": "STRING",
+                "optional": true
+              },
+              {
+                "name": "amazonOrderChannel",
+                "type": "STRING",
+                "optional": true,
+                "description": "Order channel. Enum values: MOBILEAPP, WEBSITE, or OTHER."
+              },
+              {
+                "name": "shipServiceLevel",
+                "type": "STRING",
+                "optional": true
+              },
+              {
+                "name": "addressCity",
+                "type": "STRING",
+                "optional": true,
+                "description": "Ship-to city from the orders report. This is not buyer PII."
+              },
+              {
+                "name": "addressState",
+                "type": "STRING",
+                "optional": true,
+                "description": "Ship-to state or region from the orders report. This is not buyer PII."
+              },
+              {
+                "name": "addressCountry",
+                "type": "STRING",
+                "optional": true,
+                "description": "Ship-to country from the orders report. This is not buyer PII."
+              },
+              {
+                "name": "addressPostalCode",
+                "type": "STRING",
+                "optional": true,
+                "description": "Ship-to postal code from the orders report. This is not buyer PII."
+              },
+              {
+                "name": "orderIsBusiness",
+                "type": "BOOL",
+                "optional": true,
+                "description": "Whether Amazon marked the order as a business order."
+              },
+              {
+                "name": "purchaseOrderNumber",
+                "type": "STRING",
+                "optional": true
+              }
+            ]
+          },
+          {
+            "name": "orderItems",
+            "type": "OBJECT_LIST",
+            "optional": false,
+            "description": "Line items from the orders report, including prices and COGS.",
+            "fields": [
+              {
+                "name": "sku",
+                "type": "STRING",
+                "optional": true
+              },
+              {
+                "name": "lineItemNumber",
+                "type": "STRING",
+                "optional": true
+              },
+              {
+                "name": "amazonOrderItemId",
+                "type": "STRING",
+                "optional": true
+              },
+              {
+                "name": "childAsin",
+                "type": "STRING",
+                "optional": true
+              },
+              {
+                "name": "productName",
+                "type": "STRING",
+                "optional": true
+              },
+              {
+                "name": "itemStatus",
+                "type": "STRING",
+                "optional": true
+              },
+              {
+                "name": "quantity",
+                "type": "NUMBER",
+                "optional": true
+              },
+              {
+                "name": "itemPriceValue",
+                "type": "NUMBER",
+                "optional": true,
+                "description": "Total value of the line item."
+              },
+              {
+                "name": "itemPriceCurrency",
+                "type": "STRING",
+                "optional": true
+              },
+              {
+                "name": "itemTaxValue",
+                "type": "NUMBER",
+                "optional": true
+              },
+              {
+                "name": "itemShippingPriceValue",
+                "type": "NUMBER",
+                "optional": true
+              },
+              {
+                "name": "itemShippingTaxValue",
+                "type": "NUMBER",
+                "optional": true
+              },
+              {
+                "name": "itemShipPromotionDiscountValue",
+                "type": "NUMBER",
+                "optional": true
+              },
+              {
+                "name": "giftWrapPriceValue",
+                "type": "NUMBER",
+                "optional": true
+              },
+              {
+                "name": "giftWrapTaxValue",
+                "type": "NUMBER",
+                "optional": true
+              },
+              {
+                "name": "cogsItemValue",
+                "type": "NUMBER",
+                "optional": true,
+                "description": "Item COGS for the line, when a COGS record matches."
+              },
+              {
+                "name": "cogsShippingValue",
+                "type": "NUMBER",
+                "optional": true
+              },
+              {
+                "name": "cogsCurrency",
+                "type": "STRING",
+                "optional": true
+              },
+              {
+                "name": "cogsTotalValue",
+                "type": "NUMBER",
+                "optional": true
+              },
+              {
+                "name": "itemSupplierName",
+                "type": "STRING",
+                "optional": true
+              }
+            ]
+          },
+          {
+            "name": "buyerInfo",
+            "type": "OBJECT",
+            "optional": true,
+            "description": "Buyer and recipient information for the Amazon order.",
+            "fields": [
+              {
+                "name": "buyerEmail",
+                "type": "STRING",
+                "optional": true
+              },
+              {
+                "name": "buyerName",
+                "type": "STRING",
+                "optional": true
+              },
+              {
+                "name": "buyerCompanyName",
+                "type": "STRING",
+                "optional": true
+              },
+              {
+                "name": "buyerPurchaseOrderNumber",
+                "type": "STRING",
+                "optional": true
+              },
+              {
+                "name": "recipientName",
+                "type": "STRING",
+                "optional": true
+              },
+              {
+                "name": "recipientCompanyName",
+                "type": "STRING",
+                "optional": true
+              },
+              {
+                "name": "recipientAddressLine1",
+                "type": "STRING",
+                "optional": true
+              },
+              {
+                "name": "recipientAddressLine2",
+                "type": "STRING",
+                "optional": true
+              },
+              {
+                "name": "recipientAddressLine3",
+                "type": "STRING",
+                "optional": true
+              },
+              {
+                "name": "recipientCity",
+                "type": "STRING",
+                "optional": true
+              },
+              {
+                "name": "recipientDistrictOrCounty",
+                "type": "STRING",
+                "optional": true
+              },
+              {
+                "name": "recipientStateOrRegion",
+                "type": "STRING",
+                "optional": true
+              },
+              {
+                "name": "recipientMunicipality",
+                "type": "STRING",
+                "optional": true
+              },
+              {
+                "name": "recipientPostalCode",
+                "type": "STRING",
+                "optional": true
+              },
+              {
+                "name": "recipientCountryCode",
+                "type": "STRING",
+                "optional": true
+              },
+              {
+                "name": "recipientPhone",
+                "type": "STRING",
+                "optional": true
+              },
+              {
+                "name": "recipientAddressType",
+                "type": "STRING",
+                "optional": true
+              },
+              {
+                "name": "recipientExtendedFields",
+                "type": "JSON",
+                "optional": true
+              },
+              {
+                "name": "orderItemsGiftMessages",
+                "type": "JSON",
+                "optional": true
+              },
+              {
+                "name": "orderItemsCustomizedUrls",
+                "type": "JSON",
+                "optional": true
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "messageType": "AMAZON_ACCOUNT_STATUS_CHANGED",
+      "description": "The status of an Amazon selling account changed.",
+      "summary": {
+        "description": "Amazon marketplace, connection, and notification context.",
+        "fields": [
+          {
+            "name": "marketplaceId",
+            "type": "STRING",
+            "optional": false,
+            "description": "Amazon marketplace identifier."
+          },
+          {
+            "name": "marketplaceCountryCode",
+            "type": "STRING",
+            "optional": true,
+            "description": "ISO country code for the marketplace."
+          },
+          {
+            "name": "marketplaceCountryName",
+            "type": "STRING",
+            "optional": true,
+            "description": "Human-readable country name for the marketplace."
+          },
+          {
+            "name": "sellerOrVendorId",
+            "type": "STRING",
+            "optional": false,
+            "description": "DataDoe connection context identifier for the seller or vendor."
+          },
+          {
+            "name": "sellerOrVendorName",
+            "type": "STRING",
+            "optional": true,
+            "description": "DataDoe connection context display name for the seller or vendor."
+          },
+          {
+            "name": "marketplaceSellerId",
+            "type": "STRING",
+            "optional": true,
+            "description": "Amazon Seller Central seller ID from the connection."
+          },
+          {
+            "name": "spApiNotificationId",
+            "type": "STRING",
+            "optional": false,
+            "description": "Unique identifier assigned to the notification by Amazon."
+          },
+          {
+            "name": "spApiNotificationType",
+            "type": "STRING",
+            "optional": false,
+            "description": "Amazon SP-API notification type."
+          },
+          {
+            "name": "eventTimeUtc",
+            "type": "STRING",
+            "optional": false,
+            "description": "Notification event date and time in UTC in ISO-8601 format."
+          }
+        ]
+      },
+      "details": {
+        "description": "Metadata and connection-routed payload received from Amazon.",
+        "fields": [
+          {
+            "name": "notificationMetadata",
+            "type": "JSON",
+            "optional": false,
+            "description": "Metadata included with the notification by Amazon."
+          },
+          {
+            "name": "payload",
+            "type": "JSON",
+            "optional": false,
+            "description": "Notification payload routed to the resolved seller or vendor connection."
+          }
+        ]
+      }
+    },
+    {
+      "messageType": "AMAZON_ANY_OFFER_CHANGED",
+      "description": "Offer information for an item on an Amazon marketplace changed.",
+      "highVolume": true,
+      "summary": {
+        "description": "Amazon marketplace, connection, and notification context.",
+        "fields": [
+          {
+            "name": "marketplaceId",
+            "type": "STRING",
+            "optional": false,
+            "description": "Amazon marketplace identifier."
+          },
+          {
+            "name": "marketplaceCountryCode",
+            "type": "STRING",
+            "optional": true,
+            "description": "ISO country code for the marketplace."
+          },
+          {
+            "name": "marketplaceCountryName",
+            "type": "STRING",
+            "optional": true,
+            "description": "Human-readable country name for the marketplace."
+          },
+          {
+            "name": "sellerOrVendorId",
+            "type": "STRING",
+            "optional": false,
+            "description": "DataDoe connection context identifier for the seller or vendor."
+          },
+          {
+            "name": "sellerOrVendorName",
+            "type": "STRING",
+            "optional": true,
+            "description": "DataDoe connection context display name for the seller or vendor."
+          },
+          {
+            "name": "marketplaceSellerId",
+            "type": "STRING",
+            "optional": true,
+            "description": "Amazon Seller Central seller ID from the connection."
+          },
+          {
+            "name": "spApiNotificationId",
+            "type": "STRING",
+            "optional": false,
+            "description": "Unique identifier assigned to the notification by Amazon."
+          },
+          {
+            "name": "spApiNotificationType",
+            "type": "STRING",
+            "optional": false,
+            "description": "Amazon SP-API notification type."
+          },
+          {
+            "name": "eventTimeUtc",
+            "type": "STRING",
+            "optional": false,
+            "description": "Notification event date and time in UTC in ISO-8601 format."
+          }
+        ]
+      },
+      "details": {
+        "description": "Metadata and connection-routed payload received from Amazon.",
+        "fields": [
+          {
+            "name": "notificationMetadata",
+            "type": "JSON",
+            "optional": false,
+            "description": "Metadata included with the notification by Amazon."
+          },
+          {
+            "name": "payload",
+            "type": "JSON",
+            "optional": false,
+            "description": "Notification payload routed to the resolved seller or vendor connection."
+          }
+        ]
+      }
+    },
+    {
+      "messageType": "AMAZON_B2B_ANY_OFFER_CHANGED",
+      "description": "Business offer information for an item on an Amazon marketplace changed.",
+      "highVolume": true,
+      "summary": {
+        "description": "Amazon marketplace, connection, and notification context.",
+        "fields": [
+          {
+            "name": "marketplaceId",
+            "type": "STRING",
+            "optional": false,
+            "description": "Amazon marketplace identifier."
+          },
+          {
+            "name": "marketplaceCountryCode",
+            "type": "STRING",
+            "optional": true,
+            "description": "ISO country code for the marketplace."
+          },
+          {
+            "name": "marketplaceCountryName",
+            "type": "STRING",
+            "optional": true,
+            "description": "Human-readable country name for the marketplace."
+          },
+          {
+            "name": "sellerOrVendorId",
+            "type": "STRING",
+            "optional": false,
+            "description": "DataDoe connection context identifier for the seller or vendor."
+          },
+          {
+            "name": "sellerOrVendorName",
+            "type": "STRING",
+            "optional": true,
+            "description": "DataDoe connection context display name for the seller or vendor."
+          },
+          {
+            "name": "marketplaceSellerId",
+            "type": "STRING",
+            "optional": true,
+            "description": "Amazon Seller Central seller ID from the connection."
+          },
+          {
+            "name": "spApiNotificationId",
+            "type": "STRING",
+            "optional": false,
+            "description": "Unique identifier assigned to the notification by Amazon."
+          },
+          {
+            "name": "spApiNotificationType",
+            "type": "STRING",
+            "optional": false,
+            "description": "Amazon SP-API notification type."
+          },
+          {
+            "name": "eventTimeUtc",
+            "type": "STRING",
+            "optional": false,
+            "description": "Notification event date and time in UTC in ISO-8601 format."
+          }
+        ]
+      },
+      "details": {
+        "description": "Metadata and connection-routed payload received from Amazon.",
+        "fields": [
+          {
+            "name": "notificationMetadata",
+            "type": "JSON",
+            "optional": false,
+            "description": "Metadata included with the notification by Amazon."
+          },
+          {
+            "name": "payload",
+            "type": "JSON",
+            "optional": false,
+            "description": "Notification payload routed to the resolved seller or vendor connection."
+          }
+        ]
+      }
+    },
+    {
+      "messageType": "AMAZON_BRANDED_ITEM_CONTENT_CHANGE",
+      "description": "Content for an item associated with a registered brand changed.",
+      "availabilityNote": "Requires Amazon Brand Registry.",
+      "summary": {
+        "description": "Amazon marketplace, connection, and notification context.",
+        "fields": [
+          {
+            "name": "marketplaceId",
+            "type": "STRING",
+            "optional": false,
+            "description": "Amazon marketplace identifier."
+          },
+          {
+            "name": "marketplaceCountryCode",
+            "type": "STRING",
+            "optional": true,
+            "description": "ISO country code for the marketplace."
+          },
+          {
+            "name": "marketplaceCountryName",
+            "type": "STRING",
+            "optional": true,
+            "description": "Human-readable country name for the marketplace."
+          },
+          {
+            "name": "sellerOrVendorId",
+            "type": "STRING",
+            "optional": false,
+            "description": "DataDoe connection context identifier for the seller or vendor."
+          },
+          {
+            "name": "sellerOrVendorName",
+            "type": "STRING",
+            "optional": true,
+            "description": "DataDoe connection context display name for the seller or vendor."
+          },
+          {
+            "name": "marketplaceSellerId",
+            "type": "STRING",
+            "optional": true,
+            "description": "Amazon Seller Central seller ID from the connection."
+          },
+          {
+            "name": "spApiNotificationId",
+            "type": "STRING",
+            "optional": false,
+            "description": "Unique identifier assigned to the notification by Amazon."
+          },
+          {
+            "name": "spApiNotificationType",
+            "type": "STRING",
+            "optional": false,
+            "description": "Amazon SP-API notification type."
+          },
+          {
+            "name": "eventTimeUtc",
+            "type": "STRING",
+            "optional": false,
+            "description": "Notification event date and time in UTC in ISO-8601 format."
+          }
+        ]
+      },
+      "details": {
+        "description": "Metadata and connection-routed payload received from Amazon.",
+        "fields": [
+          {
+            "name": "notificationMetadata",
+            "type": "JSON",
+            "optional": false,
+            "description": "Metadata included with the notification by Amazon."
+          },
+          {
+            "name": "payload",
+            "type": "JSON",
+            "optional": false,
+            "description": "Notification payload routed to the resolved seller or vendor connection."
+          }
+        ]
+      }
+    },
+    {
+      "messageType": "AMAZON_DETAIL_PAGE_TRAFFIC_EVENT",
+      "description": "Traffic on an Amazon product detail page changed.",
+      "highVolume": true,
+      "summary": {
+        "description": "Amazon marketplace, connection, and notification context.",
+        "fields": [
+          {
+            "name": "marketplaceId",
+            "type": "STRING",
+            "optional": false,
+            "description": "Amazon marketplace identifier."
+          },
+          {
+            "name": "marketplaceCountryCode",
+            "type": "STRING",
+            "optional": true,
+            "description": "ISO country code for the marketplace."
+          },
+          {
+            "name": "marketplaceCountryName",
+            "type": "STRING",
+            "optional": true,
+            "description": "Human-readable country name for the marketplace."
+          },
+          {
+            "name": "sellerOrVendorId",
+            "type": "STRING",
+            "optional": false,
+            "description": "DataDoe connection context identifier for the seller or vendor."
+          },
+          {
+            "name": "sellerOrVendorName",
+            "type": "STRING",
+            "optional": true,
+            "description": "DataDoe connection context display name for the seller or vendor."
+          },
+          {
+            "name": "marketplaceSellerId",
+            "type": "STRING",
+            "optional": true,
+            "description": "Amazon Seller Central seller ID from the connection."
+          },
+          {
+            "name": "spApiNotificationId",
+            "type": "STRING",
+            "optional": false,
+            "description": "Unique identifier assigned to the notification by Amazon."
+          },
+          {
+            "name": "spApiNotificationType",
+            "type": "STRING",
+            "optional": false,
+            "description": "Amazon SP-API notification type."
+          },
+          {
+            "name": "eventTimeUtc",
+            "type": "STRING",
+            "optional": false,
+            "description": "Notification event date and time in UTC in ISO-8601 format."
+          }
+        ]
+      },
+      "details": {
+        "description": "Metadata and connection-routed payload received from Amazon.",
+        "fields": [
+          {
+            "name": "notificationMetadata",
+            "type": "JSON",
+            "optional": false,
+            "description": "Metadata included with the notification by Amazon."
+          },
+          {
+            "name": "payload",
+            "type": "JSON",
+            "optional": false,
+            "description": "Notification payload routed to the resolved seller or vendor connection."
+          }
+        ]
+      }
+    },
+    {
+      "messageType": "AMAZON_FBA_OUTBOUND_SHIPMENT_STATUS",
+      "description": "The status of an outbound Fulfillment by Amazon shipment changed.",
+      "availabilityNote": "Available for Brazil FBA Onsite shipments only.",
+      "summary": {
+        "description": "Amazon marketplace, connection, and notification context.",
+        "fields": [
+          {
+            "name": "marketplaceId",
+            "type": "STRING",
+            "optional": false,
+            "description": "Amazon marketplace identifier."
+          },
+          {
+            "name": "marketplaceCountryCode",
+            "type": "STRING",
+            "optional": true,
+            "description": "ISO country code for the marketplace."
+          },
+          {
+            "name": "marketplaceCountryName",
+            "type": "STRING",
+            "optional": true,
+            "description": "Human-readable country name for the marketplace."
+          },
+          {
+            "name": "sellerOrVendorId",
+            "type": "STRING",
+            "optional": false,
+            "description": "DataDoe connection context identifier for the seller or vendor."
+          },
+          {
+            "name": "sellerOrVendorName",
+            "type": "STRING",
+            "optional": true,
+            "description": "DataDoe connection context display name for the seller or vendor."
+          },
+          {
+            "name": "marketplaceSellerId",
+            "type": "STRING",
+            "optional": true,
+            "description": "Amazon Seller Central seller ID from the connection."
+          },
+          {
+            "name": "spApiNotificationId",
+            "type": "STRING",
+            "optional": false,
+            "description": "Unique identifier assigned to the notification by Amazon."
+          },
+          {
+            "name": "spApiNotificationType",
+            "type": "STRING",
+            "optional": false,
+            "description": "Amazon SP-API notification type."
+          },
+          {
+            "name": "eventTimeUtc",
+            "type": "STRING",
+            "optional": false,
+            "description": "Notification event date and time in UTC in ISO-8601 format."
+          }
+        ]
+      },
+      "details": {
+        "description": "Metadata and connection-routed payload received from Amazon.",
+        "fields": [
+          {
+            "name": "notificationMetadata",
+            "type": "JSON",
+            "optional": false,
+            "description": "Metadata included with the notification by Amazon."
+          },
+          {
+            "name": "payload",
+            "type": "JSON",
+            "optional": false,
+            "description": "Notification payload routed to the resolved seller or vendor connection."
+          }
+        ]
+      }
+    },
+    {
+      "messageType": "AMAZON_FULFILLMENT_ORDER_STATUS",
+      "description": "An Amazon Multi-Channel Fulfillment order, shipment, or package changed status. The payload is Amazon FULFILLMENT_ORDER_STATUS version 2026-07-04. eventType is ORDER_STATUS_CHANGED, SHIPMENT_STATUS_CHANGED, or SHIPMENT_PACKAGE_STATUS_CHANGED. Tracking numbers, delivery estimates, and other optional Amazon fields are included only when Amazon sends them.",
+      "availabilityNote": "Seller Central Multi-Channel Fulfillment in North America, Europe, and the Far East. Not Brazil FBA Onsite and not the US-only Tracking API. DataDoe subscribes automatically when this message type is selected.",
+      "summary": {
+        "description": "Amazon marketplace, connection, and notification context.",
+        "fields": [
+          {
+            "name": "marketplaceId",
+            "type": "STRING",
+            "optional": false,
+            "description": "Amazon marketplace identifier."
+          },
+          {
+            "name": "marketplaceCountryCode",
+            "type": "STRING",
+            "optional": true,
+            "description": "ISO country code for the marketplace."
+          },
+          {
+            "name": "marketplaceCountryName",
+            "type": "STRING",
+            "optional": true,
+            "description": "Human-readable country name for the marketplace."
+          },
+          {
+            "name": "sellerOrVendorId",
+            "type": "STRING",
+            "optional": false,
+            "description": "DataDoe connection context identifier for the seller or vendor."
+          },
+          {
+            "name": "sellerOrVendorName",
+            "type": "STRING",
+            "optional": true,
+            "description": "DataDoe connection context display name for the seller or vendor."
+          },
+          {
+            "name": "marketplaceSellerId",
+            "type": "STRING",
+            "optional": true,
+            "description": "Amazon Seller Central seller ID from the connection."
+          },
+          {
+            "name": "spApiNotificationId",
+            "type": "STRING",
+            "optional": false,
+            "description": "Unique identifier assigned to the notification by Amazon."
+          },
+          {
+            "name": "spApiNotificationType",
+            "type": "STRING",
+            "optional": false,
+            "description": "Amazon SP-API notification type."
+          },
+          {
+            "name": "eventTimeUtc",
+            "type": "STRING",
+            "optional": false,
+            "description": "Notification event date and time in UTC in ISO-8601 format."
+          }
+        ]
+      },
+      "details": {
+        "description": "Metadata and connection-routed payload received from Amazon.",
+        "fields": [
+          {
+            "name": "notificationMetadata",
+            "type": "JSON",
+            "optional": false,
+            "description": "Metadata included with the notification by Amazon."
+          },
+          {
+            "name": "payload",
+            "type": "JSON",
+            "optional": false,
+            "description": "Notification payload routed to the resolved seller or vendor connection."
+          }
+        ]
+      }
+    },
+    {
+      "messageType": "AMAZON_FEE_PROMOTION",
+      "description": "An Amazon fee promotion became available or changed.",
+      "summary": {
+        "description": "Amazon marketplace, connection, and notification context.",
+        "fields": [
+          {
+            "name": "marketplaceId",
+            "type": "STRING",
+            "optional": false,
+            "description": "Amazon marketplace identifier."
+          },
+          {
+            "name": "marketplaceCountryCode",
+            "type": "STRING",
+            "optional": true,
+            "description": "ISO country code for the marketplace."
+          },
+          {
+            "name": "marketplaceCountryName",
+            "type": "STRING",
+            "optional": true,
+            "description": "Human-readable country name for the marketplace."
+          },
+          {
+            "name": "sellerOrVendorId",
+            "type": "STRING",
+            "optional": false,
+            "description": "DataDoe connection context identifier for the seller or vendor."
+          },
+          {
+            "name": "sellerOrVendorName",
+            "type": "STRING",
+            "optional": true,
+            "description": "DataDoe connection context display name for the seller or vendor."
+          },
+          {
+            "name": "marketplaceSellerId",
+            "type": "STRING",
+            "optional": true,
+            "description": "Amazon Seller Central seller ID from the connection."
+          },
+          {
+            "name": "spApiNotificationId",
+            "type": "STRING",
+            "optional": false,
+            "description": "Unique identifier assigned to the notification by Amazon."
+          },
+          {
+            "name": "spApiNotificationType",
+            "type": "STRING",
+            "optional": false,
+            "description": "Amazon SP-API notification type."
+          },
+          {
+            "name": "eventTimeUtc",
+            "type": "STRING",
+            "optional": false,
+            "description": "Notification event date and time in UTC in ISO-8601 format."
+          }
+        ]
+      },
+      "details": {
+        "description": "Metadata and connection-routed payload received from Amazon.",
+        "fields": [
+          {
+            "name": "notificationMetadata",
+            "type": "JSON",
+            "optional": false,
+            "description": "Metadata included with the notification by Amazon."
+          },
+          {
+            "name": "payload",
+            "type": "JSON",
+            "optional": false,
+            "description": "Notification payload routed to the resolved seller or vendor connection."
+          }
+        ]
+      }
+    },
+    {
+      "messageType": "AMAZON_ITEM_INVENTORY_EVENT_CHANGE",
+      "description": "Inventory information for an Amazon item changed.",
+      "summary": {
+        "description": "Amazon marketplace, connection, and notification context.",
+        "fields": [
+          {
+            "name": "marketplaceId",
+            "type": "STRING",
+            "optional": false,
+            "description": "Amazon marketplace identifier."
+          },
+          {
+            "name": "marketplaceCountryCode",
+            "type": "STRING",
+            "optional": true,
+            "description": "ISO country code for the marketplace."
+          },
+          {
+            "name": "marketplaceCountryName",
+            "type": "STRING",
+            "optional": true,
+            "description": "Human-readable country name for the marketplace."
+          },
+          {
+            "name": "sellerOrVendorId",
+            "type": "STRING",
+            "optional": false,
+            "description": "DataDoe connection context identifier for the seller or vendor."
+          },
+          {
+            "name": "sellerOrVendorName",
+            "type": "STRING",
+            "optional": true,
+            "description": "DataDoe connection context display name for the seller or vendor."
+          },
+          {
+            "name": "marketplaceSellerId",
+            "type": "STRING",
+            "optional": true,
+            "description": "Amazon Seller Central seller ID from the connection."
+          },
+          {
+            "name": "spApiNotificationId",
+            "type": "STRING",
+            "optional": false,
+            "description": "Unique identifier assigned to the notification by Amazon."
+          },
+          {
+            "name": "spApiNotificationType",
+            "type": "STRING",
+            "optional": false,
+            "description": "Amazon SP-API notification type."
+          },
+          {
+            "name": "eventTimeUtc",
+            "type": "STRING",
+            "optional": false,
+            "description": "Notification event date and time in UTC in ISO-8601 format."
+          }
+        ]
+      },
+      "details": {
+        "description": "Metadata and connection-routed payload received from Amazon.",
+        "fields": [
+          {
+            "name": "notificationMetadata",
+            "type": "JSON",
+            "optional": false,
+            "description": "Metadata included with the notification by Amazon."
+          },
+          {
+            "name": "payload",
+            "type": "JSON",
+            "optional": false,
+            "description": "Notification payload routed to the resolved seller or vendor connection."
+          }
+        ]
+      }
+    },
+    {
+      "messageType": "AMAZON_ITEM_SALES_EVENT_CHANGE",
+      "description": "Sales information for an Amazon item changed.",
+      "highVolume": true,
+      "summary": {
+        "description": "Amazon marketplace, connection, and notification context.",
+        "fields": [
+          {
+            "name": "marketplaceId",
+            "type": "STRING",
+            "optional": false,
+            "description": "Amazon marketplace identifier."
+          },
+          {
+            "name": "marketplaceCountryCode",
+            "type": "STRING",
+            "optional": true,
+            "description": "ISO country code for the marketplace."
+          },
+          {
+            "name": "marketplaceCountryName",
+            "type": "STRING",
+            "optional": true,
+            "description": "Human-readable country name for the marketplace."
+          },
+          {
+            "name": "sellerOrVendorId",
+            "type": "STRING",
+            "optional": false,
+            "description": "DataDoe connection context identifier for the seller or vendor."
+          },
+          {
+            "name": "sellerOrVendorName",
+            "type": "STRING",
+            "optional": true,
+            "description": "DataDoe connection context display name for the seller or vendor."
+          },
+          {
+            "name": "marketplaceSellerId",
+            "type": "STRING",
+            "optional": true,
+            "description": "Amazon Seller Central seller ID from the connection."
+          },
+          {
+            "name": "spApiNotificationId",
+            "type": "STRING",
+            "optional": false,
+            "description": "Unique identifier assigned to the notification by Amazon."
+          },
+          {
+            "name": "spApiNotificationType",
+            "type": "STRING",
+            "optional": false,
+            "description": "Amazon SP-API notification type."
+          },
+          {
+            "name": "eventTimeUtc",
+            "type": "STRING",
+            "optional": false,
+            "description": "Notification event date and time in UTC in ISO-8601 format."
+          }
+        ]
+      },
+      "details": {
+        "description": "Metadata and connection-routed payload received from Amazon.",
+        "fields": [
+          {
+            "name": "notificationMetadata",
+            "type": "JSON",
+            "optional": false,
+            "description": "Metadata included with the notification by Amazon."
+          },
+          {
+            "name": "payload",
+            "type": "JSON",
+            "optional": false,
+            "description": "Notification payload routed to the resolved seller or vendor connection."
+          }
+        ]
+      }
+    },
+    {
+      "messageType": "AMAZON_ITEM_PRODUCT_TYPE_CHANGE",
+      "description": "The product type assigned to an Amazon item changed.",
+      "availabilityNote": "Requires Amazon Brand Registry.",
+      "summary": {
+        "description": "Amazon marketplace, connection, and notification context.",
+        "fields": [
+          {
+            "name": "marketplaceId",
+            "type": "STRING",
+            "optional": false,
+            "description": "Amazon marketplace identifier."
+          },
+          {
+            "name": "marketplaceCountryCode",
+            "type": "STRING",
+            "optional": true,
+            "description": "ISO country code for the marketplace."
+          },
+          {
+            "name": "marketplaceCountryName",
+            "type": "STRING",
+            "optional": true,
+            "description": "Human-readable country name for the marketplace."
+          },
+          {
+            "name": "sellerOrVendorId",
+            "type": "STRING",
+            "optional": false,
+            "description": "DataDoe connection context identifier for the seller or vendor."
+          },
+          {
+            "name": "sellerOrVendorName",
+            "type": "STRING",
+            "optional": true,
+            "description": "DataDoe connection context display name for the seller or vendor."
+          },
+          {
+            "name": "marketplaceSellerId",
+            "type": "STRING",
+            "optional": true,
+            "description": "Amazon Seller Central seller ID from the connection."
+          },
+          {
+            "name": "spApiNotificationId",
+            "type": "STRING",
+            "optional": false,
+            "description": "Unique identifier assigned to the notification by Amazon."
+          },
+          {
+            "name": "spApiNotificationType",
+            "type": "STRING",
+            "optional": false,
+            "description": "Amazon SP-API notification type."
+          },
+          {
+            "name": "eventTimeUtc",
+            "type": "STRING",
+            "optional": false,
+            "description": "Notification event date and time in UTC in ISO-8601 format."
+          }
+        ]
+      },
+      "details": {
+        "description": "Metadata and connection-routed payload received from Amazon.",
+        "fields": [
+          {
+            "name": "notificationMetadata",
+            "type": "JSON",
+            "optional": false,
+            "description": "Metadata included with the notification by Amazon."
+          },
+          {
+            "name": "payload",
+            "type": "JSON",
+            "optional": false,
+            "description": "Notification payload routed to the resolved seller or vendor connection."
+          }
+        ]
+      }
+    },
+    {
+      "messageType": "AMAZON_LISTINGS_ITEM_STATUS_CHANGE",
+      "description": "The status of an Amazon listings item changed.",
+      "summary": {
+        "description": "Amazon marketplace, connection, and notification context.",
+        "fields": [
+          {
+            "name": "marketplaceId",
+            "type": "STRING",
+            "optional": false,
+            "description": "Amazon marketplace identifier."
+          },
+          {
+            "name": "marketplaceCountryCode",
+            "type": "STRING",
+            "optional": true,
+            "description": "ISO country code for the marketplace."
+          },
+          {
+            "name": "marketplaceCountryName",
+            "type": "STRING",
+            "optional": true,
+            "description": "Human-readable country name for the marketplace."
+          },
+          {
+            "name": "sellerOrVendorId",
+            "type": "STRING",
+            "optional": false,
+            "description": "DataDoe connection context identifier for the seller or vendor."
+          },
+          {
+            "name": "sellerOrVendorName",
+            "type": "STRING",
+            "optional": true,
+            "description": "DataDoe connection context display name for the seller or vendor."
+          },
+          {
+            "name": "marketplaceSellerId",
+            "type": "STRING",
+            "optional": true,
+            "description": "Amazon Seller Central seller ID from the connection."
+          },
+          {
+            "name": "spApiNotificationId",
+            "type": "STRING",
+            "optional": false,
+            "description": "Unique identifier assigned to the notification by Amazon."
+          },
+          {
+            "name": "spApiNotificationType",
+            "type": "STRING",
+            "optional": false,
+            "description": "Amazon SP-API notification type."
+          },
+          {
+            "name": "eventTimeUtc",
+            "type": "STRING",
+            "optional": false,
+            "description": "Notification event date and time in UTC in ISO-8601 format."
+          }
+        ]
+      },
+      "details": {
+        "description": "Metadata and connection-routed payload received from Amazon.",
+        "fields": [
+          {
+            "name": "notificationMetadata",
+            "type": "JSON",
+            "optional": false,
+            "description": "Metadata included with the notification by Amazon."
+          },
+          {
+            "name": "payload",
+            "type": "JSON",
+            "optional": false,
+            "description": "Notification payload routed to the resolved seller or vendor connection."
+          }
+        ]
+      }
+    },
+    {
+      "messageType": "AMAZON_LISTINGS_ITEM_ISSUES_CHANGE",
+      "description": "Issues associated with an Amazon listings item changed.",
+      "summary": {
+        "description": "Amazon marketplace, connection, and notification context.",
+        "fields": [
+          {
+            "name": "marketplaceId",
+            "type": "STRING",
+            "optional": false,
+            "description": "Amazon marketplace identifier."
+          },
+          {
+            "name": "marketplaceCountryCode",
+            "type": "STRING",
+            "optional": true,
+            "description": "ISO country code for the marketplace."
+          },
+          {
+            "name": "marketplaceCountryName",
+            "type": "STRING",
+            "optional": true,
+            "description": "Human-readable country name for the marketplace."
+          },
+          {
+            "name": "sellerOrVendorId",
+            "type": "STRING",
+            "optional": false,
+            "description": "DataDoe connection context identifier for the seller or vendor."
+          },
+          {
+            "name": "sellerOrVendorName",
+            "type": "STRING",
+            "optional": true,
+            "description": "DataDoe connection context display name for the seller or vendor."
+          },
+          {
+            "name": "marketplaceSellerId",
+            "type": "STRING",
+            "optional": true,
+            "description": "Amazon Seller Central seller ID from the connection."
+          },
+          {
+            "name": "spApiNotificationId",
+            "type": "STRING",
+            "optional": false,
+            "description": "Unique identifier assigned to the notification by Amazon."
+          },
+          {
+            "name": "spApiNotificationType",
+            "type": "STRING",
+            "optional": false,
+            "description": "Amazon SP-API notification type."
+          },
+          {
+            "name": "eventTimeUtc",
+            "type": "STRING",
+            "optional": false,
+            "description": "Notification event date and time in UTC in ISO-8601 format."
+          }
+        ]
+      },
+      "details": {
+        "description": "Metadata and connection-routed payload received from Amazon.",
+        "fields": [
+          {
+            "name": "notificationMetadata",
+            "type": "JSON",
+            "optional": false,
+            "description": "Metadata included with the notification by Amazon."
+          },
+          {
+            "name": "payload",
+            "type": "JSON",
+            "optional": false,
+            "description": "Notification payload routed to the resolved seller or vendor connection."
+          }
+        ]
+      }
+    },
+    {
+      "messageType": "AMAZON_LISTINGS_ITEM_MFN_QUANTITY_CHANGE",
+      "description": "The merchant-fulfilled quantity for an Amazon listings item changed.",
+      "summary": {
+        "description": "Amazon marketplace, connection, and notification context.",
+        "fields": [
+          {
+            "name": "marketplaceId",
+            "type": "STRING",
+            "optional": false,
+            "description": "Amazon marketplace identifier."
+          },
+          {
+            "name": "marketplaceCountryCode",
+            "type": "STRING",
+            "optional": true,
+            "description": "ISO country code for the marketplace."
+          },
+          {
+            "name": "marketplaceCountryName",
+            "type": "STRING",
+            "optional": true,
+            "description": "Human-readable country name for the marketplace."
+          },
+          {
+            "name": "sellerOrVendorId",
+            "type": "STRING",
+            "optional": false,
+            "description": "DataDoe connection context identifier for the seller or vendor."
+          },
+          {
+            "name": "sellerOrVendorName",
+            "type": "STRING",
+            "optional": true,
+            "description": "DataDoe connection context display name for the seller or vendor."
+          },
+          {
+            "name": "marketplaceSellerId",
+            "type": "STRING",
+            "optional": true,
+            "description": "Amazon Seller Central seller ID from the connection."
+          },
+          {
+            "name": "spApiNotificationId",
+            "type": "STRING",
+            "optional": false,
+            "description": "Unique identifier assigned to the notification by Amazon."
+          },
+          {
+            "name": "spApiNotificationType",
+            "type": "STRING",
+            "optional": false,
+            "description": "Amazon SP-API notification type."
+          },
+          {
+            "name": "eventTimeUtc",
+            "type": "STRING",
+            "optional": false,
+            "description": "Notification event date and time in UTC in ISO-8601 format."
+          }
+        ]
+      },
+      "details": {
+        "description": "Metadata and connection-routed payload received from Amazon.",
+        "fields": [
+          {
+            "name": "notificationMetadata",
+            "type": "JSON",
+            "optional": false,
+            "description": "Metadata included with the notification by Amazon."
+          },
+          {
+            "name": "payload",
+            "type": "JSON",
+            "optional": false,
+            "description": "Notification payload routed to the resolved seller or vendor connection."
+          }
+        ]
+      }
+    },
+    {
+      "messageType": "AMAZON_PRICING_HEALTH",
+      "description": "An Amazon offer became ineligible for the Featured Offer because of an uncompetitive price.",
+      "summary": {
+        "description": "Amazon marketplace, connection, and notification context.",
+        "fields": [
+          {
+            "name": "marketplaceId",
+            "type": "STRING",
+            "optional": false,
+            "description": "Amazon marketplace identifier."
+          },
+          {
+            "name": "marketplaceCountryCode",
+            "type": "STRING",
+            "optional": true,
+            "description": "ISO country code for the marketplace."
+          },
+          {
+            "name": "marketplaceCountryName",
+            "type": "STRING",
+            "optional": true,
+            "description": "Human-readable country name for the marketplace."
+          },
+          {
+            "name": "sellerOrVendorId",
+            "type": "STRING",
+            "optional": false,
+            "description": "DataDoe connection context identifier for the seller or vendor."
+          },
+          {
+            "name": "sellerOrVendorName",
+            "type": "STRING",
+            "optional": true,
+            "description": "DataDoe connection context display name for the seller or vendor."
+          },
+          {
+            "name": "marketplaceSellerId",
+            "type": "STRING",
+            "optional": true,
+            "description": "Amazon Seller Central seller ID from the connection."
+          },
+          {
+            "name": "spApiNotificationId",
+            "type": "STRING",
+            "optional": false,
+            "description": "Unique identifier assigned to the notification by Amazon."
+          },
+          {
+            "name": "spApiNotificationType",
+            "type": "STRING",
+            "optional": false,
+            "description": "Amazon SP-API notification type."
+          },
+          {
+            "name": "eventTimeUtc",
+            "type": "STRING",
+            "optional": false,
+            "description": "Notification event date and time in UTC in ISO-8601 format."
+          }
+        ]
+      },
+      "details": {
+        "description": "Metadata and connection-routed payload received from Amazon.",
+        "fields": [
+          {
+            "name": "notificationMetadata",
+            "type": "JSON",
+            "optional": false,
+            "description": "Metadata included with the notification by Amazon."
+          },
+          {
+            "name": "payload",
+            "type": "JSON",
+            "optional": false,
+            "description": "Notification payload routed to the resolved seller or vendor connection."
+          }
+        ]
+      }
+    },
+    {
+      "messageType": "AMAZON_TRANSACTION_UPDATE",
+      "description": "Amazon transaction information became available or changed.",
+      "summary": {
+        "description": "Amazon marketplace, connection, and notification context.",
+        "fields": [
+          {
+            "name": "marketplaceId",
+            "type": "STRING",
+            "optional": false,
+            "description": "Amazon marketplace identifier."
+          },
+          {
+            "name": "marketplaceCountryCode",
+            "type": "STRING",
+            "optional": true,
+            "description": "ISO country code for the marketplace."
+          },
+          {
+            "name": "marketplaceCountryName",
+            "type": "STRING",
+            "optional": true,
+            "description": "Human-readable country name for the marketplace."
+          },
+          {
+            "name": "sellerOrVendorId",
+            "type": "STRING",
+            "optional": false,
+            "description": "DataDoe connection context identifier for the seller or vendor."
+          },
+          {
+            "name": "sellerOrVendorName",
+            "type": "STRING",
+            "optional": true,
+            "description": "DataDoe connection context display name for the seller or vendor."
+          },
+          {
+            "name": "marketplaceSellerId",
+            "type": "STRING",
+            "optional": true,
+            "description": "Amazon Seller Central seller ID from the connection."
+          },
+          {
+            "name": "spApiNotificationId",
+            "type": "STRING",
+            "optional": false,
+            "description": "Unique identifier assigned to the notification by Amazon."
+          },
+          {
+            "name": "spApiNotificationType",
+            "type": "STRING",
+            "optional": false,
+            "description": "Amazon SP-API notification type."
+          },
+          {
+            "name": "eventTimeUtc",
+            "type": "STRING",
+            "optional": false,
+            "description": "Notification event date and time in UTC in ISO-8601 format."
+          }
+        ]
+      },
+      "details": {
+        "description": "Metadata and connection-routed payload received from Amazon.",
+        "fields": [
+          {
+            "name": "notificationMetadata",
+            "type": "JSON",
+            "optional": false,
+            "description": "Metadata included with the notification by Amazon."
+          },
+          {
+            "name": "payload",
+            "type": "JSON",
+            "optional": false,
+            "description": "Notification payload routed to the resolved seller or vendor connection."
+          }
+        ]
+      }
+    },
+    {
+      "messageType": "AMAZON_FBA_INVENTORY_AVAILABILITY_CHANGES",
+      "description": "Fulfillment by Amazon inventory availability changed.",
+      "summary": {
+        "description": "Amazon marketplace, connection, and notification context.",
+        "fields": [
+          {
+            "name": "marketplaceId",
+            "type": "STRING",
+            "optional": false,
+            "description": "Amazon marketplace identifier."
+          },
+          {
+            "name": "marketplaceCountryCode",
+            "type": "STRING",
+            "optional": true,
+            "description": "ISO country code for the marketplace."
+          },
+          {
+            "name": "marketplaceCountryName",
+            "type": "STRING",
+            "optional": true,
+            "description": "Human-readable country name for the marketplace."
+          },
+          {
+            "name": "sellerOrVendorId",
+            "type": "STRING",
+            "optional": false,
+            "description": "DataDoe connection context identifier for the seller or vendor."
+          },
+          {
+            "name": "sellerOrVendorName",
+            "type": "STRING",
+            "optional": true,
+            "description": "DataDoe connection context display name for the seller or vendor."
+          },
+          {
+            "name": "marketplaceSellerId",
+            "type": "STRING",
+            "optional": true,
+            "description": "Amazon Seller Central seller ID from the connection."
+          },
+          {
+            "name": "spApiNotificationId",
+            "type": "STRING",
+            "optional": false,
+            "description": "Unique identifier assigned to the notification by Amazon."
+          },
+          {
+            "name": "spApiNotificationType",
+            "type": "STRING",
+            "optional": false,
+            "description": "Amazon SP-API notification type."
+          },
+          {
+            "name": "eventTimeUtc",
+            "type": "STRING",
+            "optional": false,
+            "description": "Notification event date and time in UTC in ISO-8601 format."
+          }
+        ]
+      },
+      "details": {
+        "description": "Metadata and connection-routed payload received from Amazon.",
+        "fields": [
+          {
+            "name": "notificationMetadata",
+            "type": "JSON",
+            "optional": false,
+            "description": "Metadata included with the notification by Amazon."
+          },
+          {
+            "name": "payload",
+            "type": "JSON",
+            "optional": false,
+            "description": "Notification payload routed to the resolved seller or vendor connection."
+          }
+        ]
+      }
+    },
+    {
+      "messageType": "AMAZON_SHIPMENT_TRACKING_MILESTONE_CHANGED",
+      "description": "An Amazon Tracking API shipment milestone changed.",
+      "availabilityNote": "Available for the US Tracking API.",
+      "prerequisites": "Amazon requires a subscription for each tracking identifier (US Tracking API). Use the AMAZON_SHIPMENT_TRACKING_SUBSCRIBE Action to send tracking IDs. DataDoe does not subscribe automatically.",
+      "summary": {
+        "description": "Amazon marketplace, connection, and notification context.",
+        "fields": [
+          {
+            "name": "marketplaceId",
+            "type": "STRING",
+            "optional": false,
+            "description": "Amazon marketplace identifier."
+          },
+          {
+            "name": "marketplaceCountryCode",
+            "type": "STRING",
+            "optional": true,
+            "description": "ISO country code for the marketplace."
+          },
+          {
+            "name": "marketplaceCountryName",
+            "type": "STRING",
+            "optional": true,
+            "description": "Human-readable country name for the marketplace."
+          },
+          {
+            "name": "sellerOrVendorId",
+            "type": "STRING",
+            "optional": false,
+            "description": "DataDoe connection context identifier for the seller or vendor."
+          },
+          {
+            "name": "sellerOrVendorName",
+            "type": "STRING",
+            "optional": true,
+            "description": "DataDoe connection context display name for the seller or vendor."
+          },
+          {
+            "name": "marketplaceSellerId",
+            "type": "STRING",
+            "optional": true,
+            "description": "Amazon Seller Central seller ID from the connection."
+          },
+          {
+            "name": "spApiNotificationId",
+            "type": "STRING",
+            "optional": false,
+            "description": "Unique identifier assigned to the notification by Amazon."
+          },
+          {
+            "name": "spApiNotificationType",
+            "type": "STRING",
+            "optional": false,
+            "description": "Amazon SP-API notification type."
+          },
+          {
+            "name": "eventTimeUtc",
+            "type": "STRING",
+            "optional": false,
+            "description": "Notification event date and time in UTC in ISO-8601 format."
+          }
+        ]
+      },
+      "details": {
+        "description": "Metadata and connection-routed payload received from Amazon.",
+        "fields": [
+          {
+            "name": "notificationMetadata",
+            "type": "JSON",
+            "optional": false,
+            "description": "Metadata included with the notification by Amazon."
+          },
+          {
+            "name": "payload",
+            "type": "JSON",
+            "optional": false,
+            "description": "Notification payload routed to the resolved seller or vendor connection."
+          }
+        ]
+      }
+    }
+  ]
+}

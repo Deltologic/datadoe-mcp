@@ -2,7 +2,7 @@
 # Manual changes might be lost - proceed with caution!
 
 __metadata:
-  version: 9
+  version: 10
   cacheKey: 10c0
 
 "@hono/node-server@npm:^1.19.9":
@@ -213,7 +213,6 @@ __metadata:
     "@modelcontextprotocol/sdk": "npm:^1.29.0"
     "@types/node": "npm:^25.9.0"
     typescript: "npm:^6.0.3"
-    zod: "npm:^4.4.3"
   languageName: unknown
   linkType: soft
 
@@ -927,7 +926,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"zod@npm:^3.25 || ^4.0, zod@npm:^4.4.3":
+"zod@npm:^3.25 || ^4.0":
   version: 4.4.3
   resolution: "zod@npm:4.4.3"
   checksum: 10c0/7ea31b558e88f9faf44f31dd185e2e1cbf51fed3081787fb96cc2534749b50c0acfc6da7f0922a7353ed092dd358c7d50c28ea96c94d04af64191bd33152eca3
