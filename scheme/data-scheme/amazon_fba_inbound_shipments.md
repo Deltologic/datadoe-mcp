@@ -4,7 +4,7 @@
 - Available in: Seller Central
 - Data scheme index: ../data-scheme.md
 
-FBA inbound shipment line items from inbound plans with shipment status, destination and source addresses, carrier and tracking details, and plan metadata. quantity is the planned unit count. quantity_shipped, quantity_received, quantity_in_case, and release_date are filled when Amazon reports them.
+FBA inbound shipment items from modern inbound plans and legacy shipment reads, with planned, shipped and received quantities, shipment status, addresses, and available carrier, tracking and plan details. quantity is the planned unit count and is empty on a legacy-only row. quantity_shipped, quantity_received, and quantity_in_case keep a reported zero and stay empty when Amazon omits them. inbound_plan_id and fba_inbound_shipment_id are empty when the row comes only from a legacy shipment read. shipment_confirmation_id then holds the FBA shipment id. Estimated box contents fees repeat on every SKU row and are not a posted freight charge. source_api_versions lists the Amazon APIs that supplied the row. Historical rows are limited to shipments Amazon still returns. There is no AGL classification flag.
 
 - Source type: `SELLER_CENTRAL`
 - Source ID: `8bc6f4bd0931e728b80b9d18abd92bbc7dfe2aeb3c05f290c731d9fb195db3bf`
@@ -29,7 +29,7 @@ FBA inbound shipment line items from inbound plans with shipment status, destina
 
 actions_details_schema_get reports whether each Action type is enabled for the Organization. An Organization owner enables a type in the DataDoe app under Settings > Actions.
 
-## Columns (67)
+## Columns (79)
 
 - `marketplace_id` (`TEXT`, nullable) — Amazon provided ID that represents a specific country where the Seller or Vendor operates. Null on regional rows (attribution_method = regional).
 - `marketplace_country_code` (`TEXT`, nullable) — ISO country code for the Amazon marketplace. Null on regional rows (attribution_method = regional).
@@ -41,20 +41,20 @@ actions_details_schema_get reports whether each Action type is enabled for the O
 - `attribution_method` (`TEXT`, required) — How the row was tied to a marketplace. connection: the row belongs to its marketplace connection. order / sales_channel: tied to the marketplace from the order or sales channel. regional: the row belongs to the whole seller account (regional_account_id), not to one marketplace; it appears once per account in exports for any selected marketplace of that account, and marketplace columns are null. Summing separate per-marketplace exports counts regional rows once per export.
 - `warehouse_country` (`TEXT`, nullable) — Warehouse or fulfillment center country (ISO code, GB for the United Kingdom) when the report has one. It is not the sales marketplace.
 - `source_connection_id` (`TEXT`, required, BigQuery only) — Connection whose report copy holds the row. A regional report is the same for every marketplace of a seller account and one copy is shown per account, so this can be another marketplace connection of the account, including a deleted one while the account still has a connected marketplace. — available in BigQuery only — cannot be requested in exports / MCP `exports_create`
-- `inbound_plan_id` (`TEXT`, required)
-- `fba_inbound_shipment_id` (`TEXT`, required)
+- `inbound_plan_id` (`TEXT`, nullable) — Modern inbound plan id. Empty when the row comes only from a legacy shipment read.
+- `fba_inbound_shipment_id` (`TEXT`, nullable) — Modern inbound shipment id. Empty when the row comes only from a legacy shipment read. The FBA shipment id is shipment_confirmation_id.
 - `seller_sku` (`TEXT`, required)
-- `fnsku` (`TEXT`, required)
-- `child_asin` (`TEXT`, required)
-- `quantity` (`NUMBER`, required) — Planned units for this shipment and seller SKU. This is not the number of units Amazon has received.
+- `fnsku` (`TEXT`, nullable)
+- `child_asin` (`TEXT`, nullable)
+- `quantity` (`NUMBER`, nullable) — Planned units for this shipment and seller SKU. This is not the number of units Amazon has received. Empty on a legacy-only row.
 - `quantity_shipped` (`NUMBER`, nullable) — Units Amazon reports shipped for this shipment and seller SKU. Empty until Amazon supplies the field. Distinct from planned quantity.
 - `quantity_received` (`NUMBER`, nullable) — Cumulative units Amazon reports as received for this shipment and seller SKU. This can be higher than quantity. Zero means Amazon reported zero. Empty means Amazon did not send the field.
 - `quantity_in_case` (`NUMBER`, nullable) — Units in each case. This is not the number of cases or the shipment total. Zero means Amazon reported zero. Empty means Amazon did not send the field.
 - `release_date` (`DATE`, nullable) — Date a preorder item becomes available for sale. This is not the shipment, receipt, delivery, or expiration date. Empty means Amazon did not send the field.
 - `expiration` (`DATE`, nullable)
-- `label_owner` (`TEXT`, required)
+- `label_owner` (`TEXT`, nullable)
 - `manufacturing_lot_code` (`TEXT`, nullable)
-- `prep_instructions` (`JSON`, required)
+- `prep_instructions` (`JSON`, nullable)
 - `shipment_name` (`TEXT`, nullable)
 - `fba_inbound_shipment_status` (`TEXT`, required)
 - `shipment_confirmation_id` (`TEXT`, nullable)
@@ -97,6 +97,18 @@ actions_details_schema_get reports whether each Action type is enabled for the O
 - `plan_status` (`TEXT`, nullable)
 - `plan_created_at` (`DATE`, nullable)
 - `plan_last_updated_at` (`DATE`, nullable)
+- `legacy_prep_details` (`JSON`, nullable) — Prep instruction and prep owner pairs from the legacy shipment item. Empty when Amazon omits the list. An empty array means Amazon sent an empty list.
+- `label_prep_type` (`TEXT`, nullable) — Legacy label preparation type, such as NO_LABEL, SELLER_LABEL, or AMAZON_LABEL. This is not label_owner.
+- `are_cases_required` (`LOGIC`, nullable) — Whether the legacy shipment requires cases. False means Amazon reported false. Empty means Amazon omitted the field.
+- `confirmed_need_by_date` (`DATE`, nullable)
+- `box_contents_source` (`TEXT`, nullable)
+- `estimated_box_contents_fee_total_units` (`NUMBER`, nullable) — Shipment-level estimated box contents fee unit count. Repeated on every SKU row. This is not a sum across SKUs and not a posted freight charge.
+- `estimated_box_contents_fee_per_unit` (`NUMBER`, nullable)
+- `estimated_box_contents_fee_per_unit_currency` (`TEXT`, nullable)
+- `estimated_box_contents_fee_total` (`NUMBER`, nullable) — Shipment-level estimated box contents fee. Repeated on every SKU row. This is not a posted freight charge.
+- `estimated_box_contents_fee_total_currency` (`TEXT`, nullable)
+- `source_api_versions` (`JSON`, required) — Amazon APIs that supplied this row. Values are fulfillmentInbound:v0 and fulfillmentInbound:2024-03-20.
+- `legacy_last_seen_at` (`DATE`, nullable) — Time of the last complete legacy item read. A failed or partial read does not move this time.
 - `last_seen_at` (`DATE`, required)
 
 ---

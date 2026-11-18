@@ -1,6 +1,6 @@
 # DataDoe Actions
 
-Actions let AI agents and integrations read and change Amazon data through DataDoe. This page lists 223 Action types by group, with their limits, results, and group guides.
+Actions let AI agents and integrations read and change Amazon data through DataDoe. This page lists 224 Action types by group, with their limits, results, and group guides.
 
 - How to enable and run Actions: https://www.datadoe.com/hub/docs/datadoe-actions/introduction.md
 - Full JSON, including the JSON Schema of each Action's `details` (`detailsJsonSchema`): https://api.datadoe.com/api/v1/spec/action-scheme
@@ -52,7 +52,7 @@ Actions let AI agents and integrations read and change Amazon data through DataD
 - Accounts: Sellers only
 - Requires PII access: no
 - Max items: 5000 (API) / 50 (MCP)
-- Description: Set the single-unit price for one audience. Audience defaults to ALL. You can set Amazon Business quantity-discount tiers. A merge update changes only that audience.
+- Description: Set the single-unit price for one audience. Audience defaults to ALL. You can set or remove a sale price, and set Amazon Business quantity-discount tiers. A merge update changes only the fields you send for that audience. An omitted sale price stays in place and can be the price buyers pay.
 - Result: Confirmation that Amazon accepted the Action.
 
 #### `AMAZON_LISTINGS_DETAILS_UPDATE`: Update listing details
@@ -591,6 +591,16 @@ Each list query returns one page. Pass `paginationToken` with the same other fie
 - Max items: 20 (API) / 10 (MCP)
 - Description: Subscribe to shipment milestone notifications for one tracking identifier, such as a carrier tracking number or a freight PRO number.
 - Result: Subscription details for each tracking identifier.
+
+#### `AMAZON_SHIPMENT_TRACKING_GET`: Get shipment tracking
+
+- Access: Read
+- Accounts: Sellers only
+- Marketplaces: US marketplace only.
+- Requires PII access: no
+- Max items: 1 (API) / 1 (MCP)
+- Description: Read Amazon tracking detail for one identifier, such as a PRO number or a carrier tracking number with an optional carrier code. This does not create a subscription.
+- Result: Amazon tracking detail in response.trackingDetail.
 
 #### Guide: Buy Shipping labels
 

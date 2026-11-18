@@ -989,7 +989,7 @@
         "api": 5000,
         "mcp": 50
       },
-      "description": "Set the single-unit price for one audience. Audience defaults to ALL. You can set Amazon Business quantity-discount tiers. A merge update changes only that audience.",
+      "description": "Set the single-unit price for one audience. Audience defaults to ALL. You can set or remove a sale price, and set Amazon Business quantity-discount tiers. A merge update changes only the fields you send for that audience. An omitted sale price stays in place and can be the price buyers pay.",
       "result": "Confirmation that Amazon accepted the Action.",
       "detailsJsonSchema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -1022,7 +1022,7 @@
                 "type": "number",
                 "exclusiveMinimum": 0,
                 "maximum": 99999.99,
-                "description": "Single-unit price for this audience. Currency comes from the connection marketplace. Supported for Seller Central accounts only."
+                "description": "Single-unit price for this audience. Currency comes from the connection marketplace. Seller Central accounts only. Changing this price leaves an existing sale price in place. Buyers can pay the sale price until you change or remove it."
               },
               "audience": {
                 "description": "Buyer audience. Omit or use ALL for every buyer. Use B2B for Amazon Business. Use an industry audience such as B2B_EDUCATION when the seller is enrolled in Amazon Business and the product-type schema lists that audience. Defaults to ALL.",
@@ -1032,7 +1032,7 @@
                 "pattern": "^[A-Za-z][A-Za-z0-9_]*$"
               },
               "productType": {
-                "description": "Amazon product type, for example LUGGAGE. Required when audience is not ALL or when quantity discounts are set, so DataDoe can check the offer against the current product-type schema for this seller and marketplace.",
+                "description": "Amazon product type, for example LUGGAGE. Required when the audience is not ALL, when quantity discounts are set, or when a sale price is set or removed. DataDoe uses it to check the offer against the current product-type schema for this seller and marketplace.",
                 "type": "string",
                 "minLength": 1,
                 "maxLength": 64
@@ -1040,6 +1040,17 @@
               "quantityDiscount": {
                 "description": "Quantity discounts for an Amazon Business or industry audience. Omit to leave existing quantity discounts unchanged. Not allowed for audience ALL.",
                 "$ref": "#/$defs/ActionRequestListingsPricingQuantityDiscount"
+              },
+              "salePrice": {
+                "description": "Sale price for this audience, with a start and an end. Leave this out to keep the current sale price. Set this to null to remove it. Buyers can pay the sale price even when it is higher than the single-unit price.",
+                "anyOf": [
+                  {
+                    "$ref": "#/$defs/ActionRequestListingsPricingSalePrice"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
               }
             },
             "required": [
@@ -1093,6 +1104,33 @@
             "required": [
               "lowerBound",
               "value"
+            ],
+            "additionalProperties": false
+          },
+          "ActionRequestListingsPricingSalePrice": {
+            "type": "object",
+            "properties": {
+              "price": {
+                "type": "number",
+                "exclusiveMinimum": 0,
+                "maximum": 99999.99,
+                "description": "Sale price in the marketplace currency."
+              },
+              "startAt": {
+                "type": "string",
+                "minLength": 1,
+                "description": "Start of the sale price. Send a date, such as 2026-05-15, or a UTC time, such as 2026-05-15T07:00:00Z."
+              },
+              "endAt": {
+                "type": "string",
+                "minLength": 1,
+                "description": "End of the sale price. Send a date, such as 2027-01-31, or a UTC time, such as 2027-01-31T08:00:00Z. The end must be after the start."
+              }
+            },
+            "required": [
+              "price",
+              "startAt",
+              "endAt"
             ],
             "additionalProperties": false
           }
@@ -1841,7 +1879,7 @@
           "changes"
         ],
         "additionalProperties": false,
-        "description": "Previews AMAZON_LISTINGS_PRICING_UPDATE. Calls Amazon patchListingsItem (Listings Items v2021-08-01) with mode=VALIDATION_PREVIEW and the same audience prices the pricing update would send. Amazon validation preview does not accept merge, so the preview uses replace. The price update still merges that audience and leaves other audiences and omitted offer fields unchanged. Does not change the price. Returns Amazon status, submissionId, and issues, including pricing issues when the body contains price attributes. dryRun checks the DataDoe request and does not call Amazon. When a change includes productType, dryRun also checks that offer against the current product-type schema for the seller and marketplace. To check before a write, run dryRun, then this Action, then AMAZON_LISTINGS_PRICING_UPDATE. One SKU per Amazon call. Limits count distinct SKUs; all changes for a SKU are validated together. Not a bulk workflow. Seller Central only.",
+        "description": "Previews AMAZON_LISTINGS_PRICING_UPDATE. Calls Amazon patchListingsItem (Listings Items v2021-08-01) with mode=VALIDATION_PREVIEW and the same audience prices the pricing update would send. Amazon validation preview does not accept merge, so the preview uses replace. The price update still merges that audience and leaves other audiences and omitted offer fields unchanged, including an omitted sale price. Does not change the price. Returns Amazon status, submissionId, and issues, including pricing issues when the body contains price attributes. dryRun checks the DataDoe request and does not call Amazon. When a change includes productType, dryRun also checks that offer against the current product-type schema for the seller and marketplace. To check before a write, run dryRun, then this Action, then AMAZON_LISTINGS_PRICING_UPDATE. One SKU per Amazon call. Limits count distinct SKUs; all changes for a SKU are validated together. Not a bulk workflow. Seller Central only.",
         "$defs": {
           "ActionRequestListingsPricingUpdateChange": {
             "type": "object",
@@ -1856,7 +1894,7 @@
                 "type": "number",
                 "exclusiveMinimum": 0,
                 "maximum": 99999.99,
-                "description": "Single-unit price for this audience. Currency comes from the connection marketplace. Supported for Seller Central accounts only."
+                "description": "Single-unit price for this audience. Currency comes from the connection marketplace. Seller Central accounts only. Changing this price leaves an existing sale price in place. Buyers can pay the sale price until you change or remove it."
               },
               "audience": {
                 "description": "Buyer audience. Omit or use ALL for every buyer. Use B2B for Amazon Business. Use an industry audience such as B2B_EDUCATION when the seller is enrolled in Amazon Business and the product-type schema lists that audience. Defaults to ALL.",
@@ -1866,7 +1904,7 @@
                 "pattern": "^[A-Za-z][A-Za-z0-9_]*$"
               },
               "productType": {
-                "description": "Amazon product type, for example LUGGAGE. Required when audience is not ALL or when quantity discounts are set, so DataDoe can check the offer against the current product-type schema for this seller and marketplace.",
+                "description": "Amazon product type, for example LUGGAGE. Required when the audience is not ALL, when quantity discounts are set, or when a sale price is set or removed. DataDoe uses it to check the offer against the current product-type schema for this seller and marketplace.",
                 "type": "string",
                 "minLength": 1,
                 "maxLength": 64
@@ -1874,6 +1912,17 @@
               "quantityDiscount": {
                 "description": "Quantity discounts for an Amazon Business or industry audience. Omit to leave existing quantity discounts unchanged. Not allowed for audience ALL.",
                 "$ref": "#/$defs/ActionRequestListingsPricingQuantityDiscount"
+              },
+              "salePrice": {
+                "description": "Sale price for this audience, with a start and an end. Leave this out to keep the current sale price. Set this to null to remove it. Buyers can pay the sale price even when it is higher than the single-unit price.",
+                "anyOf": [
+                  {
+                    "$ref": "#/$defs/ActionRequestListingsPricingSalePrice"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
               }
             },
             "required": [
@@ -1927,6 +1976,33 @@
             "required": [
               "lowerBound",
               "value"
+            ],
+            "additionalProperties": false
+          },
+          "ActionRequestListingsPricingSalePrice": {
+            "type": "object",
+            "properties": {
+              "price": {
+                "type": "number",
+                "exclusiveMinimum": 0,
+                "maximum": 99999.99,
+                "description": "Sale price in the marketplace currency."
+              },
+              "startAt": {
+                "type": "string",
+                "minLength": 1,
+                "description": "Start of the sale price. Send a date, such as 2026-05-15, or a UTC time, such as 2026-05-15T07:00:00Z."
+              },
+              "endAt": {
+                "type": "string",
+                "minLength": 1,
+                "description": "End of the sale price. Send a date, such as 2027-01-31, or a UTC time, such as 2027-01-31T08:00:00Z. The end must be after the start."
+              }
+            },
+            "required": [
+              "price",
+              "startAt",
+              "endAt"
             ],
             "additionalProperties": false
           }
@@ -13316,8 +13392,8 @@
                 },
                 "aftn": {
                   "type": "string",
-                  "minLength": 1,
-                  "maxLength": 256
+                  "maxLength": 256,
+                  "pattern": "^AFTN\\d+$"
                 },
                 "acsin": {
                   "type": "string",
@@ -13346,6 +13422,11 @@
                       "type": "string",
                       "minLength": 1,
                       "maxLength": 256
+                    },
+                    "carrierCode": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 256
                     }
                   },
                   "required": [
@@ -13360,6 +13441,87 @@
         },
         "required": [
           "trackingIdentifiers"
+        ],
+        "additionalProperties": false
+      }
+    },
+    {
+      "type": "AMAZON_SHIPMENT_TRACKING_GET",
+      "label": "Get shipment tracking",
+      "group": "fbm-shipping",
+      "entity": "Tracking",
+      "access": "READ",
+      "requiresPii": false,
+      "accountAvailability": "SELLERS_ONLY",
+      "marketplaceNote": "US marketplace only.",
+      "maxItems": {
+        "api": 1,
+        "mcp": 1
+      },
+      "description": "Read Amazon tracking detail for one identifier, such as a PRO number or a carrier tracking number with an optional carrier code. This does not create a subscription.",
+      "result": "Amazon tracking detail in response.trackingDetail.",
+      "detailsJsonSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "trackingIdentifier": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 256
+              },
+              "aftn": {
+                "type": "string",
+                "maxLength": 256,
+                "pattern": "^AFTN\\d+$"
+              },
+              "acsin": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 256
+              },
+              "containerNumber": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 256
+              },
+              "houseBillOfLadingNumber": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 256
+              },
+              "proNumber": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 256
+              },
+              "carrierTracking": {
+                "type": "object",
+                "properties": {
+                  "trackingNumber": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 256
+                  },
+                  "carrierCode": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 256
+                  }
+                },
+                "required": [
+                  "trackingNumber"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "required": [
+          "trackingIdentifier"
         ],
         "additionalProperties": false
       }

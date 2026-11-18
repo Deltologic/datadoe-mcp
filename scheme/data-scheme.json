@@ -6079,14 +6079,14 @@
         {
           "name": "inbound_plan_id",
           "type": "TEXT",
-          "nullable": false,
-          "description": null
+          "nullable": true,
+          "description": "Modern inbound plan id. Empty when the row comes only from a legacy shipment read."
         },
         {
           "name": "fba_inbound_shipment_id",
           "type": "TEXT",
-          "nullable": false,
-          "description": null
+          "nullable": true,
+          "description": "Modern inbound shipment id. Empty when the row comes only from a legacy shipment read. The FBA shipment id is shipment_confirmation_id."
         },
         {
           "name": "seller_sku",
@@ -6097,20 +6097,20 @@
         {
           "name": "fnsku",
           "type": "TEXT",
-          "nullable": false,
+          "nullable": true,
           "description": null
         },
         {
           "name": "child_asin",
           "type": "TEXT",
-          "nullable": false,
+          "nullable": true,
           "description": null
         },
         {
           "name": "quantity",
           "type": "NUMBER",
-          "nullable": false,
-          "description": "Planned units for this shipment and seller SKU. This is not the number of units Amazon has received."
+          "nullable": true,
+          "description": "Planned units for this shipment and seller SKU. This is not the number of units Amazon has received. Empty on a legacy-only row."
         },
         {
           "name": "quantity_shipped",
@@ -6145,7 +6145,7 @@
         {
           "name": "label_owner",
           "type": "TEXT",
-          "nullable": false,
+          "nullable": true,
           "description": null
         },
         {
@@ -6157,7 +6157,7 @@
         {
           "name": "prep_instructions",
           "type": "JSON",
-          "nullable": false,
+          "nullable": true,
           "description": null
         },
         {
@@ -6413,6 +6413,78 @@
           "description": null
         },
         {
+          "name": "legacy_prep_details",
+          "type": "JSON",
+          "nullable": true,
+          "description": "Prep instruction and prep owner pairs from the legacy shipment item. Empty when Amazon omits the list. An empty array means Amazon sent an empty list."
+        },
+        {
+          "name": "label_prep_type",
+          "type": "TEXT",
+          "nullable": true,
+          "description": "Legacy label preparation type, such as NO_LABEL, SELLER_LABEL, or AMAZON_LABEL. This is not label_owner."
+        },
+        {
+          "name": "are_cases_required",
+          "type": "LOGIC",
+          "nullable": true,
+          "description": "Whether the legacy shipment requires cases. False means Amazon reported false. Empty means Amazon omitted the field."
+        },
+        {
+          "name": "confirmed_need_by_date",
+          "type": "DATE",
+          "nullable": true,
+          "description": null
+        },
+        {
+          "name": "box_contents_source",
+          "type": "TEXT",
+          "nullable": true,
+          "description": null
+        },
+        {
+          "name": "estimated_box_contents_fee_total_units",
+          "type": "NUMBER",
+          "nullable": true,
+          "description": "Shipment-level estimated box contents fee unit count. Repeated on every SKU row. This is not a sum across SKUs and not a posted freight charge."
+        },
+        {
+          "name": "estimated_box_contents_fee_per_unit",
+          "type": "NUMBER",
+          "nullable": true,
+          "description": null
+        },
+        {
+          "name": "estimated_box_contents_fee_per_unit_currency",
+          "type": "TEXT",
+          "nullable": true,
+          "description": null
+        },
+        {
+          "name": "estimated_box_contents_fee_total",
+          "type": "NUMBER",
+          "nullable": true,
+          "description": "Shipment-level estimated box contents fee. Repeated on every SKU row. This is not a posted freight charge."
+        },
+        {
+          "name": "estimated_box_contents_fee_total_currency",
+          "type": "TEXT",
+          "nullable": true,
+          "description": null
+        },
+        {
+          "name": "source_api_versions",
+          "type": "JSON",
+          "nullable": false,
+          "description": "Amazon APIs that supplied this row. Values are fulfillmentInbound:v0 and fulfillmentInbound:2024-03-20."
+        },
+        {
+          "name": "legacy_last_seen_at",
+          "type": "DATE",
+          "nullable": true,
+          "description": "Time of the last complete legacy item read. A failed or partial read does not move this time."
+        },
+        {
           "name": "last_seen_at",
           "type": "DATE",
           "nullable": false,
@@ -6424,7 +6496,7 @@
       "defaultDataset": false,
       "enabled": true,
       "rowCountBilling": true,
-      "description": "FBA inbound shipment line items from inbound plans with shipment status, destination and source addresses, carrier and tracking details, and plan metadata. quantity is the planned unit count. quantity_shipped, quantity_received, quantity_in_case, and release_date are filled when Amazon reports them.",
+      "description": "FBA inbound shipment items from modern inbound plans and legacy shipment reads, with planned, shipped and received quantities, shipment status, addresses, and available carrier, tracking and plan details. quantity is the planned unit count and is empty on a legacy-only row. quantity_shipped, quantity_received, and quantity_in_case keep a reported zero and stay empty when Amazon omits them. inbound_plan_id and fba_inbound_shipment_id are empty when the row comes only from a legacy shipment read. shipment_confirmation_id then holds the FBA shipment id. Estimated box contents fees repeat on every SKU row and are not a posted freight charge. source_api_versions lists the Amazon APIs that supplied the row. Historical rows are limited to shipments Amazon still returns. There is no AGL classification flag.",
       "requiresDatePeriod": false,
       "issues": [],
       "relatedActions": [
@@ -37086,7 +37158,7 @@
       "defaultDataset": false,
       "enabled": true,
       "rowCountBilling": true,
-      "description": "Amazon DSP performance per advertiser, date, order, line item, and city. Amazon DSP only (DataDoe DSP slot of a seller or vendor), refreshed once a day, not intraday. Rows map to a seller or vendor through seller_or_vendor_id, which is null when the DSP advertiser is not mapped. DSP order = campaign and line item = ad group in the new Amazon DSP naming. city is a bare city name (for example Columbus) and is not unique across regions; the country is the marketplace country. Large table: always filter by date.",
+      "description": "Amazon DSP performance per advertiser, date, order, line item, and city. Amazon DSP only (DataDoe DSP slot of a seller or vendor), refreshed once a day, not intraday. Rows map to a seller or vendor through seller_or_vendor_id, which is null when the DSP advertiser is not mapped. DSP order = campaign and line item = ad group in the new Amazon DSP naming. city is a bare city name (for example Columbus) and is not unique across regions. marketplace_country_code and marketplace_country_name describe the marketplace of the seller or vendor, not where the ad was delivered; use amazon_ads_dsp_performance_by_country_by_date for the delivery country. Large table: always filter by date.",
       "requiresDatePeriod": true,
       "issues": [],
       "fetchPeriods": [
@@ -37114,6 +37186,319 @@
         "amazon dsp",
         "dsp geo",
         "dsp city"
+      ]
+    },
+    {
+      "id": "348b551df32f38c7cfe62fad7b8e43aeed0261294e5311a2495359854cfbd603",
+      "name": "DSP Performance by Country & Date",
+      "tableName": "amazon_ads_dsp_performance_by_country_by_date",
+      "type": "AMAZON_ADS",
+      "columns": [
+        {
+          "name": "marketplace_id",
+          "type": "TEXT",
+          "nullable": false,
+          "description": "Amazon marketplace of the DataDoe DSP slot the advertiser is fetched for."
+        },
+        {
+          "name": "marketplace_country_code",
+          "type": "TEXT",
+          "nullable": false,
+          "description": "ISO country code for the Amazon marketplace."
+        },
+        {
+          "name": "marketplace_country_name",
+          "type": "TEXT",
+          "nullable": false,
+          "description": "Human-readable country name for the marketplace (derived from marketplace_id)."
+        },
+        {
+          "name": "seller_or_vendor_id",
+          "type": "TEXT",
+          "nullable": true,
+          "description": "DataDoe account identifier the DSP advertiser is mapped to, used by MCP/API calls (sellers_and_vendors_list, exports). Null when the advertiser is not mapped to a seller or vendor."
+        },
+        {
+          "name": "seller_or_vendor_name",
+          "type": "TEXT",
+          "nullable": true,
+          "description": "DataDoe connection context display name of the mapped seller or vendor. Null when the advertiser is not mapped."
+        },
+        {
+          "name": "marketplace_seller_id",
+          "type": "TEXT",
+          "nullable": true,
+          "description": "Amazon selling partner id of the mapped seller. Null for vendors, unmapped advertisers, and contexts without a seller id."
+        },
+        {
+          "name": "amazon_ads_profile_id",
+          "type": "TEXT",
+          "nullable": true,
+          "description": "Amazon Ads profile identifier."
+        },
+        {
+          "name": "dsp_advertiser_id",
+          "type": "TEXT",
+          "nullable": false,
+          "description": "Amazon DSP advertiser identifier. Join amazon_sellers_and_vendors_context on organization_id, store_id, ads_dsp_connection_id = ads_connection_id, and dsp_advertiser_id."
+        },
+        {
+          "name": "dsp_advertiser_name",
+          "type": "TEXT",
+          "nullable": true,
+          "description": "Amazon DSP advertiser name."
+        },
+        {
+          "name": "date",
+          "type": "DATE",
+          "nullable": false,
+          "description": "Report date (Amazon DSP daily report)."
+        },
+        {
+          "name": "dt_created",
+          "type": "DATE",
+          "nullable": false,
+          "description": "Timestamp when DataDoe first stored this row."
+        },
+        {
+          "name": "dt_updated",
+          "type": "DATE",
+          "nullable": false,
+          "description": "Timestamp when DataDoe last updated this row."
+        },
+        {
+          "name": "dsp_order_id",
+          "type": "TEXT",
+          "nullable": false,
+          "description": "Amazon DSP order identifier. An order is a campaign in the new Amazon DSP naming."
+        },
+        {
+          "name": "dsp_order_name",
+          "type": "TEXT",
+          "nullable": true,
+          "description": "Amazon DSP order (campaign) name."
+        },
+        {
+          "name": "dsp_line_item_id",
+          "type": "TEXT",
+          "nullable": false,
+          "description": "Amazon DSP line item identifier. A line item is an ad group in the new Amazon DSP naming."
+        },
+        {
+          "name": "dsp_line_item_name",
+          "type": "TEXT",
+          "nullable": true,
+          "description": "Amazon DSP line item (ad group) name."
+        },
+        {
+          "name": "country",
+          "type": "TEXT",
+          "nullable": true,
+          "description": "Country where the ad was delivered, as an English country name reported by Amazon DSP (for example Australia or Viet Nam), not an ISO code. Unallocated or null when Amazon could not attribute the country."
+        },
+        {
+          "name": "ad_currency",
+          "type": "TEXT",
+          "nullable": true,
+          "description": "Currency of all monetary Amazon DSP values in the row (order currency)."
+        },
+        {
+          "name": "ad_impressions",
+          "type": "NUMBER",
+          "nullable": false,
+          "description": "Amazon DSP impressions after Amazon removed invalid traffic. Gross impressions, including invalid traffic, are ad_gross_impressions."
+        },
+        {
+          "name": "ad_viewable_impressions",
+          "type": "NUMBER",
+          "nullable": false,
+          "description": "Impressions that met the Amazon DSP viewability standard."
+        },
+        {
+          "name": "ad_clicks",
+          "type": "NUMBER",
+          "nullable": false,
+          "description": "Amazon DSP click-throughs after Amazon removed invalid traffic."
+        },
+        {
+          "name": "ad_spend",
+          "type": "NUMBER",
+          "nullable": false,
+          "description": "Amazon DSP totalCost: supply cost plus Amazon fees (ad_supply_cost + ad_fees_total), excluding third-party fees paid by the agency. In ad_currency."
+        },
+        {
+          "name": "ad_agency_fee",
+          "type": "NUMBER",
+          "nullable": false,
+          "description": "Agency fee reported by Amazon DSP. In ad_currency."
+        },
+        {
+          "name": "ad_sales",
+          "type": "NUMBER",
+          "nullable": false,
+          "description": "Attributed sales (DSP totalSales). Promoted ASINs plus brand halo (non-promoted ASINs of the same brands). Amazon DSP 14-day attribution after an ad view or click. In ad_currency."
+        },
+        {
+          "name": "ad_sales_promoted",
+          "type": "NUMBER",
+          "nullable": false,
+          "description": "Attributed sales (DSP sales). Promoted ASINs of the line item only, excluding brand halo. Amazon DSP 14-day attribution after an ad view or click. In ad_currency."
+        },
+        {
+          "name": "ad_orders",
+          "type": "NUMBER",
+          "nullable": false,
+          "description": "Attributed purchases (DSP totalPurchases). Promoted ASINs plus brand halo (non-promoted ASINs of the same brands). Amazon DSP 14-day attribution after an ad view or click."
+        },
+        {
+          "name": "ad_orders_promoted",
+          "type": "NUMBER",
+          "nullable": false,
+          "description": "Attributed purchases (DSP purchases). Promoted ASINs of the line item only, excluding brand halo. Amazon DSP 14-day attribution after an ad view or click."
+        },
+        {
+          "name": "ad_units_sold",
+          "type": "NUMBER",
+          "nullable": false,
+          "description": "Attributed units sold (DSP totalUnitsSold). Promoted ASINs plus brand halo (non-promoted ASINs of the same brands). Amazon DSP 14-day attribution after an ad view or click."
+        },
+        {
+          "name": "ad_units_sold_promoted",
+          "type": "NUMBER",
+          "nullable": false,
+          "description": "Attributed units sold (DSP unitsSold). Promoted ASINs of the line item only, excluding brand halo. Amazon DSP 14-day attribution after an ad view or click."
+        },
+        {
+          "name": "ad_sales_new_to_brand",
+          "type": "NUMBER",
+          "nullable": false,
+          "description": "New-to-brand sales (DSP totalNewToBrandSales): sales to customers who did not buy the brand in the past 12 months. Promoted ASINs plus brand halo (non-promoted ASINs of the same brands). Amazon DSP 14-day attribution after an ad view or click. In ad_currency."
+        },
+        {
+          "name": "ad_sales_new_to_brand_promoted",
+          "type": "NUMBER",
+          "nullable": false,
+          "description": "New-to-brand sales (DSP newToBrandProductSales). Promoted ASINs of the line item only, excluding brand halo. Amazon DSP 14-day attribution after an ad view or click. In ad_currency."
+        },
+        {
+          "name": "ad_orders_new_to_brand",
+          "type": "NUMBER",
+          "nullable": false,
+          "description": "New-to-brand purchases (DSP totalNewToBrandPurchases). Promoted ASINs plus brand halo (non-promoted ASINs of the same brands). Amazon DSP 14-day attribution after an ad view or click."
+        },
+        {
+          "name": "ad_orders_new_to_brand_promoted",
+          "type": "NUMBER",
+          "nullable": false,
+          "description": "New-to-brand purchases (DSP newToBrandPurchases). Promoted ASINs of the line item only, excluding brand halo. Amazon DSP 14-day attribution after an ad view or click."
+        },
+        {
+          "name": "ad_detail_page_views",
+          "type": "NUMBER",
+          "nullable": false,
+          "description": "Attributed detail page views (DSP totalDetailPageView). Promoted ASINs plus brand halo (non-promoted ASINs of the same brands). Amazon DSP 14-day attribution after an ad view or click."
+        },
+        {
+          "name": "ad_detail_page_views_promoted",
+          "type": "NUMBER",
+          "nullable": false,
+          "description": "Attributed detail page views (DSP detailPageViews). Promoted ASINs of the line item only, excluding brand halo. Amazon DSP 14-day attribution after an ad view or click."
+        },
+        {
+          "name": "ad_add_to_cart",
+          "type": "NUMBER",
+          "nullable": false,
+          "description": "Attributed add-to-cart events (DSP totalAddToCart). Promoted ASINs plus brand halo (non-promoted ASINs of the same brands). Amazon DSP 14-day attribution after an ad view or click."
+        },
+        {
+          "name": "ad_add_to_cart_promoted",
+          "type": "NUMBER",
+          "nullable": false,
+          "description": "Attributed add-to-cart events (DSP addToCart). Promoted ASINs of the line item only, excluding brand halo. Amazon DSP 14-day attribution after an ad view or click."
+        },
+        {
+          "name": "ad_gross_impressions",
+          "type": "NUMBER",
+          "nullable": false,
+          "description": "Times the ad was displayed, including invalid traffic (fraudulent, non-human, and other illegitimate impressions). ad_impressions excludes that traffic."
+        },
+        {
+          "name": "ad_invalid_impressions",
+          "type": "NUMBER",
+          "nullable": false,
+          "description": "Impressions removed by the traffic quality filter. Not included in ad_impressions."
+        },
+        {
+          "name": "kindle_edition_normalized_pages_read",
+          "type": "NUMBER",
+          "nullable": true,
+          "description": "Kindle Edition Normalized Pages (KENP) read, attributed to the ad. A page count, not money. Amazon DSP reports no attribution window for Kindle metrics. Null when the report has no value."
+        },
+        {
+          "name": "kindle_edition_normalized_pages_read_from_clicks",
+          "type": "NUMBER",
+          "nullable": true,
+          "description": "Part of kindle_edition_normalized_pages_read attributed to ad clicks. Amazon DSP reports no attribution window for Kindle metrics. Null when the report has no value."
+        },
+        {
+          "name": "kindle_edition_normalized_pages_read_from_views",
+          "type": "NUMBER",
+          "nullable": true,
+          "description": "Part of kindle_edition_normalized_pages_read attributed to ad views. Amazon DSP reports no attribution window for Kindle metrics. Null when the report has no value."
+        },
+        {
+          "name": "ad_kindle_detail_page_views",
+          "type": "NUMBER",
+          "nullable": true,
+          "description": "Attributed Kindle detail page views (DSP kindleDetailPageView). Amazon DSP reports no attribution window for Kindle metrics. Null when the report has no value."
+        },
+        {
+          "name": "ad_kindle_detail_page_views_from_clicks",
+          "type": "NUMBER",
+          "nullable": true,
+          "description": "Part of ad_kindle_detail_page_views attributed to ad clicks. Amazon DSP reports no attribution window for Kindle metrics. Null when the report has no value."
+        },
+        {
+          "name": "ad_kindle_detail_page_views_from_views",
+          "type": "NUMBER",
+          "nullable": true,
+          "description": "Part of ad_kindle_detail_page_views attributed to ad views. Amazon DSP reports no attribution window for Kindle metrics. Null when the report has no value."
+        }
+      ],
+      "userManaged": false,
+      "isPremium": false,
+      "defaultDataset": false,
+      "enabled": true,
+      "rowCountBilling": true,
+      "description": "Amazon DSP performance per advertiser, date, order, line item, and delivery country. Amazon DSP only (DataDoe DSP slot of a seller or vendor), refreshed once a day, not intraday. Rows map to a seller or vendor through seller_or_vendor_id, which is null when the DSP advertiser is not mapped. DSP order = campaign and line item = ad group in the new Amazon DSP naming. country is where the ad was delivered and can differ from marketplace_country_code, the marketplace of the seller or vendor; filter on country to find line items that deliver outside their marketplace. Country and city rows break down the same delivery, so never add them together.",
+      "requiresDatePeriod": true,
+      "issues": [],
+      "fetchPeriods": [
+        {
+          "type": "INITIAL",
+          "numberOfDays": 95
+        },
+        {
+          "type": "RECURRING_DAILY",
+          "numberOfDays": 28
+        },
+        {
+          "type": "RECURRING_MONTHLY",
+          "numberOfDays": 56
+        }
+      ],
+      "sources": [
+        "connections",
+        "raw_ads_api_report_geo_country_dsp"
+      ],
+      "containsPii": false,
+      "initialLoadProgress": null,
+      "searchAliases": [
+        "dsp",
+        "amazon dsp",
+        "dsp geo",
+        "dsp country",
+        "delivery country"
       ]
     },
     {
