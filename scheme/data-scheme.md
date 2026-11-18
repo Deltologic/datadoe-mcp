@@ -187,10 +187,10 @@ AWD outbound distribution packages exploded from the order and from each shipmen
 ### FBA Inbound Shipments
 
 - Table name: `amazon_fba_inbound_shipments`
-- Columns: 67
+- Columns: 79
 - Markdown: data-scheme/amazon_fba_inbound_shipments.md
 
-FBA inbound shipment line items from inbound plans with shipment status, destination and source addresses, carrier and tracking details, and plan metadata. quantity is the planned unit count. quantity_shipped, quantity_received, quantity_in_case, and release_date are filled when Amazon reports them.
+FBA inbound shipment items from modern inbound plans and legacy shipment reads, with planned, shipped and received quantities, shipment status, addresses, and available carrier, tracking and plan details. quantity is the planned unit count and is empty on a legacy-only row. quantity_shipped, quantity_received, and quantity_in_case keep a reported zero and stay empty when Amazon omits them. inbound_plan_id and fba_inbound_shipment_id are empty when the row comes only from a legacy shipment read. shipment_confirmation_id then holds the FBA shipment id. Estimated box contents fees repeat on every SKU row and are not a posted freight charge. source_api_versions lists the Amazon APIs that supplied the row. Historical rows are limited to shipments Amazon still returns. There is no AGL classification flag.
 
 ### FBA Inbound Shipment Boxes
 
@@ -1258,7 +1258,7 @@ WePay/collect Vendor Retail Procurement shipments (submitted or requested for ro
 
 Lookup of DataDoe Amazon accounts for Seller Central, Vendor Central, Amazon Ads, and Amazon DSP. One row per connection, plus one row per Amazon DSP advertiser mapped to a seller or vendor on a shared agency Ads account. A DSP-only agency seat is not its own seller. seller_or_vendor_id equals connection_context_id and is not unique: one context can have a Seller Central row, an Amazon Ads row, and one row per DSP advertiser. Join Seller Central and Vendor Central facts on sp_connection_id or vendor_connection_id. Attribute DSP facts on organization_id, store_id, ads_dsp_connection_id, and dsp_advertiser_id.
 
-## Amazon Ads (82 tables)
+## Amazon Ads (83 tables)
 
 ### Ad Performance by ASIN & Date
 
@@ -1298,7 +1298,15 @@ Amazon DSP product conversions per advertiser, date, order, line item, child ASI
 - Columns: 45
 - Markdown: data-scheme/amazon_ads_dsp_performance_by_city_by_date.md
 
-Amazon DSP performance per advertiser, date, order, line item, and city. Amazon DSP only (DataDoe DSP slot of a seller or vendor), refreshed once a day, not intraday. Rows map to a seller or vendor through seller_or_vendor_id, which is null when the DSP advertiser is not mapped. DSP order = campaign and line item = ad group in the new Amazon DSP naming. city is a bare city name (for example Columbus) and is not unique across regions; the country is the marketplace country. Large table: always filter by date.
+Amazon DSP performance per advertiser, date, order, line item, and city. Amazon DSP only (DataDoe DSP slot of a seller or vendor), refreshed once a day, not intraday. Rows map to a seller or vendor through seller_or_vendor_id, which is null when the DSP advertiser is not mapped. DSP order = campaign and line item = ad group in the new Amazon DSP naming. city is a bare city name (for example Columbus) and is not unique across regions. marketplace_country_code and marketplace_country_name describe the marketplace of the seller or vendor, not where the ad was delivered; use amazon_ads_dsp_performance_by_country_by_date for the delivery country. Large table: always filter by date.
+
+### DSP Performance by Country & Date
+
+- Table name: `amazon_ads_dsp_performance_by_country_by_date`
+- Columns: 45
+- Markdown: data-scheme/amazon_ads_dsp_performance_by_country_by_date.md
+
+Amazon DSP performance per advertiser, date, order, line item, and delivery country. Amazon DSP only (DataDoe DSP slot of a seller or vendor), refreshed once a day, not intraday. Rows map to a seller or vendor through seller_or_vendor_id, which is null when the DSP advertiser is not mapped. DSP order = campaign and line item = ad group in the new Amazon DSP naming. country is where the ad was delivered and can differ from marketplace_country_code, the marketplace of the seller or vendor; filter on country to find line items that deliver outside their marketplace. Country and city rows break down the same delivery, so never add them together.
 
 ### DSP Performance by Audience & Date
 

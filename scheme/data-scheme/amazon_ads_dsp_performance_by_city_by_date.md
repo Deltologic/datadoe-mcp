@@ -4,7 +4,7 @@
 - Available in: Amazon Ads
 - Data scheme index: ../data-scheme.md
 
-Amazon DSP performance per advertiser, date, order, line item, and city. Amazon DSP only (DataDoe DSP slot of a seller or vendor), refreshed once a day, not intraday. Rows map to a seller or vendor through seller_or_vendor_id, which is null when the DSP advertiser is not mapped. DSP order = campaign and line item = ad group in the new Amazon DSP naming. city is a bare city name (for example Columbus) and is not unique across regions; the country is the marketplace country. Large table: always filter by date.
+Amazon DSP performance per advertiser, date, order, line item, and city. Amazon DSP only (DataDoe DSP slot of a seller or vendor), refreshed once a day, not intraday. Rows map to a seller or vendor through seller_or_vendor_id, which is null when the DSP advertiser is not mapped. DSP order = campaign and line item = ad group in the new Amazon DSP naming. city is a bare city name (for example Columbus) and is not unique across regions. marketplace_country_code and marketplace_country_name describe the marketplace of the seller or vendor, not where the ad was delivered; use amazon_ads_dsp_performance_by_country_by_date for the delivery country. Large table: always filter by date.
 
 - Source type: `AMAZON_ADS`
 - Source ID: `c5e669002482c32ecbaff6eb3410de72886a9fc46e02077e92b0867bbae514c7`
