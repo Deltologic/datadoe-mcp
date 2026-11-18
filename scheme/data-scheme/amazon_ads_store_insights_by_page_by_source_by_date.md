@@ -18,8 +18,8 @@ Daily Brand Store traffic by page and the source category Amazon returned for th
 
 ## Fetch periods
 
-- `INITIAL` (418 days)
-- `RECURRING_DAILY` (30 days)
+- `INITIAL` (7 days)
+- `RECURRING_DAILY` (1 days)
 
 ## Columns (24)
 

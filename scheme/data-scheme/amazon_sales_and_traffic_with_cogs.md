@@ -4,7 +4,7 @@
 - Available in: Seller Central
 - Data scheme index: ../data-scheme.md
 
-Deprecated: amazon_sales_and_traffic_with_cogs will be removed on November 16, 2026. Use amazon_profit_by_sku_and_date for SKU and child-ASIN analysis and amazon_profit_by_date for daily account summaries. These tables provide consistent sales and profitability definitions and more current sales data; Amazon traffic reports can still be delayed. SAT contains Sales and Traffic report metrics per child ASIN and date, including ordered sales and units. Read the SAT migration to profit tables guide at https://app.datadoe.com/hub/docs/datadoe-data/sat-migration-to-profit-tables or open a support ticket for help. The underlying report data remains available through the Raw BigQuery integration.
+Deprecated: amazon_sales_and_traffic_with_cogs will be removed on November 22, 2026. Use amazon_profit_by_sku_and_date for SKU and child-ASIN analysis and amazon_profit_by_date for daily account summaries. These tables provide consistent sales and profitability definitions and more current sales data; Amazon traffic reports can still be delayed. SAT contains Sales and Traffic report metrics per child ASIN and date, including ordered sales and units. Read the SAT migration to profit tables guide at https://app.datadoe.com/hub/docs/datadoe-data/sat-migration-to-profit-tables or open a support ticket for help. The underlying report data remains available through the Raw BigQuery integration.
 
 - Source type: `SELLER_CENTRAL`
 - Source ID: `401ffcd7e50c1ea9a18cacf221ddf99858db20a0f31eff65fc22a8e8140c7e1b`
@@ -19,12 +19,12 @@ Deprecated: amazon_sales_and_traffic_with_cogs will be removed on November 16, 2
 ## Fetch periods
 
 - `INITIAL` (35 days)
-- `RECURRING_DAILY` (4 days)
-- `RECURRING_MONTHLY` (30 days, shifted by 4 days)
+- `RECURRING_DAILY` (5 days)
+- `RECURRING_MONTHLY` (30 days, shifted by 5 days)
 
 ## Known issues
 
-- **Deprecated: removal on November 16, 2026** — The Sales & Traffic by ASIN & Date (SAT) table will be removed on November 16, 2026. Migrate reports, exports, schedules, and integrations to Profit by SKU & Date or Profit by Date before that date. Read the [SAT migration to profit tables guide](https://app.datadoe.com/hub/docs/datadoe-data/sat-migration-to-profit-tables) or [open a support ticket](https://forms.clickup.com/9015200219/f/8cnj2ev-38615/AOYF9I35QFOXWJQXIG?type=Form&source=hub-sat-migration-docs) for help. The underlying report data remains available through the Raw BigQuery integration.
+- **Deprecated: removal on November 22, 2026** — The Sales & Traffic by ASIN & Date (SAT) table will be removed on November 22, 2026. Migrate reports, exports, schedules, and integrations to Profit by SKU & Date or Profit by Date before that date. Read the [SAT migration to profit tables guide](https://app.datadoe.com/hub/docs/datadoe-data/sat-migration-to-profit-tables) or [open a support ticket](https://forms.clickup.com/9015200219/f/8cnj2ev-38615/AOYF9I35QFOXWJQXIG?type=Form&source=hub-sat-migration-docs) for help. The underlying report data remains available through the Raw BigQuery integration.
 
 ## Search aliases
 
