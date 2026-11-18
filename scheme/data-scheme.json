@@ -376,321 +376,321 @@
         {
           "name": "avg_buybox_percentage",
           "type": "NUMBER",
-          "nullable": false,
-          "description": "Buy box percentage for the child ASIN on this date. Buy box percentage is the share of page views where the buy box (add to cart) appeared for your offers. From Amazon Sales and Traffic (Data Kiosk). Data may be delayed by up to 3 days and may remain incomplete or be revised for up to 30 days after the row date due to Amazon reporting limitations.",
+          "nullable": true,
+          "description": "Buy box percentage for the child ASIN on this date. Buy box percentage is the share of page views where the buy box (add to cart) appeared for your offers. Describes the child ASIN, not the SKU, and repeats on every SKU row of that child ASIN and date, for example its FBA and FBM SKUs. Take max per seller, marketplace, child ASIN and date, including rows with no SKU. Do not add percentages; for several days or ASINs, recalculate the ratio from totals. Empty when Amazon has not published traffic for the connection and date yet; 0 when traffic is published but the child ASIN had none. From Amazon Sales and Traffic (Data Kiosk). Data may be delayed by up to 3 days and may remain incomplete or be revised for up to 30 days after the row date due to Amazon reporting limitations.",
           "definition": "amazon_sales_and_traffic_with_cogs.buybox_percentage"
         },
         {
           "name": "avg_buybox_percentage_b2b",
           "type": "NUMBER",
-          "nullable": false,
-          "description": "B2B buy box percentage for the child ASIN on this date, from Amazon Sales and Traffic buyBoxPercentageB2B. From Amazon Sales and Traffic (Data Kiosk). Data may be delayed by up to 3 days and may remain incomplete or be revised for up to 30 days after the row date due to Amazon reporting limitations.",
+          "nullable": true,
+          "description": "B2B buy box percentage for the child ASIN on this date, from Amazon Sales and Traffic buyBoxPercentageB2B. Describes the child ASIN, not the SKU, and repeats on every SKU row of that child ASIN and date, for example its FBA and FBM SKUs. Take max per seller, marketplace, child ASIN and date, including rows with no SKU. Do not add percentages; for several days or ASINs, recalculate the ratio from totals. Empty when Amazon has not published traffic for the connection and date yet; 0 when traffic is published but the child ASIN had none. From Amazon Sales and Traffic (Data Kiosk). Data may be delayed by up to 3 days and may remain incomplete or be revised for up to 30 days after the row date due to Amazon reporting limitations.",
           "definition": "amazon_sales_and_traffic_with_cogs.buybox_percentage_b2b"
         },
         {
           "name": "avg_buybox_percentage_b2c",
           "type": "NUMBER",
-          "nullable": false,
-          "description": "B2C buy box percentage for the child ASIN on this date. Amazon does not publish B2C buy box; reconstructed from overall and B2B buy box weighted by page views. From Amazon Sales and Traffic (Data Kiosk). Data may be delayed by up to 3 days and may remain incomplete or be revised for up to 30 days after the row date due to Amazon reporting limitations.",
+          "nullable": true,
+          "description": "B2C buy box percentage for the child ASIN on this date. Amazon does not publish B2C buy box; reconstructed from overall and B2B buy box weighted by page views. Describes the child ASIN, not the SKU, and repeats on every SKU row of that child ASIN and date, for example its FBA and FBM SKUs. Take max per seller, marketplace, child ASIN and date, including rows with no SKU. Do not add percentages; for several days or ASINs, recalculate the ratio from totals. Empty when Amazon has not published traffic for the connection and date yet; 0 when traffic is published but the child ASIN had none. From Amazon Sales and Traffic (Data Kiosk). Data may be delayed by up to 3 days and may remain incomplete or be revised for up to 30 days after the row date due to Amazon reporting limitations.",
           "definition": "((amazon_sales_and_traffic_with_cogs.buybox_percentage ?? 0) * (amazon_sales_and_traffic_with_cogs.page_views ?? 0) - (amazon_sales_and_traffic_with_cogs.buybox_percentage_b2b ?? 0) * (amazon_sales_and_traffic_with_cogs.page_views_b2b ?? 0)) / ((amazon_sales_and_traffic_with_cogs.page_views ?? 0) - (amazon_sales_and_traffic_with_cogs.page_views_b2b ?? 0))"
         },
         {
           "name": "total_sessions",
           "type": "NUMBER",
-          "nullable": false,
-          "description": "Sessions for the child ASIN on this date. A session is a visit to your Amazon product detail pages via browser or mobile app. From Amazon Sales and Traffic (Data Kiosk). Data may be delayed by up to 3 days and may remain incomplete or be revised for up to 30 days after the row date due to Amazon reporting limitations.",
+          "nullable": true,
+          "description": "Sessions for the child ASIN on this date. A session is a visit to your Amazon product detail pages via browser or mobile app. Describes the child ASIN, not the SKU, and repeats on every SKU row of that child ASIN and date, for example its FBA and FBM SKUs. Do not add it across SKU rows: take max per seller, marketplace, child ASIN and date, including rows with no SKU, then add the daily values. Empty when Amazon has not published traffic for the connection and date yet; 0 when traffic is published but the child ASIN had none. From Amazon Sales and Traffic (Data Kiosk). Data may be delayed by up to 3 days and may remain incomplete or be revised for up to 30 days after the row date due to Amazon reporting limitations.",
           "definition": "sum(amazon_sales_and_traffic_with_cogs.session)"
         },
         {
           "name": "sessions_b2b",
           "type": "NUMBER",
-          "nullable": false,
-          "description": "B2B sessions for the child ASIN on this date, from Amazon Sales and Traffic sessionsB2B. Included in total_sessions, not additive. From Amazon Sales and Traffic (Data Kiosk). Data may be delayed by up to 3 days and may remain incomplete or be revised for up to 30 days after the row date due to Amazon reporting limitations.",
+          "nullable": true,
+          "description": "B2B sessions for the child ASIN on this date, from Amazon Sales and Traffic sessionsB2B. Included in total_sessions, not additive. Describes the child ASIN, not the SKU, and repeats on every SKU row of that child ASIN and date, for example its FBA and FBM SKUs. Do not add it across SKU rows: take max per seller, marketplace, child ASIN and date, including rows with no SKU, then add the daily values. Empty when Amazon has not published traffic for the connection and date yet; 0 when traffic is published but the child ASIN had none. From Amazon Sales and Traffic (Data Kiosk). Data may be delayed by up to 3 days and may remain incomplete or be revised for up to 30 days after the row date due to Amazon reporting limitations.",
           "definition": "sum(amazon_sales_and_traffic_with_cogs.sessions_b2b)"
         },
         {
           "name": "sessions_b2c",
           "type": "NUMBER",
-          "nullable": false,
-          "description": "B2C sessions for the child ASIN on this date, calculated as total_sessions minus sessions_b2b. Amazon does not publish a B2C sessions field. From Amazon Sales and Traffic (Data Kiosk). Data may be delayed by up to 3 days and may remain incomplete or be revised for up to 30 days after the row date due to Amazon reporting limitations.",
+          "nullable": true,
+          "description": "B2C sessions for the child ASIN on this date, calculated as total_sessions minus sessions_b2b. Amazon does not publish a B2C sessions field. Describes the child ASIN, not the SKU, and repeats on every SKU row of that child ASIN and date, for example its FBA and FBM SKUs. Do not add it across SKU rows: take max per seller, marketplace, child ASIN and date, including rows with no SKU, then add the daily values. Empty when Amazon has not published traffic for the connection and date yet; 0 when traffic is published but the child ASIN had none. From Amazon Sales and Traffic (Data Kiosk). Data may be delayed by up to 3 days and may remain incomplete or be revised for up to 30 days after the row date due to Amazon reporting limitations.",
           "definition": "sum(Math.max((amazon_sales_and_traffic_with_cogs.session ?? 0) - (amazon_sales_and_traffic_with_cogs.sessions_b2b ?? 0), 0))"
         },
         {
           "name": "total_page_views",
           "type": "NUMBER",
-          "nullable": false,
-          "description": "Page views for the child ASIN on this date. Page views count visits to your Amazon product detail pages via browser or mobile app. From Amazon Sales and Traffic (Data Kiosk). Data may be delayed by up to 3 days and may remain incomplete or be revised for up to 30 days after the row date due to Amazon reporting limitations.",
+          "nullable": true,
+          "description": "Page views for the child ASIN on this date. Page views count visits to your Amazon product detail pages via browser or mobile app. Describes the child ASIN, not the SKU, and repeats on every SKU row of that child ASIN and date, for example its FBA and FBM SKUs. Do not add it across SKU rows: take max per seller, marketplace, child ASIN and date, including rows with no SKU, then add the daily values. Empty when Amazon has not published traffic for the connection and date yet; 0 when traffic is published but the child ASIN had none. From Amazon Sales and Traffic (Data Kiosk). Data may be delayed by up to 3 days and may remain incomplete or be revised for up to 30 days after the row date due to Amazon reporting limitations.",
           "definition": "sum(amazon_sales_and_traffic_with_cogs.page_views)"
         },
         {
           "name": "page_views_b2b",
           "type": "NUMBER",
-          "nullable": false,
-          "description": "B2B page views for the child ASIN on this date, from Amazon Sales and Traffic pageViewsB2B. Included in total_page_views, not additive. From Amazon Sales and Traffic (Data Kiosk). Data may be delayed by up to 3 days and may remain incomplete or be revised for up to 30 days after the row date due to Amazon reporting limitations.",
+          "nullable": true,
+          "description": "B2B page views for the child ASIN on this date, from Amazon Sales and Traffic pageViewsB2B. Included in total_page_views, not additive. Describes the child ASIN, not the SKU, and repeats on every SKU row of that child ASIN and date, for example its FBA and FBM SKUs. Do not add it across SKU rows: take max per seller, marketplace, child ASIN and date, including rows with no SKU, then add the daily values. Empty when Amazon has not published traffic for the connection and date yet; 0 when traffic is published but the child ASIN had none. From Amazon Sales and Traffic (Data Kiosk). Data may be delayed by up to 3 days and may remain incomplete or be revised for up to 30 days after the row date due to Amazon reporting limitations.",
           "definition": "sum(amazon_sales_and_traffic_with_cogs.page_views_b2b)"
         },
         {
           "name": "page_views_b2c",
           "type": "NUMBER",
-          "nullable": false,
-          "description": "B2C page views for the child ASIN on this date, calculated as total_page_views minus page_views_b2b. Amazon does not publish a B2C page views field. From Amazon Sales and Traffic (Data Kiosk). Data may be delayed by up to 3 days and may remain incomplete or be revised for up to 30 days after the row date due to Amazon reporting limitations.",
+          "nullable": true,
+          "description": "B2C page views for the child ASIN on this date, calculated as total_page_views minus page_views_b2b. Amazon does not publish a B2C page views field. Describes the child ASIN, not the SKU, and repeats on every SKU row of that child ASIN and date, for example its FBA and FBM SKUs. Do not add it across SKU rows: take max per seller, marketplace, child ASIN and date, including rows with no SKU, then add the daily values. Empty when Amazon has not published traffic for the connection and date yet; 0 when traffic is published but the child ASIN had none. From Amazon Sales and Traffic (Data Kiosk). Data may be delayed by up to 3 days and may remain incomplete or be revised for up to 30 days after the row date due to Amazon reporting limitations.",
           "definition": "sum(Math.max((amazon_sales_and_traffic_with_cogs.page_views ?? 0) - (amazon_sales_and_traffic_with_cogs.page_views_b2b ?? 0), 0))"
         },
         {
           "name": "browser_sessions",
           "type": "NUMBER",
-          "nullable": false,
-          "description": "Sessions from web browsers for the child ASIN on this date, from Amazon Sales and Traffic browserSessions. From Amazon Sales and Traffic (Data Kiosk). Data may be delayed by up to 3 days and may remain incomplete or be revised for up to 30 days after the row date due to Amazon reporting limitations."
+          "nullable": true,
+          "description": "Sessions from web browsers for the child ASIN on this date, from Amazon Sales and Traffic browserSessions. Describes the child ASIN, not the SKU, and repeats on every SKU row of that child ASIN and date, for example its FBA and FBM SKUs. Do not add it across SKU rows: take max per seller, marketplace, child ASIN and date, including rows with no SKU, then add the daily values. Empty when Amazon has not published traffic for the connection and date yet; 0 when traffic is published but the child ASIN had none. From Amazon Sales and Traffic (Data Kiosk). Data may be delayed by up to 3 days and may remain incomplete or be revised for up to 30 days after the row date due to Amazon reporting limitations."
         },
         {
           "name": "browser_sessions_b2b",
           "type": "NUMBER",
-          "nullable": false,
-          "description": "B2B sessions from web browsers for the child ASIN on this date, from Amazon Sales and Traffic browserSessionsB2B. Included in browser_sessions, not additive. From Amazon Sales and Traffic (Data Kiosk). Data may be delayed by up to 3 days and may remain incomplete or be revised for up to 30 days after the row date due to Amazon reporting limitations."
+          "nullable": true,
+          "description": "B2B sessions from web browsers for the child ASIN on this date, from Amazon Sales and Traffic browserSessionsB2B. Included in browser_sessions, not additive. Describes the child ASIN, not the SKU, and repeats on every SKU row of that child ASIN and date, for example its FBA and FBM SKUs. Do not add it across SKU rows: take max per seller, marketplace, child ASIN and date, including rows with no SKU, then add the daily values. Empty when Amazon has not published traffic for the connection and date yet; 0 when traffic is published but the child ASIN had none. From Amazon Sales and Traffic (Data Kiosk). Data may be delayed by up to 3 days and may remain incomplete or be revised for up to 30 days after the row date due to Amazon reporting limitations."
         },
         {
           "name": "browser_sessions_b2c",
           "type": "NUMBER",
-          "nullable": false,
-          "description": "B2C sessions from web browsers for the child ASIN on this date, calculated as browser_sessions minus browser_sessions_b2b, floored at 0 per child ASIN. Amazon does not publish a B2C field. From Amazon Sales and Traffic (Data Kiosk). Data may be delayed by up to 3 days and may remain incomplete or be revised for up to 30 days after the row date due to Amazon reporting limitations.",
+          "nullable": true,
+          "description": "B2C sessions from web browsers for the child ASIN on this date, calculated as browser_sessions minus browser_sessions_b2b, floored at 0 per child ASIN. Amazon does not publish a B2C field. Describes the child ASIN, not the SKU, and repeats on every SKU row of that child ASIN and date, for example its FBA and FBM SKUs. Do not add it across SKU rows: take max per seller, marketplace, child ASIN and date, including rows with no SKU, then add the daily values. Empty when Amazon has not published traffic for the connection and date yet; 0 when traffic is published but the child ASIN had none. From Amazon Sales and Traffic (Data Kiosk). Data may be delayed by up to 3 days and may remain incomplete or be revised for up to 30 days after the row date due to Amazon reporting limitations.",
           "definition": "sum(Math.max((raw_sp_api_report_sales_and_traffic.browserSessions ?? 0) - (raw_sp_api_report_sales_and_traffic.browserSessionsB2B ?? 0), 0))"
         },
         {
           "name": "mobile_sessions",
           "type": "NUMBER",
-          "nullable": false,
-          "description": "Sessions from the Amazon mobile app for the child ASIN on this date, from Amazon Sales and Traffic mobileAppSessions. From Amazon Sales and Traffic (Data Kiosk). Data may be delayed by up to 3 days and may remain incomplete or be revised for up to 30 days after the row date due to Amazon reporting limitations."
+          "nullable": true,
+          "description": "Sessions from the Amazon mobile app for the child ASIN on this date, from Amazon Sales and Traffic mobileAppSessions. Describes the child ASIN, not the SKU, and repeats on every SKU row of that child ASIN and date, for example its FBA and FBM SKUs. Do not add it across SKU rows: take max per seller, marketplace, child ASIN and date, including rows with no SKU, then add the daily values. Empty when Amazon has not published traffic for the connection and date yet; 0 when traffic is published but the child ASIN had none. From Amazon Sales and Traffic (Data Kiosk). Data may be delayed by up to 3 days and may remain incomplete or be revised for up to 30 days after the row date due to Amazon reporting limitations."
         },
         {
           "name": "mobile_sessions_b2b",
           "type": "NUMBER",
-          "nullable": false,
-          "description": "B2B sessions from the amazon mobile app for the child ASIN on this date, from Amazon Sales and Traffic mobileAppSessionsB2B. Included in mobile_sessions, not additive. From Amazon Sales and Traffic (Data Kiosk). Data may be delayed by up to 3 days and may remain incomplete or be revised for up to 30 days after the row date due to Amazon reporting limitations."
+          "nullable": true,
+          "description": "B2B sessions from the amazon mobile app for the child ASIN on this date, from Amazon Sales and Traffic mobileAppSessionsB2B. Included in mobile_sessions, not additive. Describes the child ASIN, not the SKU, and repeats on every SKU row of that child ASIN and date, for example its FBA and FBM SKUs. Do not add it across SKU rows: take max per seller, marketplace, child ASIN and date, including rows with no SKU, then add the daily values. Empty when Amazon has not published traffic for the connection and date yet; 0 when traffic is published but the child ASIN had none. From Amazon Sales and Traffic (Data Kiosk). Data may be delayed by up to 3 days and may remain incomplete or be revised for up to 30 days after the row date due to Amazon reporting limitations."
         },
         {
           "name": "mobile_sessions_b2c",
           "type": "NUMBER",
-          "nullable": false,
-          "description": "B2C sessions from the amazon mobile app for the child ASIN on this date, calculated as mobile_sessions minus mobile_sessions_b2b, floored at 0 per child ASIN. Amazon does not publish a B2C field. From Amazon Sales and Traffic (Data Kiosk). Data may be delayed by up to 3 days and may remain incomplete or be revised for up to 30 days after the row date due to Amazon reporting limitations.",
+          "nullable": true,
+          "description": "B2C sessions from the amazon mobile app for the child ASIN on this date, calculated as mobile_sessions minus mobile_sessions_b2b, floored at 0 per child ASIN. Amazon does not publish a B2C field. Describes the child ASIN, not the SKU, and repeats on every SKU row of that child ASIN and date, for example its FBA and FBM SKUs. Do not add it across SKU rows: take max per seller, marketplace, child ASIN and date, including rows with no SKU, then add the daily values. Empty when Amazon has not published traffic for the connection and date yet; 0 when traffic is published but the child ASIN had none. From Amazon Sales and Traffic (Data Kiosk). Data may be delayed by up to 3 days and may remain incomplete or be revised for up to 30 days after the row date due to Amazon reporting limitations.",
           "definition": "sum(Math.max((raw_sp_api_report_sales_and_traffic.mobileAppSessions ?? 0) - (raw_sp_api_report_sales_and_traffic.mobileAppSessionsB2B ?? 0), 0))"
         },
         {
           "name": "browser_page_views",
           "type": "NUMBER",
-          "nullable": false,
-          "description": "Page views from web browsers for the child ASIN on this date, from Amazon Sales and Traffic browserPageViews. From Amazon Sales and Traffic (Data Kiosk). Data may be delayed by up to 3 days and may remain incomplete or be revised for up to 30 days after the row date due to Amazon reporting limitations."
+          "nullable": true,
+          "description": "Page views from web browsers for the child ASIN on this date, from Amazon Sales and Traffic browserPageViews. Describes the child ASIN, not the SKU, and repeats on every SKU row of that child ASIN and date, for example its FBA and FBM SKUs. Do not add it across SKU rows: take max per seller, marketplace, child ASIN and date, including rows with no SKU, then add the daily values. Empty when Amazon has not published traffic for the connection and date yet; 0 when traffic is published but the child ASIN had none. From Amazon Sales and Traffic (Data Kiosk). Data may be delayed by up to 3 days and may remain incomplete or be revised for up to 30 days after the row date due to Amazon reporting limitations."
         },
         {
           "name": "browser_page_views_b2b",
           "type": "NUMBER",
-          "nullable": false,
-          "description": "B2B page views from web browsers for the child ASIN on this date, from Amazon Sales and Traffic browserPageViewsB2B. Included in browser_page_views, not additive. From Amazon Sales and Traffic (Data Kiosk). Data may be delayed by up to 3 days and may remain incomplete or be revised for up to 30 days after the row date due to Amazon reporting limitations."
+          "nullable": true,
+          "description": "B2B page views from web browsers for the child ASIN on this date, from Amazon Sales and Traffic browserPageViewsB2B. Included in browser_page_views, not additive. Describes the child ASIN, not the SKU, and repeats on every SKU row of that child ASIN and date, for example its FBA and FBM SKUs. Do not add it across SKU rows: take max per seller, marketplace, child ASIN and date, including rows with no SKU, then add the daily values. Empty when Amazon has not published traffic for the connection and date yet; 0 when traffic is published but the child ASIN had none. From Amazon Sales and Traffic (Data Kiosk). Data may be delayed by up to 3 days and may remain incomplete or be revised for up to 30 days after the row date due to Amazon reporting limitations."
         },
         {
           "name": "browser_page_views_b2c",
           "type": "NUMBER",
-          "nullable": false,
-          "description": "B2C page views from web browsers for the child ASIN on this date, calculated as browser_page_views minus browser_page_views_b2b, floored at 0 per child ASIN. Amazon does not publish a B2C field. From Amazon Sales and Traffic (Data Kiosk). Data may be delayed by up to 3 days and may remain incomplete or be revised for up to 30 days after the row date due to Amazon reporting limitations.",
+          "nullable": true,
+          "description": "B2C page views from web browsers for the child ASIN on this date, calculated as browser_page_views minus browser_page_views_b2b, floored at 0 per child ASIN. Amazon does not publish a B2C field. Describes the child ASIN, not the SKU, and repeats on every SKU row of that child ASIN and date, for example its FBA and FBM SKUs. Do not add it across SKU rows: take max per seller, marketplace, child ASIN and date, including rows with no SKU, then add the daily values. Empty when Amazon has not published traffic for the connection and date yet; 0 when traffic is published but the child ASIN had none. From Amazon Sales and Traffic (Data Kiosk). Data may be delayed by up to 3 days and may remain incomplete or be revised for up to 30 days after the row date due to Amazon reporting limitations.",
           "definition": "sum(Math.max((raw_sp_api_report_sales_and_traffic.browserPageViews ?? 0) - (raw_sp_api_report_sales_and_traffic.browserPageViewsB2B ?? 0), 0))"
         },
         {
           "name": "mobile_page_views",
           "type": "NUMBER",
-          "nullable": false,
-          "description": "Page views from the Amazon mobile app for the child ASIN on this date, from Amazon Sales and Traffic mobileAppPageViews. From Amazon Sales and Traffic (Data Kiosk). Data may be delayed by up to 3 days and may remain incomplete or be revised for up to 30 days after the row date due to Amazon reporting limitations."
+          "nullable": true,
+          "description": "Page views from the Amazon mobile app for the child ASIN on this date, from Amazon Sales and Traffic mobileAppPageViews. Describes the child ASIN, not the SKU, and repeats on every SKU row of that child ASIN and date, for example its FBA and FBM SKUs. Do not add it across SKU rows: take max per seller, marketplace, child ASIN and date, including rows with no SKU, then add the daily values. Empty when Amazon has not published traffic for the connection and date yet; 0 when traffic is published but the child ASIN had none. From Amazon Sales and Traffic (Data Kiosk). Data may be delayed by up to 3 days and may remain incomplete or be revised for up to 30 days after the row date due to Amazon reporting limitations."
         },
         {
           "name": "mobile_page_views_b2b",
           "type": "NUMBER",
-          "nullable": false,
-          "description": "B2B page views from the amazon mobile app for the child ASIN on this date, from Amazon Sales and Traffic mobileAppPageViewsB2B. Included in mobile_page_views, not additive. From Amazon Sales and Traffic (Data Kiosk). Data may be delayed by up to 3 days and may remain incomplete or be revised for up to 30 days after the row date due to Amazon reporting limitations."
+          "nullable": true,
+          "description": "B2B page views from the amazon mobile app for the child ASIN on this date, from Amazon Sales and Traffic mobileAppPageViewsB2B. Included in mobile_page_views, not additive. Describes the child ASIN, not the SKU, and repeats on every SKU row of that child ASIN and date, for example its FBA and FBM SKUs. Do not add it across SKU rows: take max per seller, marketplace, child ASIN and date, including rows with no SKU, then add the daily values. Empty when Amazon has not published traffic for the connection and date yet; 0 when traffic is published but the child ASIN had none. From Amazon Sales and Traffic (Data Kiosk). Data may be delayed by up to 3 days and may remain incomplete or be revised for up to 30 days after the row date due to Amazon reporting limitations."
         },
         {
           "name": "mobile_page_views_b2c",
           "type": "NUMBER",
-          "nullable": false,
-          "description": "B2C page views from the amazon mobile app for the child ASIN on this date, calculated as mobile_page_views minus mobile_page_views_b2b, floored at 0 per child ASIN. Amazon does not publish a B2C field. From Amazon Sales and Traffic (Data Kiosk). Data may be delayed by up to 3 days and may remain incomplete or be revised for up to 30 days after the row date due to Amazon reporting limitations.",
+          "nullable": true,
+          "description": "B2C page views from the amazon mobile app for the child ASIN on this date, calculated as mobile_page_views minus mobile_page_views_b2b, floored at 0 per child ASIN. Amazon does not publish a B2C field. Describes the child ASIN, not the SKU, and repeats on every SKU row of that child ASIN and date, for example its FBA and FBM SKUs. Do not add it across SKU rows: take max per seller, marketplace, child ASIN and date, including rows with no SKU, then add the daily values. Empty when Amazon has not published traffic for the connection and date yet; 0 when traffic is published but the child ASIN had none. From Amazon Sales and Traffic (Data Kiosk). Data may be delayed by up to 3 days and may remain incomplete or be revised for up to 30 days after the row date due to Amazon reporting limitations.",
           "definition": "sum(Math.max((raw_sp_api_report_sales_and_traffic.mobileAppPageViews ?? 0) - (raw_sp_api_report_sales_and_traffic.mobileAppPageViewsB2B ?? 0), 0))"
         },
         {
           "name": "session_percentage",
           "type": "NUMBER",
-          "nullable": false,
-          "description": "Child ASIN share of the account's daily sessions as a percentage (0-100) for the child ASIN on this date, from Amazon Sales and Traffic sessionPercentage. From Amazon Sales and Traffic (Data Kiosk). Data may be delayed by up to 3 days and may remain incomplete or be revised for up to 30 days after the row date due to Amazon reporting limitations."
+          "nullable": true,
+          "description": "Child ASIN share of the account's daily sessions as a percentage (0-100) for the child ASIN on this date, from Amazon Sales and Traffic sessionPercentage. Describes the child ASIN, not the SKU, and repeats on every SKU row of that child ASIN and date, for example its FBA and FBM SKUs. Take max per seller, marketplace, child ASIN and date, including rows with no SKU. Do not add percentages; for several days or ASINs, recalculate the ratio from totals. Empty when Amazon has not published traffic for the connection and date yet; 0 when traffic is published but the child ASIN had none. From Amazon Sales and Traffic (Data Kiosk). Data may be delayed by up to 3 days and may remain incomplete or be revised for up to 30 days after the row date due to Amazon reporting limitations."
         },
         {
           "name": "session_percentage_b2b",
           "type": "NUMBER",
-          "nullable": false,
-          "description": "Child ASIN share of the account's daily B2B sessions as a percentage (0-100) for the child ASIN on this date, from Amazon Sales and Traffic sessionPercentageB2B. From Amazon Sales and Traffic (Data Kiosk). Data may be delayed by up to 3 days and may remain incomplete or be revised for up to 30 days after the row date due to Amazon reporting limitations."
+          "nullable": true,
+          "description": "Child ASIN share of the account's daily B2B sessions as a percentage (0-100) for the child ASIN on this date, from Amazon Sales and Traffic sessionPercentageB2B. Describes the child ASIN, not the SKU, and repeats on every SKU row of that child ASIN and date, for example its FBA and FBM SKUs. Take max per seller, marketplace, child ASIN and date, including rows with no SKU. Do not add percentages; for several days or ASINs, recalculate the ratio from totals. Empty when Amazon has not published traffic for the connection and date yet; 0 when traffic is published but the child ASIN had none. From Amazon Sales and Traffic (Data Kiosk). Data may be delayed by up to 3 days and may remain incomplete or be revised for up to 30 days after the row date due to Amazon reporting limitations."
         },
         {
           "name": "page_views_percentage",
           "type": "NUMBER",
-          "nullable": false,
-          "description": "Child ASIN share of the account's daily page views as a percentage (0-100) for the child ASIN on this date, from Amazon Sales and Traffic pageViewsPercentage. From Amazon Sales and Traffic (Data Kiosk). Data may be delayed by up to 3 days and may remain incomplete or be revised for up to 30 days after the row date due to Amazon reporting limitations."
+          "nullable": true,
+          "description": "Child ASIN share of the account's daily page views as a percentage (0-100) for the child ASIN on this date, from Amazon Sales and Traffic pageViewsPercentage. Describes the child ASIN, not the SKU, and repeats on every SKU row of that child ASIN and date, for example its FBA and FBM SKUs. Take max per seller, marketplace, child ASIN and date, including rows with no SKU. Do not add percentages; for several days or ASINs, recalculate the ratio from totals. Empty when Amazon has not published traffic for the connection and date yet; 0 when traffic is published but the child ASIN had none. From Amazon Sales and Traffic (Data Kiosk). Data may be delayed by up to 3 days and may remain incomplete or be revised for up to 30 days after the row date due to Amazon reporting limitations."
         },
         {
           "name": "page_views_percentage_b2b",
           "type": "NUMBER",
-          "nullable": false,
-          "description": "Child ASIN share of the account's daily B2B page views as a percentage (0-100) for the child ASIN on this date, from Amazon Sales and Traffic pageViewsPercentageB2B. From Amazon Sales and Traffic (Data Kiosk). Data may be delayed by up to 3 days and may remain incomplete or be revised for up to 30 days after the row date due to Amazon reporting limitations."
+          "nullable": true,
+          "description": "Child ASIN share of the account's daily B2B page views as a percentage (0-100) for the child ASIN on this date, from Amazon Sales and Traffic pageViewsPercentageB2B. Describes the child ASIN, not the SKU, and repeats on every SKU row of that child ASIN and date, for example its FBA and FBM SKUs. Take max per seller, marketplace, child ASIN and date, including rows with no SKU. Do not add percentages; for several days or ASINs, recalculate the ratio from totals. Empty when Amazon has not published traffic for the connection and date yet; 0 when traffic is published but the child ASIN had none. From Amazon Sales and Traffic (Data Kiosk). Data may be delayed by up to 3 days and may remain incomplete or be revised for up to 30 days after the row date due to Amazon reporting limitations."
         },
         {
           "name": "browser_session_percentage",
           "type": "NUMBER",
-          "nullable": false,
-          "description": "Child ASIN share of the account's daily browser sessions as a percentage (0-100) for the child ASIN on this date, from Amazon Sales and Traffic browserSessionPercentage. From Amazon Sales and Traffic (Data Kiosk). Data may be delayed by up to 3 days and may remain incomplete or be revised for up to 30 days after the row date due to Amazon reporting limitations."
+          "nullable": true,
+          "description": "Child ASIN share of the account's daily browser sessions as a percentage (0-100) for the child ASIN on this date, from Amazon Sales and Traffic browserSessionPercentage. Describes the child ASIN, not the SKU, and repeats on every SKU row of that child ASIN and date, for example its FBA and FBM SKUs. Take max per seller, marketplace, child ASIN and date, including rows with no SKU. Do not add percentages; for several days or ASINs, recalculate the ratio from totals. Empty when Amazon has not published traffic for the connection and date yet; 0 when traffic is published but the child ASIN had none. From Amazon Sales and Traffic (Data Kiosk). Data may be delayed by up to 3 days and may remain incomplete or be revised for up to 30 days after the row date due to Amazon reporting limitations."
         },
         {
           "name": "browser_session_percentage_b2b",
           "type": "NUMBER",
-          "nullable": false,
-          "description": "Child ASIN share of the account's daily B2B browser sessions as a percentage (0-100) for the child ASIN on this date, from Amazon Sales and Traffic browserSessionPercentageB2B. From Amazon Sales and Traffic (Data Kiosk). Data may be delayed by up to 3 days and may remain incomplete or be revised for up to 30 days after the row date due to Amazon reporting limitations."
+          "nullable": true,
+          "description": "Child ASIN share of the account's daily B2B browser sessions as a percentage (0-100) for the child ASIN on this date, from Amazon Sales and Traffic browserSessionPercentageB2B. Describes the child ASIN, not the SKU, and repeats on every SKU row of that child ASIN and date, for example its FBA and FBM SKUs. Take max per seller, marketplace, child ASIN and date, including rows with no SKU. Do not add percentages; for several days or ASINs, recalculate the ratio from totals. Empty when Amazon has not published traffic for the connection and date yet; 0 when traffic is published but the child ASIN had none. From Amazon Sales and Traffic (Data Kiosk). Data may be delayed by up to 3 days and may remain incomplete or be revised for up to 30 days after the row date due to Amazon reporting limitations."
         },
         {
           "name": "mobile_session_percentage",
           "type": "NUMBER",
-          "nullable": false,
-          "description": "Child ASIN share of the account's daily mobile app sessions as a percentage (0-100) for the child ASIN on this date, from Amazon Sales and Traffic mobileAppSessionPercentage. From Amazon Sales and Traffic (Data Kiosk). Data may be delayed by up to 3 days and may remain incomplete or be revised for up to 30 days after the row date due to Amazon reporting limitations."
+          "nullable": true,
+          "description": "Child ASIN share of the account's daily mobile app sessions as a percentage (0-100) for the child ASIN on this date, from Amazon Sales and Traffic mobileAppSessionPercentage. Describes the child ASIN, not the SKU, and repeats on every SKU row of that child ASIN and date, for example its FBA and FBM SKUs. Take max per seller, marketplace, child ASIN and date, including rows with no SKU. Do not add percentages; for several days or ASINs, recalculate the ratio from totals. Empty when Amazon has not published traffic for the connection and date yet; 0 when traffic is published but the child ASIN had none. From Amazon Sales and Traffic (Data Kiosk). Data may be delayed by up to 3 days and may remain incomplete or be revised for up to 30 days after the row date due to Amazon reporting limitations."
         },
         {
           "name": "mobile_session_percentage_b2b",
           "type": "NUMBER",
-          "nullable": false,
-          "description": "Child ASIN share of the account's daily B2B mobile app sessions as a percentage (0-100) for the child ASIN on this date, from Amazon Sales and Traffic mobileAppSessionPercentageB2B. From Amazon Sales and Traffic (Data Kiosk). Data may be delayed by up to 3 days and may remain incomplete or be revised for up to 30 days after the row date due to Amazon reporting limitations."
+          "nullable": true,
+          "description": "Child ASIN share of the account's daily B2B mobile app sessions as a percentage (0-100) for the child ASIN on this date, from Amazon Sales and Traffic mobileAppSessionPercentageB2B. Describes the child ASIN, not the SKU, and repeats on every SKU row of that child ASIN and date, for example its FBA and FBM SKUs. Take max per seller, marketplace, child ASIN and date, including rows with no SKU. Do not add percentages; for several days or ASINs, recalculate the ratio from totals. Empty when Amazon has not published traffic for the connection and date yet; 0 when traffic is published but the child ASIN had none. From Amazon Sales and Traffic (Data Kiosk). Data may be delayed by up to 3 days and may remain incomplete or be revised for up to 30 days after the row date due to Amazon reporting limitations."
         },
         {
           "name": "browser_page_views_percentage",
           "type": "NUMBER",
-          "nullable": false,
-          "description": "Child ASIN share of the account's daily browser page views as a percentage (0-100) for the child ASIN on this date, from Amazon Sales and Traffic browserPageViewsPercentage. From Amazon Sales and Traffic (Data Kiosk). Data may be delayed by up to 3 days and may remain incomplete or be revised for up to 30 days after the row date due to Amazon reporting limitations."
+          "nullable": true,
+          "description": "Child ASIN share of the account's daily browser page views as a percentage (0-100) for the child ASIN on this date, from Amazon Sales and Traffic browserPageViewsPercentage. Describes the child ASIN, not the SKU, and repeats on every SKU row of that child ASIN and date, for example its FBA and FBM SKUs. Take max per seller, marketplace, child ASIN and date, including rows with no SKU. Do not add percentages; for several days or ASINs, recalculate the ratio from totals. Empty when Amazon has not published traffic for the connection and date yet; 0 when traffic is published but the child ASIN had none. From Amazon Sales and Traffic (Data Kiosk). Data may be delayed by up to 3 days and may remain incomplete or be revised for up to 30 days after the row date due to Amazon reporting limitations."
         },
         {
           "name": "browser_page_views_percentage_b2b",
           "type": "NUMBER",
-          "nullable": false,
-          "description": "Child ASIN share of the account's daily B2B browser page views as a percentage (0-100) for the child ASIN on this date, from Amazon Sales and Traffic browserPageViewsPercentageB2B. From Amazon Sales and Traffic (Data Kiosk). Data may be delayed by up to 3 days and may remain incomplete or be revised for up to 30 days after the row date due to Amazon reporting limitations."
+          "nullable": true,
+          "description": "Child ASIN share of the account's daily B2B browser page views as a percentage (0-100) for the child ASIN on this date, from Amazon Sales and Traffic browserPageViewsPercentageB2B. Describes the child ASIN, not the SKU, and repeats on every SKU row of that child ASIN and date, for example its FBA and FBM SKUs. Take max per seller, marketplace, child ASIN and date, including rows with no SKU. Do not add percentages; for several days or ASINs, recalculate the ratio from totals. Empty when Amazon has not published traffic for the connection and date yet; 0 when traffic is published but the child ASIN had none. From Amazon Sales and Traffic (Data Kiosk). Data may be delayed by up to 3 days and may remain incomplete or be revised for up to 30 days after the row date due to Amazon reporting limitations."
         },
         {
           "name": "mobile_page_views_percentage",
           "type": "NUMBER",
-          "nullable": false,
-          "description": "Child ASIN share of the account's daily mobile app page views as a percentage (0-100) for the child ASIN on this date, from Amazon Sales and Traffic mobileAppPageViewsPercentage. From Amazon Sales and Traffic (Data Kiosk). Data may be delayed by up to 3 days and may remain incomplete or be revised for up to 30 days after the row date due to Amazon reporting limitations."
+          "nullable": true,
+          "description": "Child ASIN share of the account's daily mobile app page views as a percentage (0-100) for the child ASIN on this date, from Amazon Sales and Traffic mobileAppPageViewsPercentage. Describes the child ASIN, not the SKU, and repeats on every SKU row of that child ASIN and date, for example its FBA and FBM SKUs. Take max per seller, marketplace, child ASIN and date, including rows with no SKU. Do not add percentages; for several days or ASINs, recalculate the ratio from totals. Empty when Amazon has not published traffic for the connection and date yet; 0 when traffic is published but the child ASIN had none. From Amazon Sales and Traffic (Data Kiosk). Data may be delayed by up to 3 days and may remain incomplete or be revised for up to 30 days after the row date due to Amazon reporting limitations."
         },
         {
           "name": "mobile_page_views_percentage_b2b",
           "type": "NUMBER",
-          "nullable": false,
-          "description": "Child ASIN share of the account's daily B2B mobile app page views as a percentage (0-100) for the child ASIN on this date, from Amazon Sales and Traffic mobileAppPageViewsPercentageB2B. From Amazon Sales and Traffic (Data Kiosk). Data may be delayed by up to 3 days and may remain incomplete or be revised for up to 30 days after the row date due to Amazon reporting limitations."
+          "nullable": true,
+          "description": "Child ASIN share of the account's daily B2B mobile app page views as a percentage (0-100) for the child ASIN on this date, from Amazon Sales and Traffic mobileAppPageViewsPercentageB2B. Describes the child ASIN, not the SKU, and repeats on every SKU row of that child ASIN and date, for example its FBA and FBM SKUs. Take max per seller, marketplace, child ASIN and date, including rows with no SKU. Do not add percentages; for several days or ASINs, recalculate the ratio from totals. Empty when Amazon has not published traffic for the connection and date yet; 0 when traffic is published but the child ASIN had none. From Amazon Sales and Traffic (Data Kiosk). Data may be delayed by up to 3 days and may remain incomplete or be revised for up to 30 days after the row date due to Amazon reporting limitations."
         },
         {
           "name": "unit_session_percentage",
           "type": "NUMBER",
-          "nullable": false,
-          "description": "Units ordered as a percentage of sessions for the child ASIN on this date, from Amazon Sales and Traffic unitSessionPercentage. From Amazon Sales and Traffic (Data Kiosk). Data may be delayed by up to 3 days and may remain incomplete or be revised for up to 30 days after the row date due to Amazon reporting limitations."
+          "nullable": true,
+          "description": "Units ordered (not shipped units) as a percentage of sessions for the child ASIN on this date, from Amazon Sales and Traffic unitSessionPercentage. Can exceed 100. Describes the child ASIN, not the SKU, and repeats on every SKU row of that child ASIN and date, for example its FBA and FBM SKUs. Take max per seller, marketplace, child ASIN and date, including rows with no SKU. Do not add percentages; for several days or ASINs, recalculate the ratio from totals. Empty when Amazon has not published traffic for the connection and date yet; 0 when traffic is published but the child ASIN had none. From Amazon Sales and Traffic (Data Kiosk). Data may be delayed by up to 3 days and may remain incomplete or be revised for up to 30 days after the row date due to Amazon reporting limitations."
         },
         {
           "name": "unit_session_percentage_b2b",
           "type": "NUMBER",
-          "nullable": false,
-          "description": "B2B units ordered as a percentage of B2B sessions for the child ASIN on this date, from Amazon Sales and Traffic unitSessionPercentageB2B. From Amazon Sales and Traffic (Data Kiosk). Data may be delayed by up to 3 days and may remain incomplete or be revised for up to 30 days after the row date due to Amazon reporting limitations."
+          "nullable": true,
+          "description": "B2B units ordered as a percentage of B2B sessions for the child ASIN on this date, from Amazon Sales and Traffic unitSessionPercentageB2B. Describes the child ASIN, not the SKU, and repeats on every SKU row of that child ASIN and date, for example its FBA and FBM SKUs. Take max per seller, marketplace, child ASIN and date, including rows with no SKU. Do not add percentages; for several days or ASINs, recalculate the ratio from totals. Empty when Amazon has not published traffic for the connection and date yet; 0 when traffic is published but the child ASIN had none. From Amazon Sales and Traffic (Data Kiosk). Data may be delayed by up to 3 days and may remain incomplete or be revised for up to 30 days after the row date due to Amazon reporting limitations."
         },
         {
           "name": "ordered_product_sales",
           "type": "NUMBER",
           "nullable": true,
-          "description": "Ordered product sales in the row currency for the child ASIN on this date, as reported by Amazon Sales and Traffic Data Kiosk orderedProductSales. Missing report values remain empty. Repeats on each SKU row for the child ASIN. Read once per seller, marketplace, child ASIN and day, including rows with no SKU. From Amazon Sales and Traffic (Data Kiosk). Data may be delayed by up to 3 days and may remain incomplete or be revised for up to 30 days after the row date due to Amazon reporting limitations."
+          "description": "Ordered product sales in the row currency for the child ASIN on this date, as reported by Amazon Sales and Traffic Data Kiosk orderedProductSales. Missing report values remain empty. Describes the child ASIN, not the SKU, and repeats on every SKU row of that child ASIN and date, for example its FBA and FBM SKUs. Do not add it across SKU rows: take max per seller, marketplace, child ASIN and date, including rows with no SKU, then add the daily values. From Amazon Sales and Traffic (Data Kiosk). Data may be delayed by up to 3 days and may remain incomplete or be revised for up to 30 days after the row date due to Amazon reporting limitations."
         },
         {
           "name": "ordered_product_sales_b2b",
           "type": "NUMBER",
           "nullable": true,
-          "description": "B2B ordered product sales in the row currency for the child ASIN on this date, as reported by Amazon Sales and Traffic Data Kiosk orderedProductSalesB2B. Included in ordered_product_sales, not additive. Missing report values remain empty. Repeats on each SKU row for the child ASIN. Read once per seller, marketplace, child ASIN and day, including rows with no SKU. From Amazon Sales and Traffic (Data Kiosk). Data may be delayed by up to 3 days and may remain incomplete or be revised for up to 30 days after the row date due to Amazon reporting limitations."
+          "description": "B2B ordered product sales in the row currency for the child ASIN on this date, as reported by Amazon Sales and Traffic Data Kiosk orderedProductSalesB2B. Included in ordered_product_sales, not additive. Missing report values remain empty. Describes the child ASIN, not the SKU, and repeats on every SKU row of that child ASIN and date, for example its FBA and FBM SKUs. Do not add it across SKU rows: take max per seller, marketplace, child ASIN and date, including rows with no SKU, then add the daily values. From Amazon Sales and Traffic (Data Kiosk). Data may be delayed by up to 3 days and may remain incomplete or be revised for up to 30 days after the row date due to Amazon reporting limitations."
         },
         {
           "name": "units_ordered",
           "type": "NUMBER",
           "nullable": true,
-          "description": "Units ordered for the child ASIN on this date, as reported by Amazon Sales and Traffic Data Kiosk unitsOrdered. Missing report values remain empty. Repeats on each SKU row for the child ASIN. Read once per seller, marketplace, child ASIN and day, including rows with no SKU. From Amazon Sales and Traffic (Data Kiosk). Data may be delayed by up to 3 days and may remain incomplete or be revised for up to 30 days after the row date due to Amazon reporting limitations."
+          "description": "Units ordered for the child ASIN on this date, as reported by Amazon Sales and Traffic Data Kiosk unitsOrdered. Missing report values remain empty. Describes the child ASIN, not the SKU, and repeats on every SKU row of that child ASIN and date, for example its FBA and FBM SKUs. Do not add it across SKU rows: take max per seller, marketplace, child ASIN and date, including rows with no SKU, then add the daily values. From Amazon Sales and Traffic (Data Kiosk). Data may be delayed by up to 3 days and may remain incomplete or be revised for up to 30 days after the row date due to Amazon reporting limitations."
         },
         {
           "name": "units_ordered_b2b",
           "type": "NUMBER",
           "nullable": true,
-          "description": "B2B units ordered for the child ASIN on this date, as reported by Amazon Sales and Traffic Data Kiosk unitsOrderedB2B. Included in units_ordered, not additive. Missing report values remain empty. Repeats on each SKU row for the child ASIN. Read once per seller, marketplace, child ASIN and day, including rows with no SKU. From Amazon Sales and Traffic (Data Kiosk). Data may be delayed by up to 3 days and may remain incomplete or be revised for up to 30 days after the row date due to Amazon reporting limitations."
+          "description": "B2B units ordered for the child ASIN on this date, as reported by Amazon Sales and Traffic Data Kiosk unitsOrderedB2B. Included in units_ordered, not additive. Missing report values remain empty. Describes the child ASIN, not the SKU, and repeats on every SKU row of that child ASIN and date, for example its FBA and FBM SKUs. Do not add it across SKU rows: take max per seller, marketplace, child ASIN and date, including rows with no SKU, then add the daily values. From Amazon Sales and Traffic (Data Kiosk). Data may be delayed by up to 3 days and may remain incomplete or be revised for up to 30 days after the row date due to Amazon reporting limitations."
         },
         {
           "name": "total_order_items",
           "type": "NUMBER",
           "nullable": true,
-          "description": "Order items ordered, not distinct orders for the child ASIN on this date, as reported by Amazon Sales and Traffic Data Kiosk totalOrderItems. Missing report values remain empty. Repeats on each SKU row for the child ASIN. Read once per seller, marketplace, child ASIN and day, including rows with no SKU. From Amazon Sales and Traffic (Data Kiosk). Data may be delayed by up to 3 days and may remain incomplete or be revised for up to 30 days after the row date due to Amazon reporting limitations."
+          "description": "Order items ordered, not distinct orders for the child ASIN on this date, as reported by Amazon Sales and Traffic Data Kiosk totalOrderItems. Missing report values remain empty. Describes the child ASIN, not the SKU, and repeats on every SKU row of that child ASIN and date, for example its FBA and FBM SKUs. Do not add it across SKU rows: take max per seller, marketplace, child ASIN and date, including rows with no SKU, then add the daily values. From Amazon Sales and Traffic (Data Kiosk). Data may be delayed by up to 3 days and may remain incomplete or be revised for up to 30 days after the row date due to Amazon reporting limitations."
         },
         {
           "name": "total_order_items_b2b",
           "type": "NUMBER",
           "nullable": true,
-          "description": "B2B order items ordered, not distinct orders for the child ASIN on this date, as reported by Amazon Sales and Traffic Data Kiosk totalOrderItemsB2B. Included in total_order_items, not additive. Missing report values remain empty. Repeats on each SKU row for the child ASIN. Read once per seller, marketplace, child ASIN and day, including rows with no SKU. From Amazon Sales and Traffic (Data Kiosk). Data may be delayed by up to 3 days and may remain incomplete or be revised for up to 30 days after the row date due to Amazon reporting limitations."
+          "description": "B2B order items ordered, not distinct orders for the child ASIN on this date, as reported by Amazon Sales and Traffic Data Kiosk totalOrderItemsB2B. Included in total_order_items, not additive. Missing report values remain empty. Describes the child ASIN, not the SKU, and repeats on every SKU row of that child ASIN and date, for example its FBA and FBM SKUs. Do not add it across SKU rows: take max per seller, marketplace, child ASIN and date, including rows with no SKU, then add the daily values. From Amazon Sales and Traffic (Data Kiosk). Data may be delayed by up to 3 days and may remain incomplete or be revised for up to 30 days after the row date due to Amazon reporting limitations."
         },
         {
           "name": "units_refunded",
           "type": "NUMBER",
           "nullable": false,
-          "description": "Units refunded for the child ASIN on this date, from Amazon Sales and Traffic unitsRefunded. Can differ from return_units, which counts customer returns. From Amazon Sales and Traffic (Data Kiosk). Data may be delayed by up to 3 days and may remain incomplete or be revised for up to 30 days after the row date due to Amazon reporting limitations."
+          "description": "Units refunded for the child ASIN on this date, from Amazon Sales and Traffic unitsRefunded. Can differ from return_units, which counts customer returns. Describes the child ASIN, not the SKU, and repeats on every SKU row of that child ASIN and date, for example its FBA and FBM SKUs. Do not add it across SKU rows: take max per seller, marketplace, child ASIN and date, including rows with no SKU, then add the daily values. From Amazon Sales and Traffic (Data Kiosk). Data may be delayed by up to 3 days and may remain incomplete or be revised for up to 30 days after the row date due to Amazon reporting limitations."
         },
         {
           "name": "units_refunded_b2b",
           "type": "NUMBER",
           "nullable": false,
-          "description": "B2B units refunded for the child ASIN on this date, from Amazon Sales and Traffic unitsRefundedB2B. Included in units_refunded, not additive. From Amazon Sales and Traffic (Data Kiosk). Data may be delayed by up to 3 days and may remain incomplete or be revised for up to 30 days after the row date due to Amazon reporting limitations."
+          "description": "B2B units refunded for the child ASIN on this date, from Amazon Sales and Traffic unitsRefundedB2B. Included in units_refunded, not additive. Describes the child ASIN, not the SKU, and repeats on every SKU row of that child ASIN and date, for example its FBA and FBM SKUs. Do not add it across SKU rows: take max per seller, marketplace, child ASIN and date, including rows with no SKU, then add the daily values. From Amazon Sales and Traffic (Data Kiosk). Data may be delayed by up to 3 days and may remain incomplete or be revised for up to 30 days after the row date due to Amazon reporting limitations."
         },
         {
           "name": "refund_rate",
           "type": "NUMBER",
           "nullable": false,
-          "description": "Units refunded as a percentage of units ordered for the child ASIN on this date, from Amazon Sales and Traffic refundRate. From Amazon Sales and Traffic (Data Kiosk). Data may be delayed by up to 3 days and may remain incomplete or be revised for up to 30 days after the row date due to Amazon reporting limitations."
+          "description": "Units refunded as a percentage of units ordered for the child ASIN on this date, from Amazon Sales and Traffic refundRate. Describes the child ASIN, not the SKU, and repeats on every SKU row of that child ASIN and date, for example its FBA and FBM SKUs. Take max per seller, marketplace, child ASIN and date, including rows with no SKU. Do not add percentages; for several days or ASINs, recalculate the ratio from totals. From Amazon Sales and Traffic (Data Kiosk). Data may be delayed by up to 3 days and may remain incomplete or be revised for up to 30 days after the row date due to Amazon reporting limitations."
         },
         {
           "name": "refund_rate_b2b",
           "type": "NUMBER",
           "nullable": false,
-          "description": "B2B units refunded as a percentage of B2B units ordered for the child ASIN on this date, from Amazon Sales and Traffic refundRateB2B. From Amazon Sales and Traffic (Data Kiosk). Data may be delayed by up to 3 days and may remain incomplete or be revised for up to 30 days after the row date due to Amazon reporting limitations."
+          "description": "B2B units refunded as a percentage of B2B units ordered for the child ASIN on this date, from Amazon Sales and Traffic refundRateB2B. Describes the child ASIN, not the SKU, and repeats on every SKU row of that child ASIN and date, for example its FBA and FBM SKUs. Take max per seller, marketplace, child ASIN and date, including rows with no SKU. Do not add percentages; for several days or ASINs, recalculate the ratio from totals. From Amazon Sales and Traffic (Data Kiosk). Data may be delayed by up to 3 days and may remain incomplete or be revised for up to 30 days after the row date due to Amazon reporting limitations."
         },
         {
           "name": "shipped_product_sales",
           "type": "NUMBER",
           "nullable": false,
-          "description": "Shipped product sales for the child ASIN on this date in the row currency, from Amazon Sales and Traffic shippedProductSales. Amazon reports shipped values per child ASIN as 0 for older days (seen on days a year or more back); use the amazon_profit_by_date shipped columns for daily totals. From Amazon Sales and Traffic (Data Kiosk). Data may be delayed by up to 3 days and may remain incomplete or be revised for up to 30 days after the row date due to Amazon reporting limitations."
+          "description": "Shipped product sales for the child ASIN on this date in the row currency, from Amazon Sales and Traffic shippedProductSales. Amazon reports shipped values per child ASIN as 0 for older days (seen on days a year or more back); use the amazon_profit_by_date shipped columns for daily totals. Describes the child ASIN, not the SKU, and repeats on every SKU row of that child ASIN and date, for example its FBA and FBM SKUs. Do not add it across SKU rows: take max per seller, marketplace, child ASIN and date, including rows with no SKU, then add the daily values. From Amazon Sales and Traffic (Data Kiosk). Data may be delayed by up to 3 days and may remain incomplete or be revised for up to 30 days after the row date due to Amazon reporting limitations."
         },
         {
           "name": "shipped_product_sales_b2b",
           "type": "NUMBER",
           "nullable": false,
-          "description": "B2B shipped product sales for the child ASIN on this date, from Amazon Sales and Traffic shippedProductSalesB2B. Included in shipped_product_sales, not additive. Amazon reports shipped values per child ASIN as 0 for older days (seen on days a year or more back); use the amazon_profit_by_date shipped columns for daily totals. From Amazon Sales and Traffic (Data Kiosk). Data may be delayed by up to 3 days and may remain incomplete or be revised for up to 30 days after the row date due to Amazon reporting limitations."
+          "description": "B2B shipped product sales for the child ASIN on this date, from Amazon Sales and Traffic shippedProductSalesB2B. Included in shipped_product_sales, not additive. Amazon reports shipped values per child ASIN as 0 for older days (seen on days a year or more back); use the amazon_profit_by_date shipped columns for daily totals. Describes the child ASIN, not the SKU, and repeats on every SKU row of that child ASIN and date, for example its FBA and FBM SKUs. Do not add it across SKU rows: take max per seller, marketplace, child ASIN and date, including rows with no SKU, then add the daily values. From Amazon Sales and Traffic (Data Kiosk). Data may be delayed by up to 3 days and may remain incomplete or be revised for up to 30 days after the row date due to Amazon reporting limitations."
         },
         {
           "name": "units_shipped",
           "type": "NUMBER",
           "nullable": false,
-          "description": "Units shipped for the child ASIN on this date, from Amazon Sales and Traffic unitsShipped. Amazon reports shipped values per child ASIN as 0 for older days (seen on days a year or more back); use the amazon_profit_by_date shipped columns for daily totals. From Amazon Sales and Traffic (Data Kiosk). Data may be delayed by up to 3 days and may remain incomplete or be revised for up to 30 days after the row date due to Amazon reporting limitations."
+          "description": "Units shipped for the child ASIN on this date, from Amazon Sales and Traffic unitsShipped. Amazon reports shipped values per child ASIN as 0 for older days (seen on days a year or more back); use the amazon_profit_by_date shipped columns for daily totals. Describes the child ASIN, not the SKU, and repeats on every SKU row of that child ASIN and date, for example its FBA and FBM SKUs. Do not add it across SKU rows: take max per seller, marketplace, child ASIN and date, including rows with no SKU, then add the daily values. From Amazon Sales and Traffic (Data Kiosk). Data may be delayed by up to 3 days and may remain incomplete or be revised for up to 30 days after the row date due to Amazon reporting limitations."
         },
         {
           "name": "units_shipped_b2b",
           "type": "NUMBER",
           "nullable": false,
-          "description": "B2B units shipped for the child ASIN on this date, from Amazon Sales and Traffic unitsShippedB2B. Included in units_shipped, not additive. Amazon reports shipped values per child ASIN as 0 for older days (seen on days a year or more back); use the amazon_profit_by_date shipped columns for daily totals. From Amazon Sales and Traffic (Data Kiosk). Data may be delayed by up to 3 days and may remain incomplete or be revised for up to 30 days after the row date due to Amazon reporting limitations."
+          "description": "B2B units shipped for the child ASIN on this date, from Amazon Sales and Traffic unitsShippedB2B. Included in units_shipped, not additive. Amazon reports shipped values per child ASIN as 0 for older days (seen on days a year or more back); use the amazon_profit_by_date shipped columns for daily totals. Describes the child ASIN, not the SKU, and repeats on every SKU row of that child ASIN and date, for example its FBA and FBM SKUs. Do not add it across SKU rows: take max per seller, marketplace, child ASIN and date, including rows with no SKU, then add the daily values. From Amazon Sales and Traffic (Data Kiosk). Data may be delayed by up to 3 days and may remain incomplete or be revised for up to 30 days after the row date due to Amazon reporting limitations."
         },
         {
           "name": "orders_shipped",
           "type": "NUMBER",
           "nullable": false,
-          "description": "Orders shipped for the child ASIN on this date, from Amazon Sales and Traffic ordersShipped. Amazon reports shipped values per child ASIN as 0 for older days (seen on days a year or more back); use the amazon_profit_by_date shipped columns for daily totals. From Amazon Sales and Traffic (Data Kiosk). Data may be delayed by up to 3 days and may remain incomplete or be revised for up to 30 days after the row date due to Amazon reporting limitations."
+          "description": "Orders shipped for the child ASIN on this date, from Amazon Sales and Traffic ordersShipped. Amazon reports shipped values per child ASIN as 0 for older days (seen on days a year or more back); use the amazon_profit_by_date shipped columns for daily totals. Describes the child ASIN, not the SKU, and repeats on every SKU row of that child ASIN and date, for example its FBA and FBM SKUs. Do not add it across SKU rows: take max per seller, marketplace, child ASIN and date, including rows with no SKU, then add the daily values. From Amazon Sales and Traffic (Data Kiosk). Data may be delayed by up to 3 days and may remain incomplete or be revised for up to 30 days after the row date due to Amazon reporting limitations."
         },
         {
           "name": "orders_shipped_b2b",
           "type": "NUMBER",
           "nullable": false,
-          "description": "B2B orders shipped for the child ASIN on this date, from Amazon Sales and Traffic ordersShippedB2B. Included in orders_shipped, not additive. Amazon reports shipped values per child ASIN as 0 for older days (seen on days a year or more back); use the amazon_profit_by_date shipped columns for daily totals. From Amazon Sales and Traffic (Data Kiosk). Data may be delayed by up to 3 days and may remain incomplete or be revised for up to 30 days after the row date due to Amazon reporting limitations."
+          "description": "B2B orders shipped for the child ASIN on this date, from Amazon Sales and Traffic ordersShippedB2B. Included in orders_shipped, not additive. Amazon reports shipped values per child ASIN as 0 for older days (seen on days a year or more back); use the amazon_profit_by_date shipped columns for daily totals. Describes the child ASIN, not the SKU, and repeats on every SKU row of that child ASIN and date, for example its FBA and FBM SKUs. Do not add it across SKU rows: take max per seller, marketplace, child ASIN and date, including rows with no SKU, then add the daily values. From Amazon Sales and Traffic (Data Kiosk). Data may be delayed by up to 3 days and may remain incomplete or be revised for up to 30 days after the row date due to Amazon reporting limitations."
         },
         {
           "name": "product_name",
@@ -740,7 +740,7 @@
       "defaultDataset": true,
       "enabled": true,
       "rowCountBilling": true,
-      "description": "Daily profit and cost breakdown per SKU and child ASIN from shipped Amazon marketplace orders, settlement fees, COGS and ad spend. Off-Amazon Multi-Channel Fulfillment lines are excluded from sales, units, orders, tax, and COGS. Their order-report amounts are fulfillment or declared values, not verified external-channel revenue, and this table is not a complete MCF profit statement. Prefer this table for SKU and child-ASIN profit drill-down instead of calculating manually from other tables. Amazon Sales and Traffic provides child ASIN sessions, page views, buy box percentage, and unit session percentage. Those values repeat on every SKU row for that child ASIN and day. Read each traffic value once per child ASIN and day. Sponsored Products and Sponsored Display use reported advertised-product spend, sales and orders. Display units include all click-attributed purchases, not just the promoted product. Sponsored Brands contributes estimated spend but no same-SKU conversions. Amazon DSP (estimated spend) contributes promoted-ASIN sales, orders and units. Sponsored Brands spend uses eligible ad-creative ASINs, with same-day ad cost rescaled to campaign cost. Remaining spend uses campaign purchased-product shares. Without purchased-product data, it uses Seller Central sales, orders and sessions, or an even split among known campaign ASINs. Sales and orders allocate campaign totals by purchased-product shares, with the same fallback signals. ASIN spend and sales are split across available SKUs by same-day order-sales shares; orders use order-count shares. A zero total uses an even split for that measure. With no SKU rows, sku is null. Campaigns without any ASIN signal remain account-only. Amazon DSP line item spend is allocated by each ASIN's share of total product sales (including brand halo) on that day. Without positive sales, it uses purchases, then an even split among reported ASINs. Spend and promoted sales use same-day SKU order-sales shares; promoted orders and units use order-count shares. A zero total uses an even split for that measure. With no SKU rows, sku is null. Line items with no ASIN conversion rows remain account-only. Sponsored Television is account-only because its campaign report has no product allocation. Missing or delayed estimates can understate SKU ad spend and overstate SKU profit. Use amazon_profit_by_date for account-level P&L; SUM of SKU profit is not the account profit number.",
+      "description": "Daily profit and cost breakdown per SKU and child ASIN from shipped Amazon marketplace orders, settlement fees, COGS and ad spend. Off-Amazon Multi-Channel Fulfillment lines are excluded from sales, units, orders, tax, and COGS. Their order-report amounts are fulfillment or declared values, not verified external-channel revenue, and this table is not a complete MCF profit statement. Prefer this table for SKU and child-ASIN profit drill-down instead of calculating manually from other tables. Amazon Sales and Traffic provides traffic per child ASIN, not per SKU, because shoppers view product detail pages per child ASIN: sessions, page views, buy box percentage, unit session percentage and the other Sales and Traffic columns repeat on every SKU row of that child ASIN and date. For example, a child ASIN sold through an FBA SKU and an FBM SKU shows the same total_sessions on both rows; adding them doubles the sessions. To aggregate traffic, take max per seller, marketplace, child ASIN and date (keep rows with no SKU, which hold traffic without SKU activity), then add the daily values across dates; recalculate ratios from those totals instead of adding percentages. Sessions are also not additive across child ASINs or parent ASINs, because Amazon counts a shopper visit once; use amazon_profit_by_date total_sessions for account sessions. Traffic columns are empty when Amazon has not published traffic for the date yet. Guide: https://app.datadoe.com/hub/docs/datadoe-data/sat-migration-to-profit-tables. Sponsored Products and Sponsored Display use reported advertised-product spend, sales and orders. Display units include all click-attributed purchases, not just the promoted product. Sponsored Brands contributes estimated spend but no same-SKU conversions. Amazon DSP (estimated spend) contributes promoted-ASIN sales, orders and units. Sponsored Brands spend uses eligible ad-creative ASINs, with same-day ad cost rescaled to campaign cost. Remaining spend uses campaign purchased-product shares. Without purchased-product data, it uses Seller Central sales, orders and sessions, or an even split among known campaign ASINs. Sales and orders allocate campaign totals by purchased-product shares, with the same fallback signals. ASIN spend and sales are split across available SKUs by same-day order-sales shares; orders use order-count shares. A zero total uses an even split for that measure. With no SKU rows, sku is null. Campaigns without any ASIN signal remain account-only. Amazon DSP line item spend is allocated by each ASIN's share of total product sales (including brand halo) on that day. Without positive sales, it uses purchases, then an even split among reported ASINs. Spend and promoted sales use same-day SKU order-sales shares; promoted orders and units use order-count shares. A zero total uses an even split for that measure. With no SKU rows, sku is null. Line items with no ASIN conversion rows remain account-only. Sponsored Television is account-only because its campaign report has no product allocation. Missing or delayed estimates can understate SKU ad spend and overstate SKU profit. Use amazon_profit_by_date for account-level P&L; SUM of SKU profit is not the account profit number.",
       "requiresDatePeriod": true,
       "issues": [],
       "fetchPeriods": [
@@ -1253,64 +1253,64 @@
         {
           "name": "avg_buybox_percentage",
           "type": "NUMBER",
-          "nullable": false,
-          "description": "Account-level buy box percentage for the day, from Amazon Sales and Traffic daily buyBoxPercentage. Buy box percentage is the share of page views where the buy box (add to cart) appeared for your offers. Falls back to the unweighted average of child ASINs when the day has no account total. From Amazon Sales and Traffic (Data Kiosk). Data may be delayed by up to 3 days and may remain incomplete or be revised for up to 30 days after the row date due to Amazon reporting limitations.",
-          "definition": "(raw_sp_api_report_sales_and_traffic_by_date.sessions ?? 0) > 0 ? raw_sp_api_report_sales_and_traffic_by_date.buyBoxPercentage : avg(amazon_sales_and_traffic_with_cogs.buybox_percentage)"
+          "nullable": true,
+          "description": "Account-level buy box percentage for the day, from Amazon Sales and Traffic daily buyBoxPercentage. Buy box percentage is the share of page views where the buy box (add to cart) appeared for your offers. Falls back to the average of child ASINs weighted by page views when the day has no account total. Empty when Amazon has not published traffic for the date yet. From Amazon Sales and Traffic (Data Kiosk). Data may be delayed by up to 3 days and may remain incomplete or be revised for up to 30 days after the row date due to Amazon reporting limitations.",
+          "definition": "(raw_sp_api_report_sales_and_traffic_by_date.sessions ?? 0) > 0 ? raw_sp_api_report_sales_and_traffic_by_date.buyBoxPercentage : sum(amazon_sales_and_traffic_with_cogs.buybox_percentage * amazon_sales_and_traffic_with_cogs.page_views) / sum(amazon_sales_and_traffic_with_cogs.page_views)"
         },
         {
           "name": "avg_buybox_percentage_b2b",
           "type": "NUMBER",
-          "nullable": false,
-          "description": "Account-level B2B buy box percentage for the day, from Amazon Sales and Traffic daily buyBoxPercentageB2B. Falls back to the unweighted average of child ASINs when the day has no account total. From Amazon Sales and Traffic (Data Kiosk). Data may be delayed by up to 3 days and may remain incomplete or be revised for up to 30 days after the row date due to Amazon reporting limitations.",
-          "definition": "(raw_sp_api_report_sales_and_traffic_by_date.sessions ?? 0) > 0 ? raw_sp_api_report_sales_and_traffic_by_date.buyBoxPercentageB2B : avg(amazon_sales_and_traffic_with_cogs.buybox_percentage_b2b)"
+          "nullable": true,
+          "description": "Account-level B2B buy box percentage for the day, from Amazon Sales and Traffic daily buyBoxPercentageB2B. Falls back to the average of child ASINs weighted by page views when the day has no account total. Empty when Amazon has not published traffic for the date yet. From Amazon Sales and Traffic (Data Kiosk). Data may be delayed by up to 3 days and may remain incomplete or be revised for up to 30 days after the row date due to Amazon reporting limitations.",
+          "definition": "(raw_sp_api_report_sales_and_traffic_by_date.sessions ?? 0) > 0 ? raw_sp_api_report_sales_and_traffic_by_date.buyBoxPercentageB2B : sum(amazon_sales_and_traffic_with_cogs.buybox_percentage_b2b * amazon_sales_and_traffic_with_cogs.page_views_b2b) / sum(amazon_sales_and_traffic_with_cogs.page_views_b2b)"
         },
         {
           "name": "avg_buybox_percentage_b2c",
           "type": "NUMBER",
-          "nullable": false,
-          "description": "Account-level B2C buy box percentage for the day. Amazon does not publish B2C buy box; reconstructed from the daily overall and B2B buy box weighted by page views. Falls back to the unweighted average of child ASINs when the day has no account total. From Amazon Sales and Traffic (Data Kiosk). Data may be delayed by up to 3 days and may remain incomplete or be revised for up to 30 days after the row date due to Amazon reporting limitations.",
-          "definition": "(raw_sp_api_report_sales_and_traffic_by_date.sessions ?? 0) > 0 ? ((raw_sp_api_report_sales_and_traffic_by_date.buyBoxPercentage ?? 0) * (raw_sp_api_report_sales_and_traffic_by_date.pageViews ?? 0) - (raw_sp_api_report_sales_and_traffic_by_date.buyBoxPercentageB2B ?? 0) * (raw_sp_api_report_sales_and_traffic_by_date.pageViewsB2B ?? 0)) / ((raw_sp_api_report_sales_and_traffic_by_date.pageViews ?? 0) - (raw_sp_api_report_sales_and_traffic_by_date.pageViewsB2B ?? 0)) : avg(((amazon_sales_and_traffic_with_cogs.buybox_percentage ?? 0) * (amazon_sales_and_traffic_with_cogs.page_views ?? 0) - (amazon_sales_and_traffic_with_cogs.buybox_percentage_b2b ?? 0) * (amazon_sales_and_traffic_with_cogs.page_views_b2b ?? 0)) / ((amazon_sales_and_traffic_with_cogs.page_views ?? 0) - (amazon_sales_and_traffic_with_cogs.page_views_b2b ?? 0)))"
+          "nullable": true,
+          "description": "Account-level B2C buy box percentage for the day. Amazon does not publish B2C buy box; reconstructed from the daily overall and B2B buy box weighted by page views. Falls back to the average of child ASINs weighted by page views when the day has no account total. Empty when Amazon has not published traffic for the date yet. From Amazon Sales and Traffic (Data Kiosk). Data may be delayed by up to 3 days and may remain incomplete or be revised for up to 30 days after the row date due to Amazon reporting limitations.",
+          "definition": "(raw_sp_api_report_sales_and_traffic_by_date.sessions ?? 0) > 0 ? ((raw_sp_api_report_sales_and_traffic_by_date.buyBoxPercentage ?? 0) * (raw_sp_api_report_sales_and_traffic_by_date.pageViews ?? 0) - (raw_sp_api_report_sales_and_traffic_by_date.buyBoxPercentageB2B ?? 0) * (raw_sp_api_report_sales_and_traffic_by_date.pageViewsB2B ?? 0)) / ((raw_sp_api_report_sales_and_traffic_by_date.pageViews ?? 0) - (raw_sp_api_report_sales_and_traffic_by_date.pageViewsB2B ?? 0)) : sum((amazon_sales_and_traffic_with_cogs.buybox_percentage * amazon_sales_and_traffic_with_cogs.page_views) - (amazon_sales_and_traffic_with_cogs.buybox_percentage_b2b ?? 0) * (amazon_sales_and_traffic_with_cogs.page_views_b2b ?? 0)) / sum(Math.max(amazon_sales_and_traffic_with_cogs.page_views - (amazon_sales_and_traffic_with_cogs.page_views_b2b ?? 0), 0))"
         },
         {
           "name": "total_sessions",
           "type": "NUMBER",
-          "nullable": false,
-          "description": "Account-level sessions for the day, from Amazon Sales and Traffic daily sessions. A session is a visit to your Amazon product detail pages via browser or mobile app, counted once even when it covers several child ASINs, so it can be lower than asin_ sums. Falls back to the sum of child ASIN rows when the day has no account total. From Amazon Sales and Traffic (Data Kiosk). Data may be delayed by up to 3 days and may remain incomplete or be revised for up to 30 days after the row date due to Amazon reporting limitations.",
-          "definition": "(raw_sp_api_report_sales_and_traffic_by_date.sessions ?? 0) > 0 ? raw_sp_api_report_sales_and_traffic_by_date.sessions : sum(amazon_sales_and_traffic_with_cogs.session)"
+          "nullable": true,
+          "description": "Account-level sessions for the day, from Amazon Sales and Traffic daily sessions. A session is a visit to your Amazon product detail pages via browser or mobile app, counted once even when it covers several child ASINs, so it can be lower than the sum of child ASIN sessions. Empty until Amazon publishes the day's account total; child ASIN sessions are not added up as a substitute. From Amazon Sales and Traffic (Data Kiosk). Data may be delayed by up to 3 days and may remain incomplete or be revised for up to 30 days after the row date due to Amazon reporting limitations.",
+          "definition": "(raw_sp_api_report_sales_and_traffic_by_date.sessions ?? 0) > 0 ? raw_sp_api_report_sales_and_traffic_by_date.sessions : null"
         },
         {
           "name": "sessions_b2b",
           "type": "NUMBER",
-          "nullable": false,
-          "description": "Account-level B2B sessions for the day, from Amazon Sales and Traffic daily sessionsB2B. Included in total_sessions, not additive. Falls back to the sum of child ASIN rows when the day has no account total. From Amazon Sales and Traffic (Data Kiosk). Data may be delayed by up to 3 days and may remain incomplete or be revised for up to 30 days after the row date due to Amazon reporting limitations.",
-          "definition": "(raw_sp_api_report_sales_and_traffic_by_date.sessions ?? 0) > 0 ? raw_sp_api_report_sales_and_traffic_by_date.sessionsB2B : sum(amazon_sales_and_traffic_with_cogs.sessions_b2b)"
+          "nullable": true,
+          "description": "Account-level B2B sessions for the day, from Amazon Sales and Traffic daily sessionsB2B. Included in total_sessions, not additive. Empty until Amazon publishes the day's account total. From Amazon Sales and Traffic (Data Kiosk). Data may be delayed by up to 3 days and may remain incomplete or be revised for up to 30 days after the row date due to Amazon reporting limitations.",
+          "definition": "(raw_sp_api_report_sales_and_traffic_by_date.sessions ?? 0) > 0 ? raw_sp_api_report_sales_and_traffic_by_date.sessionsB2B : null"
         },
         {
           "name": "sessions_b2c",
           "type": "NUMBER",
-          "nullable": false,
-          "description": "Account-level B2C sessions for the day, calculated as total_sessions minus sessions_b2b. Amazon does not publish a B2C sessions field. Falls back to the sum of child ASIN rows when the day has no account total. From Amazon Sales and Traffic (Data Kiosk). Data may be delayed by up to 3 days and may remain incomplete or be revised for up to 30 days after the row date due to Amazon reporting limitations.",
-          "definition": "(raw_sp_api_report_sales_and_traffic_by_date.sessions ?? 0) > 0 ? Math.max((raw_sp_api_report_sales_and_traffic_by_date.sessions ?? 0) - (raw_sp_api_report_sales_and_traffic_by_date.sessionsB2B ?? 0), 0) : sum(Math.max((amazon_sales_and_traffic_with_cogs.session ?? 0) - (amazon_sales_and_traffic_with_cogs.sessions_b2b ?? 0), 0))"
+          "nullable": true,
+          "description": "Account-level B2C sessions for the day, calculated as total_sessions minus sessions_b2b. Amazon does not publish a B2C sessions field. Empty until Amazon publishes the day's account total. From Amazon Sales and Traffic (Data Kiosk). Data may be delayed by up to 3 days and may remain incomplete or be revised for up to 30 days after the row date due to Amazon reporting limitations.",
+          "definition": "(raw_sp_api_report_sales_and_traffic_by_date.sessions ?? 0) > 0 ? Math.max((raw_sp_api_report_sales_and_traffic_by_date.sessions ?? 0) - (raw_sp_api_report_sales_and_traffic_by_date.sessionsB2B ?? 0), 0) : null"
         },
         {
           "name": "total_page_views",
           "type": "NUMBER",
-          "nullable": false,
-          "description": "Account-level page views for the day, from Amazon Sales and Traffic daily pageViews. Page views count visits to your Amazon product detail pages via browser or mobile app. Falls back to the sum of child ASIN rows when the day has no account total. From Amazon Sales and Traffic (Data Kiosk). Data may be delayed by up to 3 days and may remain incomplete or be revised for up to 30 days after the row date due to Amazon reporting limitations.",
+          "nullable": true,
+          "description": "Account-level page views for the day, from Amazon Sales and Traffic daily pageViews. Page views count visits to your Amazon product detail pages via browser or mobile app. Falls back to the sum of child ASIN rows when the day has no account total. Empty when Amazon has not published traffic for the date yet. From Amazon Sales and Traffic (Data Kiosk). Data may be delayed by up to 3 days and may remain incomplete or be revised for up to 30 days after the row date due to Amazon reporting limitations.",
           "definition": "(raw_sp_api_report_sales_and_traffic_by_date.sessions ?? 0) > 0 ? raw_sp_api_report_sales_and_traffic_by_date.pageViews : sum(amazon_sales_and_traffic_with_cogs.page_views)"
         },
         {
           "name": "page_views_b2b",
           "type": "NUMBER",
-          "nullable": false,
-          "description": "Account-level B2B page views for the day, from Amazon Sales and Traffic daily pageViewsB2B. Included in total_page_views, not additive. Falls back to the sum of child ASIN rows when the day has no account total. From Amazon Sales and Traffic (Data Kiosk). Data may be delayed by up to 3 days and may remain incomplete or be revised for up to 30 days after the row date due to Amazon reporting limitations.",
+          "nullable": true,
+          "description": "Account-level B2B page views for the day, from Amazon Sales and Traffic daily pageViewsB2B. Included in total_page_views, not additive. Falls back to the sum of child ASIN rows when the day has no account total. Empty when Amazon has not published traffic for the date yet. From Amazon Sales and Traffic (Data Kiosk). Data may be delayed by up to 3 days and may remain incomplete or be revised for up to 30 days after the row date due to Amazon reporting limitations.",
           "definition": "(raw_sp_api_report_sales_and_traffic_by_date.sessions ?? 0) > 0 ? raw_sp_api_report_sales_and_traffic_by_date.pageViewsB2B : sum(amazon_sales_and_traffic_with_cogs.page_views_b2b)"
         },
         {
           "name": "page_views_b2c",
           "type": "NUMBER",
-          "nullable": false,
-          "description": "Account-level B2C page views for the day, calculated as total_page_views minus page_views_b2b. Amazon does not publish a B2C page views field. Falls back to the sum of child ASIN rows when the day has no account total. From Amazon Sales and Traffic (Data Kiosk). Data may be delayed by up to 3 days and may remain incomplete or be revised for up to 30 days after the row date due to Amazon reporting limitations.",
+          "nullable": true,
+          "description": "Account-level B2C page views for the day, calculated as total_page_views minus page_views_b2b. Amazon does not publish a B2C page views field. Falls back to the sum of child ASIN rows when the day has no account total. Empty when Amazon has not published traffic for the date yet. From Amazon Sales and Traffic (Data Kiosk). Data may be delayed by up to 3 days and may remain incomplete or be revised for up to 30 days after the row date due to Amazon reporting limitations.",
           "definition": "(raw_sp_api_report_sales_and_traffic_by_date.sessions ?? 0) > 0 ? Math.max((raw_sp_api_report_sales_and_traffic_by_date.pageViews ?? 0) - (raw_sp_api_report_sales_and_traffic_by_date.pageViewsB2B ?? 0), 0) : sum(Math.max((amazon_sales_and_traffic_with_cogs.page_views ?? 0) - (amazon_sales_and_traffic_with_cogs.page_views_b2b ?? 0), 0))"
         },
         {
@@ -1615,162 +1615,162 @@
         {
           "name": "asin_browser_sessions",
           "type": "NUMBER",
-          "nullable": false,
-          "description": "Sessions from web browsers summed across child ASIN rows for the day, from Amazon Sales and Traffic browserSessions. From Amazon Sales and Traffic (Data Kiosk). Data may be delayed by up to 3 days and may remain incomplete or be revised for up to 30 days after the row date due to Amazon reporting limitations."
+          "nullable": true,
+          "description": "Sessions from web browsers summed across child ASIN rows for the day, from Amazon Sales and Traffic browserSessions. Empty when Amazon has not published traffic for the date yet. From Amazon Sales and Traffic (Data Kiosk). Data may be delayed by up to 3 days and may remain incomplete or be revised for up to 30 days after the row date due to Amazon reporting limitations."
         },
         {
           "name": "asin_browser_sessions_b2b",
           "type": "NUMBER",
-          "nullable": false,
-          "description": "B2B sessions from web browsers summed across child ASIN rows for the day, from Amazon Sales and Traffic browserSessionsB2B. Included in asin_browser_sessions, not additive. From Amazon Sales and Traffic (Data Kiosk). Data may be delayed by up to 3 days and may remain incomplete or be revised for up to 30 days after the row date due to Amazon reporting limitations."
+          "nullable": true,
+          "description": "B2B sessions from web browsers summed across child ASIN rows for the day, from Amazon Sales and Traffic browserSessionsB2B. Included in asin_browser_sessions, not additive. Empty when Amazon has not published traffic for the date yet. From Amazon Sales and Traffic (Data Kiosk). Data may be delayed by up to 3 days and may remain incomplete or be revised for up to 30 days after the row date due to Amazon reporting limitations."
         },
         {
           "name": "asin_browser_sessions_b2c",
           "type": "NUMBER",
-          "nullable": false,
-          "description": "B2C sessions from web browsers summed across child ASIN rows for the day, calculated as asin_browser_sessions minus asin_browser_sessions_b2b, floored at 0 per child ASIN. Amazon does not publish a B2C field. From Amazon Sales and Traffic (Data Kiosk). Data may be delayed by up to 3 days and may remain incomplete or be revised for up to 30 days after the row date due to Amazon reporting limitations.",
+          "nullable": true,
+          "description": "B2C sessions from web browsers summed across child ASIN rows for the day, calculated as asin_browser_sessions minus asin_browser_sessions_b2b, floored at 0 per child ASIN. Amazon does not publish a B2C field. Empty when Amazon has not published traffic for the date yet. From Amazon Sales and Traffic (Data Kiosk). Data may be delayed by up to 3 days and may remain incomplete or be revised for up to 30 days after the row date due to Amazon reporting limitations.",
           "definition": "sum(Math.max((raw_sp_api_report_sales_and_traffic.browserSessions ?? 0) - (raw_sp_api_report_sales_and_traffic.browserSessionsB2B ?? 0), 0))"
         },
         {
           "name": "asin_mobile_sessions",
           "type": "NUMBER",
-          "nullable": false,
-          "description": "Sessions from the Amazon mobile app summed across child ASIN rows for the day, from Amazon Sales and Traffic mobileAppSessions. From Amazon Sales and Traffic (Data Kiosk). Data may be delayed by up to 3 days and may remain incomplete or be revised for up to 30 days after the row date due to Amazon reporting limitations."
+          "nullable": true,
+          "description": "Sessions from the Amazon mobile app summed across child ASIN rows for the day, from Amazon Sales and Traffic mobileAppSessions. Empty when Amazon has not published traffic for the date yet. From Amazon Sales and Traffic (Data Kiosk). Data may be delayed by up to 3 days and may remain incomplete or be revised for up to 30 days after the row date due to Amazon reporting limitations."
         },
         {
           "name": "asin_mobile_sessions_b2b",
           "type": "NUMBER",
-          "nullable": false,
-          "description": "B2B sessions from the amazon mobile app summed across child ASIN rows for the day, from Amazon Sales and Traffic mobileAppSessionsB2B. Included in asin_mobile_sessions, not additive. From Amazon Sales and Traffic (Data Kiosk). Data may be delayed by up to 3 days and may remain incomplete or be revised for up to 30 days after the row date due to Amazon reporting limitations."
+          "nullable": true,
+          "description": "B2B sessions from the amazon mobile app summed across child ASIN rows for the day, from Amazon Sales and Traffic mobileAppSessionsB2B. Included in asin_mobile_sessions, not additive. Empty when Amazon has not published traffic for the date yet. From Amazon Sales and Traffic (Data Kiosk). Data may be delayed by up to 3 days and may remain incomplete or be revised for up to 30 days after the row date due to Amazon reporting limitations."
         },
         {
           "name": "asin_mobile_sessions_b2c",
           "type": "NUMBER",
-          "nullable": false,
-          "description": "B2C sessions from the amazon mobile app summed across child ASIN rows for the day, calculated as asin_mobile_sessions minus asin_mobile_sessions_b2b, floored at 0 per child ASIN. Amazon does not publish a B2C field. From Amazon Sales and Traffic (Data Kiosk). Data may be delayed by up to 3 days and may remain incomplete or be revised for up to 30 days after the row date due to Amazon reporting limitations.",
+          "nullable": true,
+          "description": "B2C sessions from the amazon mobile app summed across child ASIN rows for the day, calculated as asin_mobile_sessions minus asin_mobile_sessions_b2b, floored at 0 per child ASIN. Amazon does not publish a B2C field. Empty when Amazon has not published traffic for the date yet. From Amazon Sales and Traffic (Data Kiosk). Data may be delayed by up to 3 days and may remain incomplete or be revised for up to 30 days after the row date due to Amazon reporting limitations.",
           "definition": "sum(Math.max((raw_sp_api_report_sales_and_traffic.mobileAppSessions ?? 0) - (raw_sp_api_report_sales_and_traffic.mobileAppSessionsB2B ?? 0), 0))"
         },
         {
           "name": "asin_browser_page_views",
           "type": "NUMBER",
-          "nullable": false,
-          "description": "Page views from web browsers summed across child ASIN rows for the day, from Amazon Sales and Traffic browserPageViews. From Amazon Sales and Traffic (Data Kiosk). Data may be delayed by up to 3 days and may remain incomplete or be revised for up to 30 days after the row date due to Amazon reporting limitations."
+          "nullable": true,
+          "description": "Page views from web browsers summed across child ASIN rows for the day, from Amazon Sales and Traffic browserPageViews. Empty when Amazon has not published traffic for the date yet. From Amazon Sales and Traffic (Data Kiosk). Data may be delayed by up to 3 days and may remain incomplete or be revised for up to 30 days after the row date due to Amazon reporting limitations."
         },
         {
           "name": "asin_browser_page_views_b2b",
           "type": "NUMBER",
-          "nullable": false,
-          "description": "B2B page views from web browsers summed across child ASIN rows for the day, from Amazon Sales and Traffic browserPageViewsB2B. Included in asin_browser_page_views, not additive. From Amazon Sales and Traffic (Data Kiosk). Data may be delayed by up to 3 days and may remain incomplete or be revised for up to 30 days after the row date due to Amazon reporting limitations."
+          "nullable": true,
+          "description": "B2B page views from web browsers summed across child ASIN rows for the day, from Amazon Sales and Traffic browserPageViewsB2B. Included in asin_browser_page_views, not additive. Empty when Amazon has not published traffic for the date yet. From Amazon Sales and Traffic (Data Kiosk). Data may be delayed by up to 3 days and may remain incomplete or be revised for up to 30 days after the row date due to Amazon reporting limitations."
         },
         {
           "name": "asin_browser_page_views_b2c",
           "type": "NUMBER",
-          "nullable": false,
-          "description": "B2C page views from web browsers summed across child ASIN rows for the day, calculated as asin_browser_page_views minus asin_browser_page_views_b2b, floored at 0 per child ASIN. Amazon does not publish a B2C field. From Amazon Sales and Traffic (Data Kiosk). Data may be delayed by up to 3 days and may remain incomplete or be revised for up to 30 days after the row date due to Amazon reporting limitations.",
+          "nullable": true,
+          "description": "B2C page views from web browsers summed across child ASIN rows for the day, calculated as asin_browser_page_views minus asin_browser_page_views_b2b, floored at 0 per child ASIN. Amazon does not publish a B2C field. Empty when Amazon has not published traffic for the date yet. From Amazon Sales and Traffic (Data Kiosk). Data may be delayed by up to 3 days and may remain incomplete or be revised for up to 30 days after the row date due to Amazon reporting limitations.",
           "definition": "sum(Math.max((raw_sp_api_report_sales_and_traffic.browserPageViews ?? 0) - (raw_sp_api_report_sales_and_traffic.browserPageViewsB2B ?? 0), 0))"
         },
         {
           "name": "asin_mobile_page_views",
           "type": "NUMBER",
-          "nullable": false,
-          "description": "Page views from the Amazon mobile app summed across child ASIN rows for the day, from Amazon Sales and Traffic mobileAppPageViews. From Amazon Sales and Traffic (Data Kiosk). Data may be delayed by up to 3 days and may remain incomplete or be revised for up to 30 days after the row date due to Amazon reporting limitations."
+          "nullable": true,
+          "description": "Page views from the Amazon mobile app summed across child ASIN rows for the day, from Amazon Sales and Traffic mobileAppPageViews. Empty when Amazon has not published traffic for the date yet. From Amazon Sales and Traffic (Data Kiosk). Data may be delayed by up to 3 days and may remain incomplete or be revised for up to 30 days after the row date due to Amazon reporting limitations."
         },
         {
           "name": "asin_mobile_page_views_b2b",
           "type": "NUMBER",
-          "nullable": false,
-          "description": "B2B page views from the amazon mobile app summed across child ASIN rows for the day, from Amazon Sales and Traffic mobileAppPageViewsB2B. Included in asin_mobile_page_views, not additive. From Amazon Sales and Traffic (Data Kiosk). Data may be delayed by up to 3 days and may remain incomplete or be revised for up to 30 days after the row date due to Amazon reporting limitations."
+          "nullable": true,
+          "description": "B2B page views from the amazon mobile app summed across child ASIN rows for the day, from Amazon Sales and Traffic mobileAppPageViewsB2B. Included in asin_mobile_page_views, not additive. Empty when Amazon has not published traffic for the date yet. From Amazon Sales and Traffic (Data Kiosk). Data may be delayed by up to 3 days and may remain incomplete or be revised for up to 30 days after the row date due to Amazon reporting limitations."
         },
         {
           "name": "asin_mobile_page_views_b2c",
           "type": "NUMBER",
-          "nullable": false,
-          "description": "B2C page views from the amazon mobile app summed across child ASIN rows for the day, calculated as asin_mobile_page_views minus asin_mobile_page_views_b2b, floored at 0 per child ASIN. Amazon does not publish a B2C field. From Amazon Sales and Traffic (Data Kiosk). Data may be delayed by up to 3 days and may remain incomplete or be revised for up to 30 days after the row date due to Amazon reporting limitations.",
+          "nullable": true,
+          "description": "B2C page views from the amazon mobile app summed across child ASIN rows for the day, calculated as asin_mobile_page_views minus asin_mobile_page_views_b2b, floored at 0 per child ASIN. Amazon does not publish a B2C field. Empty when Amazon has not published traffic for the date yet. From Amazon Sales and Traffic (Data Kiosk). Data may be delayed by up to 3 days and may remain incomplete or be revised for up to 30 days after the row date due to Amazon reporting limitations.",
           "definition": "sum(Math.max((raw_sp_api_report_sales_and_traffic.mobileAppPageViews ?? 0) - (raw_sp_api_report_sales_and_traffic.mobileAppPageViewsB2B ?? 0), 0))"
         },
         {
           "name": "asin_session_percentage",
           "type": "NUMBER",
-          "nullable": false,
-          "description": "Child ASIN share of the account's daily sessions as a percentage (0-100) summed across child ASIN rows for the day, from Amazon Sales and Traffic sessionPercentage. From Amazon Sales and Traffic (Data Kiosk). Data may be delayed by up to 3 days and may remain incomplete or be revised for up to 30 days after the row date due to Amazon reporting limitations."
+          "nullable": true,
+          "description": "Child ASIN share of the account's daily sessions as a percentage (0-100) summed across child ASIN rows for the day, from Amazon Sales and Traffic sessionPercentage. Empty when Amazon has not published traffic for the date yet. From Amazon Sales and Traffic (Data Kiosk). Data may be delayed by up to 3 days and may remain incomplete or be revised for up to 30 days after the row date due to Amazon reporting limitations."
         },
         {
           "name": "asin_session_percentage_b2b",
           "type": "NUMBER",
-          "nullable": false,
-          "description": "Child ASIN share of the account's daily B2B sessions as a percentage (0-100) summed across child ASIN rows for the day, from Amazon Sales and Traffic sessionPercentageB2B. From Amazon Sales and Traffic (Data Kiosk). Data may be delayed by up to 3 days and may remain incomplete or be revised for up to 30 days after the row date due to Amazon reporting limitations."
+          "nullable": true,
+          "description": "Child ASIN share of the account's daily B2B sessions as a percentage (0-100) summed across child ASIN rows for the day, from Amazon Sales and Traffic sessionPercentageB2B. Empty when Amazon has not published traffic for the date yet. From Amazon Sales and Traffic (Data Kiosk). Data may be delayed by up to 3 days and may remain incomplete or be revised for up to 30 days after the row date due to Amazon reporting limitations."
         },
         {
           "name": "asin_page_views_percentage",
           "type": "NUMBER",
-          "nullable": false,
-          "description": "Child ASIN share of the account's daily page views as a percentage (0-100) summed across child ASIN rows for the day, from Amazon Sales and Traffic pageViewsPercentage. From Amazon Sales and Traffic (Data Kiosk). Data may be delayed by up to 3 days and may remain incomplete or be revised for up to 30 days after the row date due to Amazon reporting limitations."
+          "nullable": true,
+          "description": "Child ASIN share of the account's daily page views as a percentage (0-100) summed across child ASIN rows for the day, from Amazon Sales and Traffic pageViewsPercentage. Empty when Amazon has not published traffic for the date yet. From Amazon Sales and Traffic (Data Kiosk). Data may be delayed by up to 3 days and may remain incomplete or be revised for up to 30 days after the row date due to Amazon reporting limitations."
         },
         {
           "name": "asin_page_views_percentage_b2b",
           "type": "NUMBER",
-          "nullable": false,
-          "description": "Child ASIN share of the account's daily B2B page views as a percentage (0-100) summed across child ASIN rows for the day, from Amazon Sales and Traffic pageViewsPercentageB2B. From Amazon Sales and Traffic (Data Kiosk). Data may be delayed by up to 3 days and may remain incomplete or be revised for up to 30 days after the row date due to Amazon reporting limitations."
+          "nullable": true,
+          "description": "Child ASIN share of the account's daily B2B page views as a percentage (0-100) summed across child ASIN rows for the day, from Amazon Sales and Traffic pageViewsPercentageB2B. Empty when Amazon has not published traffic for the date yet. From Amazon Sales and Traffic (Data Kiosk). Data may be delayed by up to 3 days and may remain incomplete or be revised for up to 30 days after the row date due to Amazon reporting limitations."
         },
         {
           "name": "asin_browser_session_percentage",
           "type": "NUMBER",
-          "nullable": false,
-          "description": "Child ASIN share of the account's daily browser sessions as a percentage (0-100) summed across child ASIN rows for the day, from Amazon Sales and Traffic browserSessionPercentage. From Amazon Sales and Traffic (Data Kiosk). Data may be delayed by up to 3 days and may remain incomplete or be revised for up to 30 days after the row date due to Amazon reporting limitations."
+          "nullable": true,
+          "description": "Child ASIN share of the account's daily browser sessions as a percentage (0-100) summed across child ASIN rows for the day, from Amazon Sales and Traffic browserSessionPercentage. Empty when Amazon has not published traffic for the date yet. From Amazon Sales and Traffic (Data Kiosk). Data may be delayed by up to 3 days and may remain incomplete or be revised for up to 30 days after the row date due to Amazon reporting limitations."
         },
         {
           "name": "asin_browser_session_percentage_b2b",
           "type": "NUMBER",
-          "nullable": false,
-          "description": "Child ASIN share of the account's daily B2B browser sessions as a percentage (0-100) summed across child ASIN rows for the day, from Amazon Sales and Traffic browserSessionPercentageB2B. From Amazon Sales and Traffic (Data Kiosk). Data may be delayed by up to 3 days and may remain incomplete or be revised for up to 30 days after the row date due to Amazon reporting limitations."
+          "nullable": true,
+          "description": "Child ASIN share of the account's daily B2B browser sessions as a percentage (0-100) summed across child ASIN rows for the day, from Amazon Sales and Traffic browserSessionPercentageB2B. Empty when Amazon has not published traffic for the date yet. From Amazon Sales and Traffic (Data Kiosk). Data may be delayed by up to 3 days and may remain incomplete or be revised for up to 30 days after the row date due to Amazon reporting limitations."
         },
         {
           "name": "asin_mobile_session_percentage",
           "type": "NUMBER",
-          "nullable": false,
-          "description": "Child ASIN share of the account's daily mobile app sessions as a percentage (0-100) summed across child ASIN rows for the day, from Amazon Sales and Traffic mobileAppSessionPercentage. From Amazon Sales and Traffic (Data Kiosk). Data may be delayed by up to 3 days and may remain incomplete or be revised for up to 30 days after the row date due to Amazon reporting limitations."
+          "nullable": true,
+          "description": "Child ASIN share of the account's daily mobile app sessions as a percentage (0-100) summed across child ASIN rows for the day, from Amazon Sales and Traffic mobileAppSessionPercentage. Empty when Amazon has not published traffic for the date yet. From Amazon Sales and Traffic (Data Kiosk). Data may be delayed by up to 3 days and may remain incomplete or be revised for up to 30 days after the row date due to Amazon reporting limitations."
         },
         {
           "name": "asin_mobile_session_percentage_b2b",
           "type": "NUMBER",
-          "nullable": false,
-          "description": "Child ASIN share of the account's daily B2B mobile app sessions as a percentage (0-100) summed across child ASIN rows for the day, from Amazon Sales and Traffic mobileAppSessionPercentageB2B. From Amazon Sales and Traffic (Data Kiosk). Data may be delayed by up to 3 days and may remain incomplete or be revised for up to 30 days after the row date due to Amazon reporting limitations."
+          "nullable": true,
+          "description": "Child ASIN share of the account's daily B2B mobile app sessions as a percentage (0-100) summed across child ASIN rows for the day, from Amazon Sales and Traffic mobileAppSessionPercentageB2B. Empty when Amazon has not published traffic for the date yet. From Amazon Sales and Traffic (Data Kiosk). Data may be delayed by up to 3 days and may remain incomplete or be revised for up to 30 days after the row date due to Amazon reporting limitations."
         },
         {
           "name": "asin_browser_page_views_percentage",
           "type": "NUMBER",
-          "nullable": false,
-          "description": "Child ASIN share of the account's daily browser page views as a percentage (0-100) summed across child ASIN rows for the day, from Amazon Sales and Traffic browserPageViewsPercentage. From Amazon Sales and Traffic (Data Kiosk). Data may be delayed by up to 3 days and may remain incomplete or be revised for up to 30 days after the row date due to Amazon reporting limitations."
+          "nullable": true,
+          "description": "Child ASIN share of the account's daily browser page views as a percentage (0-100) summed across child ASIN rows for the day, from Amazon Sales and Traffic browserPageViewsPercentage. Empty when Amazon has not published traffic for the date yet. From Amazon Sales and Traffic (Data Kiosk). Data may be delayed by up to 3 days and may remain incomplete or be revised for up to 30 days after the row date due to Amazon reporting limitations."
         },
         {
           "name": "asin_browser_page_views_percentage_b2b",
           "type": "NUMBER",
-          "nullable": false,
-          "description": "Child ASIN share of the account's daily B2B browser page views as a percentage (0-100) summed across child ASIN rows for the day, from Amazon Sales and Traffic browserPageViewsPercentageB2B. From Amazon Sales and Traffic (Data Kiosk). Data may be delayed by up to 3 days and may remain incomplete or be revised for up to 30 days after the row date due to Amazon reporting limitations."
+          "nullable": true,
+          "description": "Child ASIN share of the account's daily B2B browser page views as a percentage (0-100) summed across child ASIN rows for the day, from Amazon Sales and Traffic browserPageViewsPercentageB2B. Empty when Amazon has not published traffic for the date yet. From Amazon Sales and Traffic (Data Kiosk). Data may be delayed by up to 3 days and may remain incomplete or be revised for up to 30 days after the row date due to Amazon reporting limitations."
         },
         {
           "name": "asin_mobile_page_views_percentage",
           "type": "NUMBER",
-          "nullable": false,
-          "description": "Child ASIN share of the account's daily mobile app page views as a percentage (0-100) summed across child ASIN rows for the day, from Amazon Sales and Traffic mobileAppPageViewsPercentage. From Amazon Sales and Traffic (Data Kiosk). Data may be delayed by up to 3 days and may remain incomplete or be revised for up to 30 days after the row date due to Amazon reporting limitations."
+          "nullable": true,
+          "description": "Child ASIN share of the account's daily mobile app page views as a percentage (0-100) summed across child ASIN rows for the day, from Amazon Sales and Traffic mobileAppPageViewsPercentage. Empty when Amazon has not published traffic for the date yet. From Amazon Sales and Traffic (Data Kiosk). Data may be delayed by up to 3 days and may remain incomplete or be revised for up to 30 days after the row date due to Amazon reporting limitations."
         },
         {
           "name": "asin_mobile_page_views_percentage_b2b",
           "type": "NUMBER",
-          "nullable": false,
-          "description": "Child ASIN share of the account's daily B2B mobile app page views as a percentage (0-100) summed across child ASIN rows for the day, from Amazon Sales and Traffic mobileAppPageViewsPercentageB2B. From Amazon Sales and Traffic (Data Kiosk). Data may be delayed by up to 3 days and may remain incomplete or be revised for up to 30 days after the row date due to Amazon reporting limitations."
+          "nullable": true,
+          "description": "Child ASIN share of the account's daily B2B mobile app page views as a percentage (0-100) summed across child ASIN rows for the day, from Amazon Sales and Traffic mobileAppPageViewsPercentageB2B. Empty when Amazon has not published traffic for the date yet. From Amazon Sales and Traffic (Data Kiosk). Data may be delayed by up to 3 days and may remain incomplete or be revised for up to 30 days after the row date due to Amazon reporting limitations."
         },
         {
           "name": "asin_unit_session_percentage",
           "type": "NUMBER",
-          "nullable": false,
-          "description": "Units ordered as a percentage of sessions across child ASIN rows for the day, the per-ASIN unitSessionPercentage weighted by sessions. From Amazon Sales and Traffic (Data Kiosk). Data may be delayed by up to 3 days and may remain incomplete or be revised for up to 30 days after the row date due to Amazon reporting limitations."
+          "nullable": true,
+          "description": "Units ordered as a percentage of sessions across child ASIN rows for the day, the per-ASIN unitSessionPercentage weighted by sessions. Empty when Amazon has not published traffic for the date yet. From Amazon Sales and Traffic (Data Kiosk). Data may be delayed by up to 3 days and may remain incomplete or be revised for up to 30 days after the row date due to Amazon reporting limitations."
         },
         {
           "name": "asin_unit_session_percentage_b2b",
           "type": "NUMBER",
-          "nullable": false,
-          "description": "B2B units ordered as a percentage of B2B sessions across child ASIN rows for the day, the per-ASIN unitSessionPercentageB2B weighted by B2B sessions. From Amazon Sales and Traffic (Data Kiosk). Data may be delayed by up to 3 days and may remain incomplete or be revised for up to 30 days after the row date due to Amazon reporting limitations."
+          "nullable": true,
+          "description": "B2B units ordered as a percentage of B2B sessions across child ASIN rows for the day, the per-ASIN unitSessionPercentageB2B weighted by B2B sessions. Empty when Amazon has not published traffic for the date yet. From Amazon Sales and Traffic (Data Kiosk). Data may be delayed by up to 3 days and may remain incomplete or be revised for up to 30 days after the row date due to Amazon reporting limitations."
         },
         {
           "name": "profit",
@@ -1813,7 +1813,7 @@
       "defaultDataset": true,
       "enabled": true,
       "rowCountBilling": true,
-      "description": "Daily profit and cost breakdown from shipped Amazon marketplace orders, settlement fees, COGS and ads spend. Off-Amazon Multi-Channel Fulfillment lines are excluded from sales, units, orders, tax, and COGS. Their order-report amounts are fulfillment or declared values, not verified external-channel revenue, and this table is not a complete MCF profit statement. Prefer this table for account-level P&L instead of calculating manually from other tables. Amazon Sales and Traffic provides account sessions, page views, buy box percentage, and unit session percentage. Target and search-term columns are separate Amazon Ads attribution summaries; their estimated profits are not included in account profit and must not be added together. Ads include Sponsored Products, Sponsored Brands, Sponsored Display, Sponsored Television and Amazon DSP. sponsored_tv_ad_spend isolates Television spend already included once in ad_spend and profit. Television has no SKU attribution. Amazon DSP spend is DSP totalCost and DSP ad sales, orders and units include promoted ASINs plus brand halo, consistent with Sponsored Brands and Sponsored Display sales. Unallocated and account-level fees and ads spend land here, including all DSP spend, so ad_spend can exceed SUM(amazon_profit_by_sku_and_date.ad_spend). Do not expect this profit to equal SUM(amazon_profit_by_sku_and_date.profit). Columns from average_sales_per_order_item through order_item_session_percentage_b2b are Amazon daily account totals from Sales and Traffic, filled for seller accounts only, and are not sums of per-ASIN rows. total_sessions, total_page_views, avg_buybox_percentage and their B2B and B2C variants also use the daily account totals, and fall back to child ASIN rows when the day has no account total. Columns starting with asin_ are per child ASIN Sales and Traffic values summed for the day.",
+      "description": "Daily profit and cost breakdown from shipped Amazon marketplace orders, settlement fees, COGS and ads spend. Off-Amazon Multi-Channel Fulfillment lines are excluded from sales, units, orders, tax, and COGS. Their order-report amounts are fulfillment or declared values, not verified external-channel revenue, and this table is not a complete MCF profit statement. Prefer this table for account-level P&L instead of calculating manually from other tables. Amazon Sales and Traffic provides account sessions, page views, buy box percentage, and unit session percentage. Target and search-term columns are separate Amazon Ads attribution summaries; their estimated profits are not included in account profit and must not be added together. Ads include Sponsored Products, Sponsored Brands, Sponsored Display, Sponsored Television and Amazon DSP. sponsored_tv_ad_spend isolates Television spend already included once in ad_spend and profit. Television has no SKU attribution. Amazon DSP spend is DSP totalCost and DSP ad sales, orders and units include promoted ASINs plus brand halo, consistent with Sponsored Brands and Sponsored Display sales. Unallocated and account-level fees and ads spend land here, including all DSP spend, so ad_spend can exceed SUM(amazon_profit_by_sku_and_date.ad_spend). Do not expect this profit to equal SUM(amazon_profit_by_sku_and_date.profit). Columns from average_sales_per_order_item through order_item_session_percentage_b2b are Amazon daily account totals from Sales and Traffic, filled for seller accounts only, and are not sums of per-ASIN rows. total_sessions, total_page_views, avg_buybox_percentage and their B2B and B2C variants also use the daily account totals. When the day has no account total yet, page views fall back to the sum of child ASIN rows and buy box to their page-view-weighted average, while sessions stay empty because Amazon counts a session once across child ASINs. Columns starting with asin_ are per child ASIN Sales and Traffic values summed for the day. Traffic columns are empty when Amazon has not published traffic for the date yet.",
       "requiresDatePeriod": true,
       "issues": [],
       "fetchPeriods": [
@@ -2126,12 +2126,12 @@
       "defaultDataset": true,
       "enabled": true,
       "rowCountBilling": true,
-      "description": "Deprecated: amazon_sales_and_traffic_with_cogs will be removed on November 16, 2026. Use amazon_profit_by_sku_and_date for SKU and child-ASIN analysis and amazon_profit_by_date for daily account summaries. These tables provide consistent sales and profitability definitions and more current sales data; Amazon traffic reports can still be delayed. SAT contains Sales and Traffic report metrics per child ASIN and date, including ordered sales and units. Read the SAT migration to profit tables guide at https://app.datadoe.com/hub/docs/datadoe-data/sat-migration-to-profit-tables or open a support ticket for help. The underlying report data remains available through the Raw BigQuery integration.",
+      "description": "Deprecated: amazon_sales_and_traffic_with_cogs will be removed on November 22, 2026. Use amazon_profit_by_sku_and_date for SKU and child-ASIN analysis and amazon_profit_by_date for daily account summaries. These tables provide consistent sales and profitability definitions and more current sales data; Amazon traffic reports can still be delayed. SAT contains Sales and Traffic report metrics per child ASIN and date, including ordered sales and units. Read the SAT migration to profit tables guide at https://app.datadoe.com/hub/docs/datadoe-data/sat-migration-to-profit-tables or open a support ticket for help. The underlying report data remains available through the Raw BigQuery integration.",
       "requiresDatePeriod": true,
       "issues": [
         {
-          "title": "Deprecated: removal on November 16, 2026",
-          "description": "The Sales & Traffic by ASIN & Date (SAT) table will be removed on November 16, 2026. Migrate reports, exports, schedules, and integrations to Profit by SKU & Date or Profit by Date before that date. Read the [SAT migration to profit tables guide](https://app.datadoe.com/hub/docs/datadoe-data/sat-migration-to-profit-tables) or [open a support ticket](https://forms.clickup.com/9015200219/f/8cnj2ev-38615/AOYF9I35QFOXWJQXIG?type=Form&source=hub-sat-migration-docs) for help. The underlying report data remains available through the Raw BigQuery integration."
+          "title": "Deprecated: removal on November 22, 2026",
+          "description": "The Sales & Traffic by ASIN & Date (SAT) table will be removed on November 22, 2026. Migrate reports, exports, schedules, and integrations to Profit by SKU & Date or Profit by Date before that date. Read the [SAT migration to profit tables guide](https://app.datadoe.com/hub/docs/datadoe-data/sat-migration-to-profit-tables) or [open a support ticket](https://forms.clickup.com/9015200219/f/8cnj2ev-38615/AOYF9I35QFOXWJQXIG?type=Form&source=hub-sat-migration-docs) for help. The underlying report data remains available through the Raw BigQuery integration."
         }
       ],
       "fetchPeriods": [
@@ -2141,12 +2141,12 @@
         },
         {
           "type": "RECURRING_DAILY",
-          "numberOfDays": 4
+          "numberOfDays": 5
         },
         {
           "type": "RECURRING_MONTHLY",
           "numberOfDays": 30,
-          "shiftDays": 4
+          "shiftDays": 5
         }
       ],
       "sources": [
@@ -6073,7 +6073,7 @@
           "name": "source_connection_id",
           "type": "TEXT",
           "nullable": false,
-          "description": "Connection whose report copy holds the row. Every marketplace connection of a seller account downloads the same regional report; one copy is shown per account.",
+          "description": "Connection whose report copy holds the row. A regional report is the same for every marketplace of a seller account and one copy is shown per account, so this can be another marketplace connection of the account, including a deleted one while the account still has a connected marketplace.",
           "bigQueryOnly": true
         },
         {
@@ -6521,7 +6521,7 @@
           "name": "source_connection_id",
           "type": "TEXT",
           "nullable": false,
-          "description": "Connection whose report copy holds the row. Every marketplace connection of a seller account downloads the same regional report; one copy is shown per account.",
+          "description": "Connection whose report copy holds the row. A regional report is the same for every marketplace of a seller account and one copy is shown per account, so this can be another marketplace connection of the account, including a deleted one while the account still has a connected marketplace.",
           "bigQueryOnly": true
         },
         {
@@ -6753,7 +6753,7 @@
           "name": "source_connection_id",
           "type": "TEXT",
           "nullable": false,
-          "description": "Connection whose report copy holds the row. Every marketplace connection of a seller account downloads the same regional report; one copy is shown per account.",
+          "description": "Connection whose report copy holds the row. A regional report is the same for every marketplace of a seller account and one copy is shown per account, so this can be another marketplace connection of the account, including a deleted one while the account still has a connected marketplace.",
           "bigQueryOnly": true
         },
         {
@@ -7140,7 +7140,7 @@
           "name": "source_connection_id",
           "type": "TEXT",
           "nullable": false,
-          "description": "Connection whose report copy holds the row. Every marketplace connection of a seller account downloads the same regional report; one copy is shown per account.",
+          "description": "Connection whose report copy holds the row. A regional report is the same for every marketplace of a seller account and one copy is shown per account, so this can be another marketplace connection of the account, including a deleted one while the account still has a connected marketplace.",
           "bigQueryOnly": true
         },
         {
@@ -7693,7 +7693,7 @@
           "name": "source_connection_id",
           "type": "TEXT",
           "nullable": false,
-          "description": "Connection whose report copy holds the row. Every marketplace connection of a seller account downloads the same regional report; one copy is shown per account.",
+          "description": "Connection whose report copy holds the row. A regional report is the same for every marketplace of a seller account and one copy is shown per account, so this can be another marketplace connection of the account, including a deleted one while the account still has a connected marketplace.",
           "bigQueryOnly": true
         },
         {
@@ -7858,7 +7858,7 @@
           "name": "source_connection_id",
           "type": "TEXT",
           "nullable": false,
-          "description": "Connection whose report copy holds the row. Every marketplace connection of a seller account downloads the same regional report; one copy is shown per account.",
+          "description": "Connection whose report copy holds the row. A regional report is the same for every marketplace of a seller account and one copy is shown per account, so this can be another marketplace connection of the account, including a deleted one while the account still has a connected marketplace.",
           "bigQueryOnly": true
         },
         {
@@ -9913,7 +9913,7 @@
           "name": "source_connection_id",
           "type": "TEXT",
           "nullable": false,
-          "description": "Connection whose report copy holds the row. Every marketplace connection of a seller account downloads the same regional report; one copy is shown per account.",
+          "description": "Connection whose report copy holds the row. A regional report is the same for every marketplace of a seller account and one copy is shown per account, so this can be another marketplace connection of the account, including a deleted one while the account still has a connected marketplace.",
           "bigQueryOnly": true
         },
         {
@@ -10912,7 +10912,7 @@
           "name": "source_connection_id",
           "type": "TEXT",
           "nullable": false,
-          "description": "Connection whose report copy holds the row. Every marketplace connection of a seller account downloads the same regional report; one copy is shown per account.",
+          "description": "Connection whose report copy holds the row. A regional report is the same for every marketplace of a seller account and one copy is shown per account, so this can be another marketplace connection of the account, including a deleted one while the account still has a connected marketplace.",
           "bigQueryOnly": true
         },
         {
@@ -11135,7 +11135,7 @@
           "name": "source_connection_id",
           "type": "TEXT",
           "nullable": false,
-          "description": "Connection whose report copy holds the row. Every marketplace connection of a seller account downloads the same regional report; one copy is shown per account.",
+          "description": "Connection whose report copy holds the row. A regional report is the same for every marketplace of a seller account and one copy is shown per account, so this can be another marketplace connection of the account, including a deleted one while the account still has a connected marketplace.",
           "bigQueryOnly": true
         },
         {
@@ -11686,7 +11686,7 @@
           "name": "source_connection_id",
           "type": "TEXT",
           "nullable": false,
-          "description": "Connection whose report copy holds the row. Every marketplace connection of a seller account downloads the same regional report; one copy is shown per account.",
+          "description": "Connection whose report copy holds the row. A regional report is the same for every marketplace of a seller account and one copy is shown per account, so this can be another marketplace connection of the account, including a deleted one while the account still has a connected marketplace.",
           "bigQueryOnly": true
         },
         {
@@ -11941,7 +11941,7 @@
           "name": "source_connection_id",
           "type": "TEXT",
           "nullable": false,
-          "description": "Connection whose report copy holds the row. Every marketplace connection of a seller account downloads the same regional report; one copy is shown per account.",
+          "description": "Connection whose report copy holds the row. A regional report is the same for every marketplace of a seller account and one copy is shown per account, so this can be another marketplace connection of the account, including a deleted one while the account still has a connected marketplace.",
           "bigQueryOnly": true
         },
         {
@@ -12124,7 +12124,7 @@
           "name": "source_connection_id",
           "type": "TEXT",
           "nullable": false,
-          "description": "Connection whose report copy holds the row. Every marketplace connection of a seller account downloads the same regional report; one copy is shown per account.",
+          "description": "Connection whose report copy holds the row. A regional report is the same for every marketplace of a seller account and one copy is shown per account, so this can be another marketplace connection of the account, including a deleted one while the account still has a connected marketplace.",
           "bigQueryOnly": true
         },
         {
@@ -12331,7 +12331,7 @@
           "name": "source_connection_id",
           "type": "TEXT",
           "nullable": false,
-          "description": "Connection whose report copy holds the row. Every marketplace connection of a seller account downloads the same regional report; one copy is shown per account.",
+          "description": "Connection whose report copy holds the row. A regional report is the same for every marketplace of a seller account and one copy is shown per account, so this can be another marketplace connection of the account, including a deleted one while the account still has a connected marketplace.",
           "bigQueryOnly": true
         },
         {
@@ -53445,11 +53445,11 @@
       "fetchPeriods": [
         {
           "type": "INITIAL",
-          "numberOfDays": 418
+          "numberOfDays": 60
         },
         {
           "type": "RECURRING_DAILY",
-          "numberOfDays": 30
+          "numberOfDays": 3
         }
       ],
       "sources": [
@@ -53599,11 +53599,11 @@
       "fetchPeriods": [
         {
           "type": "INITIAL",
-          "numberOfDays": 418
+          "numberOfDays": 60
         },
         {
           "type": "RECURRING_DAILY",
-          "numberOfDays": 30
+          "numberOfDays": 3
         }
       ],
       "sources": [
@@ -53752,11 +53752,11 @@
       "fetchPeriods": [
         {
           "type": "INITIAL",
-          "numberOfDays": 418
+          "numberOfDays": 60
         },
         {
           "type": "RECURRING_DAILY",
-          "numberOfDays": 30
+          "numberOfDays": 3
         }
       ],
       "sources": [
@@ -53929,11 +53929,11 @@
       "fetchPeriods": [
         {
           "type": "INITIAL",
-          "numberOfDays": 418
+          "numberOfDays": 7
         },
         {
           "type": "RECURRING_DAILY",
-          "numberOfDays": 30
+          "numberOfDays": 1
         }
       ],
       "sources": [
