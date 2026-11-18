@@ -18,8 +18,8 @@ Daily Brand Store traffic by store source tag. Amazon Attribution tags are a dif
 
 ## Fetch periods
 
-- `INITIAL` (418 days)
-- `RECURRING_DAILY` (30 days)
+- `INITIAL` (60 days)
+- `RECURRING_DAILY` (3 days)
 
 ## Columns (20)
 

@@ -18,8 +18,8 @@ Daily page performance for Amazon Brand Stores. One row per store, date and page
 
 ## Fetch periods
 
-- `INITIAL` (418 days)
-- `RECURRING_DAILY` (30 days)
+- `INITIAL` (60 days)
+- `RECURRING_DAILY` (3 days)
 
 ## Columns (23)
 

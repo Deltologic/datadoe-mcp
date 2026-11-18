@@ -36,12 +36,12 @@
         {
           "id": "fba-eligibility-and-listing-restrictions",
           "title": "FBA eligibility and listing restrictions",
-          "markdown": "Call `AMAZON_FBA_ELIGIBILITY_FIND` and `AMAZON_LISTINGS_RESTRICTIONS_FIND` yourself before you plan an inbound shipment or a listing change. A listing write does not run them. These checks read Seller Central at that moment. They do not enroll products, create offers, approve products, or create shipments. Listing VERIFY Actions check a proposed listing separately.\n\nSee [FBA eligibility and listing restrictions](/hub/docs/datadoe-features/actions-amazon-eligibility)."
+          "markdown": "Call `AMAZON_FBA_ELIGIBILITY_FIND` and `AMAZON_LISTINGS_RESTRICTIONS_FIND` yourself before you plan an inbound shipment or a listing change. A listing write does not run them. These checks read Seller Central at that moment. They do not enroll products, create offers, approve products, or create shipments. Listing VERIFY Actions check a proposed listing separately.\n\nSee [FBA eligibility and listing restrictions](/hub/docs/datadoe-actions/fba-eligibility)."
         },
         {
           "id": "listing-images",
           "title": "Listing images",
-          "markdown": "To set listing images on create or update, upload files to the `LISTING_IMAGES` group first, then reference file UUIDs in `AMAZON_LISTINGS_CREATE` or `AMAZON_LISTINGS_UPDATE`. See [Files](/hub/docs/datadoe-features/files) for upload details and [Actions: Amazon Images](/hub/docs/datadoe-features/actions-manage-images) for the full workflow, slot mapping, and MCP and API examples."
+          "markdown": "To set listing images on create or update, upload files to the `LISTING_IMAGES` group first, then reference file UUIDs in `AMAZON_LISTINGS_CREATE` or `AMAZON_LISTINGS_UPDATE`. See [Files](/hub/docs/datadoe-features/files) for upload details and [Actions: Listing images](/hub/docs/datadoe-actions/listing-images) for the full workflow, slot mapping, and MCP and API examples."
         }
       ]
     },
@@ -107,12 +107,12 @@
       "id": "fba-inbound",
       "label": "FBA inbound shipments",
       "platform": "SELLING_PARTNER",
-      "description": "Create and manage FBA inbound plans, packing, placement, transportation and receiving reads on a Seller Central account. Each Action runs one live Amazon operation. Enable the required types in Settings > Actions. WRITE Actions require Read and write account access. Actions marked PII also require PII permission. Validate with `dryRun` before execution and review fees and shipment choices before confirming them. [Read Actions: FBA inbound](/hub/docs/datadoe-features/actions-amazon-fba-inbound).",
+      "description": "Create and manage FBA inbound plans, packing, placement, transportation and receiving reads on a Seller Central account. Each Action runs one live Amazon operation. Enable the required types in Settings > Actions. WRITE Actions require Read and write account access. Actions marked PII also require PII permission. Validate with `dryRun` before execution and review fees and shipment choices before confirming them. [Read Actions: FBA inbound](/hub/docs/datadoe-actions/fba-inbound).",
       "guides": [
         {
           "id": "fba-inbound-workflow",
           "title": "Plan, ship and recover",
-          "markdown": "Follow [Actions: FBA inbound](/hub/docs/datadoe-features/actions-amazon-fba-inbound) for Pack First, Pack Later, India, carrier choices, documents and request examples.\n\nEach Action submits one Amazon operation. Native arrays stay in that request and the Action counts as one execution item. List operations return one page. Repeat the original filters and returned token for the next page.\n\nAfter an asynchronous write, keep the returned operation ID and wait for completion before continuing. DataDoe observes the same operation without submitting it again. If the outcome is unknown, reconcile live state before another write. The guide explains recovery with an operation ID and acknowledgment when no ID was saved.\n\nGenerated documents are retained for one week. Download links last at most 5 minutes. Read the original Action again to renew an accessible retained document's link without another Amazon request or Action charge."
+          "markdown": "Follow [Actions: FBA inbound](/hub/docs/datadoe-actions/fba-inbound) for Pack First, Pack Later, India, carrier choices, documents and request examples.\n\nEach Action submits one Amazon operation. Native arrays stay in that request and the Action counts as one execution item. List operations return one page. Repeat the original filters and returned token for the next page.\n\nAfter an asynchronous write, keep the returned operation ID and wait for completion before continuing. DataDoe observes the same operation without submitting it again. If the outcome is unknown, reconcile live state before another write. The guide explains recovery with an operation ID and acknowledgment when no ID was saved.\n\nGenerated documents are retained for one week. Download links last at most 5 minutes. Read the original Action again to renew an accessible retained document's link without another Amazon request or Action charge."
         }
       ]
     },
@@ -120,12 +120,12 @@
       "id": "external-fulfillment",
       "label": "External Fulfillment shipping",
       "platform": "SELLING_PARTNER",
-      "description": "Ship Seller Flex, Easy Ship and Self Delivery orders through External Fulfillment Shipping v2024-09-11. This is not Buy Shipping, FBA inbound, MCF or Vendor Direct Fulfillment. Each Action runs one live Amazon operation. Enable the required types in Settings > Actions. WRITE Actions require Read and write account access. Actions marked PII also require PII permission. Validate with `dryRun` before execution. [Read External Fulfillment shipping](/hub/docs/datadoe-features/actions-amazon-external-fulfillment).",
+      "description": "Ship Seller Flex, Easy Ship and Self Delivery orders through External Fulfillment Shipping v2024-09-11. This is not Buy Shipping, FBA inbound, MCF or Vendor Direct Fulfillment. Each Action runs one live Amazon operation. Enable the required types in Settings > Actions. WRITE Actions require Read and write account access. Actions marked PII also require PII permission. Validate with `dryRun` before execution. [Read Actions: External Fulfillment](/hub/docs/datadoe-actions/external-fulfillment).",
       "guides": [
         {
           "id": "external-fulfillment-workflow",
           "title": "Confirm, pack, invoice and label",
-          "markdown": "Follow [Actions: External Fulfillment shipping](/hub/docs/datadoe-features/actions-amazon-external-fulfillment) for Seller Flex, Easy Ship, Self Delivery and an Easy Ship cross-border example.\n\nEach Action submits one Amazon operation. List operations return one page. Repeat the original filters with the returned token. An empty page can still include a next token.\n\nGENERATE retrieves labels that already exist. REGENERATE replaces them. A failure for one package is not a full success. Generated documents are retained for one week. Download links last at most 5 minutes. Read the original Action again to renew an accessible retained document's link without another Amazon request or Action charge.\n\nIf a write times out or Amazon returns a server error, read the shipment before sending that write again."
+          "markdown": "Follow [Actions: External Fulfillment](/hub/docs/datadoe-actions/external-fulfillment) for Seller Flex, Easy Ship, Self Delivery and an Easy Ship cross-border example.\n\nEach Action submits one Amazon operation. List operations return one page. Repeat the original filters with the returned token. An empty page can still include a next token.\n\nGENERATE retrieves labels that already exist. REGENERATE replaces them. A failure for one package is not a full success. Generated documents are retained for one week. Download links last at most 5 minutes. Read the original Action again to renew an accessible retained document's link without another Amazon request or Action charge.\n\nIf a write times out or Amazon returns a server error, read the shipment before sending that write again."
         }
       ]
     },
@@ -335,7 +335,7 @@
         "api": 5000,
         "mcp": 20
       },
-      "description": "Create Amazon listings or offers on existing ASINs, including [images](/hub/docs/datadoe-features/actions-manage-images).",
+      "description": "Create Amazon listings or offers on existing ASINs, including [images](/hub/docs/datadoe-actions/listing-images).",
       "result": "Confirmation that Amazon accepted the Action.",
       "detailsJsonSchema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -745,7 +745,7 @@
         "api": 5000,
         "mcp": 50
       },
-      "description": "Easy way to update basic Amazon listing parameters, like name, bullet points, keywords, and [images](/hub/docs/datadoe-features/actions-manage-images).",
+      "description": "Easy way to update basic Amazon listing parameters, like name, bullet points, keywords, and [images](/hub/docs/datadoe-actions/listing-images).",
       "result": "Confirmation that Amazon accepted the Action.",
       "detailsJsonSchema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -12640,7 +12640,7 @@
       "group": "fbm-shipping",
       "entity": "FBM shipments",
       "access": "READ",
-      "requiresPii": true,
+      "requiresPii": false,
       "accountAvailability": "SELLERS_ONLY",
       "marketplaceNote": null,
       "maxItems": {
@@ -12931,7 +12931,7 @@
       "group": "fbm-shipping",
       "entity": "FBM shipments",
       "access": "READ",
-      "requiresPii": true,
+      "requiresPii": false,
       "accountAvailability": "SELLERS_ONLY",
       "marketplaceNote": null,
       "maxItems": {
@@ -12988,7 +12988,7 @@
       "group": "fbm-shipping",
       "entity": "FBM shipments",
       "access": "WRITE",
-      "requiresPii": true,
+      "requiresPii": false,
       "accountAvailability": "SELLERS_ONLY",
       "marketplaceNote": null,
       "maxItems": {
@@ -13163,7 +13163,7 @@
       "group": "fbm-shipping",
       "entity": "FBM shipments",
       "access": "READ",
-      "requiresPii": true,
+      "requiresPii": false,
       "accountAvailability": "SELLERS_ONLY",
       "marketplaceNote": null,
       "maxItems": {
@@ -15074,7 +15074,7 @@
       "accountAvailability": "SELLERS_ONLY",
       "marketplaceNote": null,
       "maxItems": null,
-      "description": "Provides a list of inbound plans with minimal information. Amazon listInboundPlans, Fulfillment Inbound 2024-03-20. READ access. No PII permission required. Use an authorized Seller Central connection with the Amazon Fulfillment role. Reads live Amazon state. Returns one page; repeat filters with the unchanged returned continuation token. Output: inboundPlans, pagination. Next Actions: AMAZON_FBA_INBOUND_PLANS_FIND. [Request example and workflow](/hub/docs/datadoe-features/actions-amazon-fba-inbound#request-plans-find).",
+      "description": "Provides a list of inbound plans with minimal information. Amazon listInboundPlans, Fulfillment Inbound 2024-03-20. READ access. No PII permission required. Use an authorized Seller Central connection with the Amazon Fulfillment role. Reads live Amazon state. Returns one page; repeat filters with the unchanged returned continuation token. Output: inboundPlans, pagination. Next Actions: AMAZON_FBA_INBOUND_PLANS_FIND. [Request example and workflow](/hub/docs/datadoe-actions/fba-inbound#request-plans-find).",
       "result": "Amazon response fields: `inboundPlans`, `pagination`. Returns the direct Amazon response. Includes observation time, warnings and error details when applicable. Document operations include stored File IDs, download links and expiry times.",
       "detailsJsonSchema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -15138,7 +15138,7 @@
       "accountAvailability": "SELLERS_ONLY",
       "marketplaceNote": null,
       "maxItems": null,
-      "description": "Creates an inbound plan. An inbound plan contains all the necessary information to send shipments into Amazon's fufillment network. Amazon createInboundPlan, Fulfillment Inbound 2024-03-20. WRITE access. No PII permission required. Use an authorized Seller Central connection with the Amazon Fulfillment role. Changes Amazon workflow state; fees or irreversible choices may apply. Follow the seller's approval instructions. No pagination input. Output: inboundPlanId, operationId. Next Actions: AMAZON_FBA_INBOUND_OPERATIONS_GET. [Request example and workflow](/hub/docs/datadoe-features/actions-amazon-fba-inbound#request-plans-add).",
+      "description": "Creates an inbound plan. An inbound plan contains all the necessary information to send shipments into Amazon's fufillment network. Amazon createInboundPlan, Fulfillment Inbound 2024-03-20. WRITE access. No PII permission required. Use an authorized Seller Central connection with the Amazon Fulfillment role. Changes Amazon workflow state; fees or irreversible choices may apply. Follow the seller's approval instructions. No pagination input. Output: inboundPlanId, operationId. Next Actions: AMAZON_FBA_INBOUND_OPERATIONS_GET. [Request example and workflow](/hub/docs/datadoe-actions/fba-inbound#request-plans-add).",
       "result": "Amazon response fields: `inboundPlanId`, `operationId`. Returns an operation ID. Pending work uses WAITING_EXTERNAL_PROCESSING while DataDoe observes the same operation. Wait for SUCCESS before the next workflow step. Includes observation time, warnings and error details when applicable. Document operations include stored File IDs, download links and expiry times.",
       "detailsJsonSchema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -15341,7 +15341,7 @@
       "accountAvailability": "SELLERS_ONLY",
       "marketplaceNote": null,
       "maxItems": null,
-      "description": "Fetches the top level information about an inbound plan. Amazon getInboundPlan, Fulfillment Inbound 2024-03-20. READ access. No PII permission required. Use an authorized Seller Central connection with the Amazon Fulfillment role. Use inboundPlanId returned by PLANS_ADD or PLANS_FIND; shipmentId comes from PLANS_GET and is distinct from the FBA shipmentConfirmationId. Reads live Amazon state. No pagination input. Output: createdAt, inboundPlanId, lastUpdatedAt, marketplaceIds, name, packingOptions, placementOptions, shipments, sourceAddress, status. Next Actions: AMAZON_FBA_INBOUND_PLANS_GET. [Request example and workflow](/hub/docs/datadoe-features/actions-amazon-fba-inbound#request-plans-get).",
+      "description": "Fetches the top level information about an inbound plan. Amazon getInboundPlan, Fulfillment Inbound 2024-03-20. READ access. No PII permission required. Use an authorized Seller Central connection with the Amazon Fulfillment role. Use inboundPlanId returned by PLANS_ADD or PLANS_FIND; shipmentId comes from PLANS_GET and is distinct from the FBA shipmentConfirmationId. Reads live Amazon state. No pagination input. Output: createdAt, inboundPlanId, lastUpdatedAt, marketplaceIds, name, packingOptions, placementOptions, shipments, sourceAddress, status. Next Actions: AMAZON_FBA_INBOUND_PLANS_GET. [Request example and workflow](/hub/docs/datadoe-actions/fba-inbound#request-plans-get).",
       "result": "Amazon response fields: `createdAt`, `inboundPlanId`, `lastUpdatedAt`, `marketplaceIds`, `name`, `packingOptions`, `placementOptions`, `shipments`, `sourceAddress`, `status`. Returns the direct Amazon response. Includes observation time, warnings and error details when applicable. Document operations include stored File IDs, download links and expiry times.",
       "detailsJsonSchema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -15381,7 +15381,7 @@
       "accountAvailability": "SELLERS_ONLY",
       "marketplaceNote": null,
       "maxItems": null,
-      "description": "Provides a paginated list of box packages in an inbound plan. Amazon listInboundPlanBoxes, Fulfillment Inbound 2024-03-20. READ access. No personal data required. Use an authorized Seller Central connection with the Amazon Fulfillment role. Use inboundPlanId returned by PLANS_ADD or PLANS_FIND; shipmentId comes from PLANS_GET and is distinct from the FBA shipmentConfirmationId. Reads live Amazon state. Returns one page; repeat filters with the unchanged returned continuation token. Output: boxes, pagination. Next Actions: AMAZON_FBA_INBOUND_PLANS_GET. [Request example and workflow](/hub/docs/datadoe-features/actions-amazon-fba-inbound#request-plan-boxes-find).",
+      "description": "Provides a paginated list of box packages in an inbound plan. Amazon listInboundPlanBoxes, Fulfillment Inbound 2024-03-20. READ access. No personal data required. Use an authorized Seller Central connection with the Amazon Fulfillment role. Use inboundPlanId returned by PLANS_ADD or PLANS_FIND; shipmentId comes from PLANS_GET and is distinct from the FBA shipmentConfirmationId. Reads live Amazon state. Returns one page; repeat filters with the unchanged returned continuation token. Output: boxes, pagination. Next Actions: AMAZON_FBA_INBOUND_PLANS_GET. [Request example and workflow](/hub/docs/datadoe-actions/fba-inbound#request-plan-boxes-find).",
       "result": "Amazon response fields: `boxes`, `pagination`. Returns the direct Amazon response. Includes observation time, warnings and error details when applicable. Document operations include stored File IDs, download links and expiry times.",
       "detailsJsonSchema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -15439,7 +15439,7 @@
       "accountAvailability": "SELLERS_ONLY",
       "marketplaceNote": null,
       "maxItems": null,
-      "description": "Cancels an Inbound Plan. Charges may apply if the cancellation is performed outside of a void window. The window for Amazon Partnered Carriers is 24 hours for Small Parcel Delivery (SPD) and one hour for Less-Than-Truckload (LTL) carrier shipments. Amazon cancelInboundPlan, Fulfillment Inbound 2024-03-20. WRITE access. No personal data required. Use an authorized Seller Central connection with the Amazon Fulfillment role. Use inboundPlanId returned by PLANS_ADD or PLANS_FIND; shipmentId comes from PLANS_GET and is distinct from the FBA shipmentConfirmationId. Changes Amazon workflow state; fees or irreversible choices may apply. Follow the seller's approval instructions. No pagination input. Output: operationId. Next Actions: AMAZON_FBA_INBOUND_OPERATIONS_GET. [Request example and workflow](/hub/docs/datadoe-features/actions-amazon-fba-inbound#request-plans-cancel).",
+      "description": "Cancels an Inbound Plan. Charges may apply if the cancellation is performed outside of a void window. The window for Amazon Partnered Carriers is 24 hours for Small Parcel Delivery (SPD) and one hour for Less-Than-Truckload (LTL) carrier shipments. Amazon cancelInboundPlan, Fulfillment Inbound 2024-03-20. WRITE access. No personal data required. Use an authorized Seller Central connection with the Amazon Fulfillment role. Use inboundPlanId returned by PLANS_ADD or PLANS_FIND; shipmentId comes from PLANS_GET and is distinct from the FBA shipmentConfirmationId. Changes Amazon workflow state; fees or irreversible choices may apply. Follow the seller's approval instructions. No pagination input. Output: operationId. Next Actions: AMAZON_FBA_INBOUND_OPERATIONS_GET. [Request example and workflow](/hub/docs/datadoe-actions/fba-inbound#request-plans-cancel).",
       "result": "Amazon response fields: `operationId`. Returns an operation ID. Pending work uses WAITING_EXTERNAL_PROCESSING while DataDoe observes the same operation. Wait for SUCCESS before the next workflow step. Includes observation time, warnings and error details when applicable. Document operations include stored File IDs, download links and expiry times.",
       "detailsJsonSchema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -15479,7 +15479,7 @@
       "accountAvailability": "SELLERS_ONLY",
       "marketplaceNote": null,
       "maxItems": null,
-      "description": "Provides a paginated list of item packages in an inbound plan. Amazon listInboundPlanItems, Fulfillment Inbound 2024-03-20. READ access. No personal data required. Use an authorized Seller Central connection with the Amazon Fulfillment role. Use inboundPlanId returned by PLANS_ADD or PLANS_FIND; shipmentId comes from PLANS_GET and is distinct from the FBA shipmentConfirmationId. Reads live Amazon state. Returns one page; repeat filters with the unchanged returned continuation token. Output: items, pagination. Next Actions: AMAZON_FBA_INBOUND_PLANS_GET. [Request example and workflow](/hub/docs/datadoe-features/actions-amazon-fba-inbound#request-plan-items-find).",
+      "description": "Provides a paginated list of item packages in an inbound plan. Amazon listInboundPlanItems, Fulfillment Inbound 2024-03-20. READ access. No personal data required. Use an authorized Seller Central connection with the Amazon Fulfillment role. Use inboundPlanId returned by PLANS_ADD or PLANS_FIND; shipmentId comes from PLANS_GET and is distinct from the FBA shipmentConfirmationId. Reads live Amazon state. Returns one page; repeat filters with the unchanged returned continuation token. Output: items, pagination. Next Actions: AMAZON_FBA_INBOUND_PLANS_GET. [Request example and workflow](/hub/docs/datadoe-actions/fba-inbound#request-plan-items-find).",
       "result": "Amazon response fields: `items`, `pagination`. Returns the direct Amazon response. Includes observation time, warnings and error details when applicable. Document operations include stored File IDs, download links and expiry times.",
       "detailsJsonSchema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -15537,7 +15537,7 @@
       "accountAvailability": "SELLERS_ONLY",
       "marketplaceNote": null,
       "maxItems": null,
-      "description": "Updates the name of an existing inbound plan. Amazon updateInboundPlanName, Fulfillment Inbound 2024-03-20. WRITE access. No personal data required. Use an authorized Seller Central connection with the Amazon Fulfillment role. Use inboundPlanId returned by PLANS_ADD or PLANS_FIND; shipmentId comes from PLANS_GET and is distinct from the FBA shipmentConfirmationId. Changes Amazon workflow state; fees or irreversible choices may apply. Follow the seller's approval instructions. No pagination input. Output: no response body, HTTP 204. Next Actions: AMAZON_FBA_INBOUND_PLANS_GET. [Request example and workflow](/hub/docs/datadoe-features/actions-amazon-fba-inbound#request-plan-name-update).",
+      "description": "Updates the name of an existing inbound plan. Amazon updateInboundPlanName, Fulfillment Inbound 2024-03-20. WRITE access. No personal data required. Use an authorized Seller Central connection with the Amazon Fulfillment role. Use inboundPlanId returned by PLANS_ADD or PLANS_FIND; shipmentId comes from PLANS_GET and is distinct from the FBA shipmentConfirmationId. Changes Amazon workflow state; fees or irreversible choices may apply. Follow the seller's approval instructions. No pagination input. Output: no response body, HTTP 204. Next Actions: AMAZON_FBA_INBOUND_PLANS_GET. [Request example and workflow](/hub/docs/datadoe-actions/fba-inbound#request-plan-name-update).",
       "result": "Amazon returns no response body on success. Returns the direct Amazon response. Includes observation time, warnings and error details when applicable. Document operations include stored File IDs, download links and expiry times.",
       "detailsJsonSchema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -15594,7 +15594,7 @@
       "accountAvailability": "SELLERS_ONLY",
       "marketplaceNote": null,
       "maxItems": null,
-      "description": "Retrieves a page of boxes from a given packing group. These boxes were previously provided through the `setPackingInformation` operation. This API is used for workflows where boxes are packed before Amazon determines shipment splits. Amazon listPackingGroupBoxes, Fulfillment Inbound 2024-03-20. READ access. No personal data required. Use an authorized Seller Central connection with the Amazon Fulfillment role. Use inboundPlanId returned by PLANS_ADD or PLANS_FIND; shipmentId comes from PLANS_GET and is distinct from the FBA shipmentConfirmationId. Reads live Amazon state. Returns one page; repeat filters with the unchanged returned continuation token. Output: boxes, pagination. Next Actions: AMAZON_FBA_INBOUND_PLANS_GET. [Request example and workflow](/hub/docs/datadoe-features/actions-amazon-fba-inbound#request-packing-group-boxes-find).",
+      "description": "Retrieves a page of boxes from a given packing group. These boxes were previously provided through the `setPackingInformation` operation. This API is used for workflows where boxes are packed before Amazon determines shipment splits. Amazon listPackingGroupBoxes, Fulfillment Inbound 2024-03-20. READ access. No personal data required. Use an authorized Seller Central connection with the Amazon Fulfillment role. Use inboundPlanId returned by PLANS_ADD or PLANS_FIND; shipmentId comes from PLANS_GET and is distinct from the FBA shipmentConfirmationId. Reads live Amazon state. Returns one page; repeat filters with the unchanged returned continuation token. Output: boxes, pagination. Next Actions: AMAZON_FBA_INBOUND_PLANS_GET. [Request example and workflow](/hub/docs/datadoe-actions/fba-inbound#request-packing-group-boxes-find).",
       "result": "Amazon response fields: `boxes`, `pagination`. Returns the direct Amazon response. Includes observation time, warnings and error details when applicable. Document operations include stored File IDs, download links and expiry times.",
       "detailsJsonSchema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -15660,7 +15660,7 @@
       "accountAvailability": "SELLERS_ONLY",
       "marketplaceNote": null,
       "maxItems": null,
-      "description": "Retrieves a page of items in a given packing group. Packing options must first be generated by the corresponding operation before packing group items can be listed. Amazon listPackingGroupItems, Fulfillment Inbound 2024-03-20. READ access. No personal data required. Use an authorized Seller Central connection with the Amazon Fulfillment role. Use inboundPlanId returned by PLANS_ADD or PLANS_FIND; shipmentId comes from PLANS_GET and is distinct from the FBA shipmentConfirmationId. Reads live Amazon state. Returns one page; repeat filters with the unchanged returned continuation token. Output: items, pagination. Next Actions: AMAZON_FBA_INBOUND_PLANS_GET. [Request example and workflow](/hub/docs/datadoe-features/actions-amazon-fba-inbound#request-packing-group-items-find).",
+      "description": "Retrieves a page of items in a given packing group. Packing options must first be generated by the corresponding operation before packing group items can be listed. Amazon listPackingGroupItems, Fulfillment Inbound 2024-03-20. READ access. No personal data required. Use an authorized Seller Central connection with the Amazon Fulfillment role. Use inboundPlanId returned by PLANS_ADD or PLANS_FIND; shipmentId comes from PLANS_GET and is distinct from the FBA shipmentConfirmationId. Reads live Amazon state. Returns one page; repeat filters with the unchanged returned continuation token. Output: items, pagination. Next Actions: AMAZON_FBA_INBOUND_PLANS_GET. [Request example and workflow](/hub/docs/datadoe-actions/fba-inbound#request-packing-group-items-find).",
       "result": "Amazon response fields: `items`, `pagination`. Returns the direct Amazon response. Includes observation time, warnings and error details when applicable. Document operations include stored File IDs, download links and expiry times.",
       "detailsJsonSchema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -15726,7 +15726,7 @@
       "accountAvailability": "SELLERS_ONLY",
       "marketplaceNote": null,
       "maxItems": null,
-      "description": "Sets packing information for an inbound plan. This should be called after an inbound plan is created to populate the box level information required for planning and transportation estimates. Amazon setPackingInformation, Fulfillment Inbound 2024-03-20. WRITE access. No personal data required. Use an authorized Seller Central connection with the Amazon Fulfillment role. Use inboundPlanId returned by PLANS_ADD or PLANS_FIND; shipmentId comes from PLANS_GET and is distinct from the FBA shipmentConfirmationId. Changes Amazon workflow state; fees or irreversible choices may apply. Follow the seller's approval instructions. No pagination input. Output: operationId. Next Actions: AMAZON_FBA_INBOUND_OPERATIONS_GET. [Request example and workflow](/hub/docs/datadoe-features/actions-amazon-fba-inbound#request-packing-information-set).",
+      "description": "Sets packing information for an inbound plan. This should be called after an inbound plan is created to populate the box level information required for planning and transportation estimates. Amazon setPackingInformation, Fulfillment Inbound 2024-03-20. WRITE access. No personal data required. Use an authorized Seller Central connection with the Amazon Fulfillment role. Use inboundPlanId returned by PLANS_ADD or PLANS_FIND; shipmentId comes from PLANS_GET and is distinct from the FBA shipmentConfirmationId. Changes Amazon workflow state; fees or irreversible choices may apply. Follow the seller's approval instructions. No pagination input. Output: operationId. Next Actions: AMAZON_FBA_INBOUND_OPERATIONS_GET. [Request example and workflow](/hub/docs/datadoe-actions/fba-inbound#request-packing-information-set).",
       "result": "Amazon response fields: `operationId`. Returns an operation ID. Pending work uses WAITING_EXTERNAL_PROCESSING while DataDoe observes the same operation. Wait for SUCCESS before the next workflow step. Includes observation time, warnings and error details when applicable. Document operations include stored File IDs, download links and expiry times.",
       "detailsJsonSchema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -15969,7 +15969,7 @@
       "accountAvailability": "SELLERS_ONLY",
       "marketplaceNote": null,
       "maxItems": null,
-      "description": "Retrieves a list of all packing options for an inbound plan. Packing options must first be generated by the corresponding operation before becoming available. Amazon listPackingOptions, Fulfillment Inbound 2024-03-20. READ access. No personal data required. Use an authorized Seller Central connection with the Amazon Fulfillment role. Use inboundPlanId returned by PLANS_ADD or PLANS_FIND; shipmentId comes from PLANS_GET and is distinct from the FBA shipmentConfirmationId. Reads live Amazon state. Returns one page; repeat filters with the unchanged returned continuation token. Output: packingOptions, pagination. Next Actions: AMAZON_FBA_INBOUND_PLANS_GET. [Request example and workflow](/hub/docs/datadoe-features/actions-amazon-fba-inbound#request-packing-options-find).",
+      "description": "Retrieves a list of all packing options for an inbound plan. Packing options must first be generated by the corresponding operation before becoming available. Amazon listPackingOptions, Fulfillment Inbound 2024-03-20. READ access. No personal data required. Use an authorized Seller Central connection with the Amazon Fulfillment role. Use inboundPlanId returned by PLANS_ADD or PLANS_FIND; shipmentId comes from PLANS_GET and is distinct from the FBA shipmentConfirmationId. Reads live Amazon state. Returns one page; repeat filters with the unchanged returned continuation token. Output: packingOptions, pagination. Next Actions: AMAZON_FBA_INBOUND_PLANS_GET. [Request example and workflow](/hub/docs/datadoe-actions/fba-inbound#request-packing-options-find).",
       "result": "Amazon response fields: `packingOptions`, `pagination`. Returns the direct Amazon response. Includes observation time, warnings and error details when applicable. Document operations include stored File IDs, download links and expiry times.",
       "detailsJsonSchema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -16027,7 +16027,7 @@
       "accountAvailability": "SELLERS_ONLY",
       "marketplaceNote": null,
       "maxItems": null,
-      "description": "Generates available packing options for the inbound plan. Amazon generatePackingOptions, Fulfillment Inbound 2024-03-20. WRITE access. No personal data required. Use an authorized Seller Central connection with the Amazon Fulfillment role. Use inboundPlanId returned by PLANS_ADD or PLANS_FIND; shipmentId comes from PLANS_GET and is distinct from the FBA shipmentConfirmationId. Changes Amazon workflow state; fees or irreversible choices may apply. Follow the seller's approval instructions. No pagination input. Output: operationId. Next Actions: AMAZON_FBA_INBOUND_OPERATIONS_GET, AMAZON_FBA_INBOUND_PACKING_OPTIONS_FIND. [Request example and workflow](/hub/docs/datadoe-features/actions-amazon-fba-inbound#request-packing-options-generate).",
+      "description": "Generates available packing options for the inbound plan. Amazon generatePackingOptions, Fulfillment Inbound 2024-03-20. WRITE access. No personal data required. Use an authorized Seller Central connection with the Amazon Fulfillment role. Use inboundPlanId returned by PLANS_ADD or PLANS_FIND; shipmentId comes from PLANS_GET and is distinct from the FBA shipmentConfirmationId. Changes Amazon workflow state; fees or irreversible choices may apply. Follow the seller's approval instructions. No pagination input. Output: operationId. Next Actions: AMAZON_FBA_INBOUND_OPERATIONS_GET, AMAZON_FBA_INBOUND_PACKING_OPTIONS_FIND. [Request example and workflow](/hub/docs/datadoe-actions/fba-inbound#request-packing-options-generate).",
       "result": "Amazon response fields: `operationId`. Returns an operation ID. Pending work uses WAITING_EXTERNAL_PROCESSING while DataDoe observes the same operation. Wait for SUCCESS before the next workflow step. Includes observation time, warnings and error details when applicable. Document operations include stored File IDs, download links and expiry times.",
       "detailsJsonSchema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -16067,7 +16067,7 @@
       "accountAvailability": "SELLERS_ONLY",
       "marketplaceNote": null,
       "maxItems": null,
-      "description": "Confirms the packing option for an inbound plan. Amazon confirmPackingOption, Fulfillment Inbound 2024-03-20. WRITE access. No personal data required. Use an authorized Seller Central connection with the Amazon Fulfillment role. Use inboundPlanId returned by PLANS_ADD or PLANS_FIND; shipmentId comes from PLANS_GET and is distinct from the FBA shipmentConfirmationId. Changes Amazon workflow state; fees or irreversible choices may apply. Follow the seller's approval instructions. No pagination input. Output: operationId. Next Actions: AMAZON_FBA_INBOUND_OPERATIONS_GET. [Request example and workflow](/hub/docs/datadoe-features/actions-amazon-fba-inbound#request-packing-options-confirm).",
+      "description": "Confirms the packing option for an inbound plan. Amazon confirmPackingOption, Fulfillment Inbound 2024-03-20. WRITE access. No personal data required. Use an authorized Seller Central connection with the Amazon Fulfillment role. Use inboundPlanId returned by PLANS_ADD or PLANS_FIND; shipmentId comes from PLANS_GET and is distinct from the FBA shipmentConfirmationId. Changes Amazon workflow state; fees or irreversible choices may apply. Follow the seller's approval instructions. No pagination input. Output: operationId. Next Actions: AMAZON_FBA_INBOUND_OPERATIONS_GET. [Request example and workflow](/hub/docs/datadoe-actions/fba-inbound#request-packing-options-confirm).",
       "result": "Amazon response fields: `operationId`. Returns an operation ID. Pending work uses WAITING_EXTERNAL_PROCESSING while DataDoe observes the same operation. Wait for SUCCESS before the next workflow step. Includes observation time, warnings and error details when applicable. Document operations include stored File IDs, download links and expiry times.",
       "detailsJsonSchema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -16115,7 +16115,7 @@
       "accountAvailability": "SELLERS_ONLY",
       "marketplaceNote": null,
       "maxItems": null,
-      "description": "Provides a paginated list of pallet packages in an inbound plan. An inbound plan will have pallets when the related details are provided after generating Less-Than-Truckload (LTL) carrier shipments. Amazon listInboundPlanPallets, Fulfillment Inbound 2024-03-20. READ access. No personal data required. Use an authorized Seller Central connection with the Amazon Fulfillment role. Use inboundPlanId returned by PLANS_ADD or PLANS_FIND; shipmentId comes from PLANS_GET and is distinct from the FBA shipmentConfirmationId. Reads live Amazon state. Returns one page; repeat filters with the unchanged returned continuation token. Output: pagination, pallets. Next Actions: AMAZON_FBA_INBOUND_PLANS_GET. [Request example and workflow](/hub/docs/datadoe-features/actions-amazon-fba-inbound#request-plan-pallets-find).",
+      "description": "Provides a paginated list of pallet packages in an inbound plan. An inbound plan will have pallets when the related details are provided after generating Less-Than-Truckload (LTL) carrier shipments. Amazon listInboundPlanPallets, Fulfillment Inbound 2024-03-20. READ access. No personal data required. Use an authorized Seller Central connection with the Amazon Fulfillment role. Use inboundPlanId returned by PLANS_ADD or PLANS_FIND; shipmentId comes from PLANS_GET and is distinct from the FBA shipmentConfirmationId. Reads live Amazon state. Returns one page; repeat filters with the unchanged returned continuation token. Output: pagination, pallets. Next Actions: AMAZON_FBA_INBOUND_PLANS_GET. [Request example and workflow](/hub/docs/datadoe-actions/fba-inbound#request-plan-pallets-find).",
       "result": "Amazon response fields: `pagination`, `pallets`. Returns the direct Amazon response. Includes observation time, warnings and error details when applicable. Document operations include stored File IDs, download links and expiry times.",
       "detailsJsonSchema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -16173,7 +16173,7 @@
       "accountAvailability": "SELLERS_ONLY",
       "marketplaceNote": null,
       "maxItems": null,
-      "description": "Provides a list of all placement options for an inbound plan. Placement options must first be generated by the corresponding operation before becoming available. Amazon listPlacementOptions, Fulfillment Inbound 2024-03-20. READ access. No personal data required. Use an authorized Seller Central connection with the Amazon Fulfillment role. Use inboundPlanId returned by PLANS_ADD or PLANS_FIND; shipmentId comes from PLANS_GET and is distinct from the FBA shipmentConfirmationId. Reads live Amazon state. Returns one page; repeat filters with the unchanged returned continuation token. Output: pagination, placementOptions. Next Actions: AMAZON_FBA_INBOUND_PLANS_GET. [Request example and workflow](/hub/docs/datadoe-features/actions-amazon-fba-inbound#request-placement-options-find).",
+      "description": "Provides a list of all placement options for an inbound plan. Placement options must first be generated by the corresponding operation before becoming available. Amazon listPlacementOptions, Fulfillment Inbound 2024-03-20. READ access. No personal data required. Use an authorized Seller Central connection with the Amazon Fulfillment role. Use inboundPlanId returned by PLANS_ADD or PLANS_FIND; shipmentId comes from PLANS_GET and is distinct from the FBA shipmentConfirmationId. Reads live Amazon state. Returns one page; repeat filters with the unchanged returned continuation token. Output: pagination, placementOptions. Next Actions: AMAZON_FBA_INBOUND_PLANS_GET. [Request example and workflow](/hub/docs/datadoe-actions/fba-inbound#request-placement-options-find).",
       "result": "Amazon response fields: `pagination`, `placementOptions`. Returns the direct Amazon response. Includes observation time, warnings and error details when applicable. Document operations include stored File IDs, download links and expiry times.",
       "detailsJsonSchema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -16231,7 +16231,7 @@
       "accountAvailability": "SELLERS_ONLY",
       "marketplaceNote": null,
       "maxItems": null,
-      "description": "Generates placement options for the inbound plan. Amazon generatePlacementOptions, Fulfillment Inbound 2024-03-20. WRITE access. No personal data required. Use an authorized Seller Central connection with the Amazon Fulfillment role. Use inboundPlanId returned by PLANS_ADD or PLANS_FIND; shipmentId comes from PLANS_GET and is distinct from the FBA shipmentConfirmationId. Changes Amazon workflow state; fees or irreversible choices may apply. Follow the seller's approval instructions. No pagination input. Output: operationId. Next Actions: AMAZON_FBA_INBOUND_OPERATIONS_GET, AMAZON_FBA_INBOUND_PLACEMENT_OPTIONS_FIND. [Request example and workflow](/hub/docs/datadoe-features/actions-amazon-fba-inbound#request-placement-options-generate).",
+      "description": "Generates placement options for the inbound plan. Amazon generatePlacementOptions, Fulfillment Inbound 2024-03-20. WRITE access. No personal data required. Use an authorized Seller Central connection with the Amazon Fulfillment role. Use inboundPlanId returned by PLANS_ADD or PLANS_FIND; shipmentId comes from PLANS_GET and is distinct from the FBA shipmentConfirmationId. Changes Amazon workflow state; fees or irreversible choices may apply. Follow the seller's approval instructions. No pagination input. Output: operationId. Next Actions: AMAZON_FBA_INBOUND_OPERATIONS_GET, AMAZON_FBA_INBOUND_PLACEMENT_OPTIONS_FIND. [Request example and workflow](/hub/docs/datadoe-actions/fba-inbound#request-placement-options-generate).",
       "result": "Amazon response fields: `operationId`. Returns an operation ID. Pending work uses WAITING_EXTERNAL_PROCESSING while DataDoe observes the same operation. Wait for SUCCESS before the next workflow step. Includes observation time, warnings and error details when applicable. Document operations include stored File IDs, download links and expiry times.",
       "detailsJsonSchema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -16367,7 +16367,7 @@
       "accountAvailability": "SELLERS_ONLY",
       "marketplaceNote": null,
       "maxItems": null,
-      "description": "Confirms the placement option for an inbound plan. Once confirmed, it cannot be changed for the Inbound Plan. Amazon confirmPlacementOption, Fulfillment Inbound 2024-03-20. WRITE access. No personal data required. Use an authorized Seller Central connection with the Amazon Fulfillment role. Use inboundPlanId returned by PLANS_ADD or PLANS_FIND; shipmentId comes from PLANS_GET and is distinct from the FBA shipmentConfirmationId. Changes Amazon workflow state; fees or irreversible choices may apply. Follow the seller's approval instructions. No pagination input. Output: operationId. Next Actions: AMAZON_FBA_INBOUND_OPERATIONS_GET. [Request example and workflow](/hub/docs/datadoe-features/actions-amazon-fba-inbound#request-placement-options-confirm).",
+      "description": "Confirms the placement option for an inbound plan. Once confirmed, it cannot be changed for the Inbound Plan. Amazon confirmPlacementOption, Fulfillment Inbound 2024-03-20. WRITE access. No personal data required. Use an authorized Seller Central connection with the Amazon Fulfillment role. Use inboundPlanId returned by PLANS_ADD or PLANS_FIND; shipmentId comes from PLANS_GET and is distinct from the FBA shipmentConfirmationId. Changes Amazon workflow state; fees or irreversible choices may apply. Follow the seller's approval instructions. No pagination input. Output: operationId. Next Actions: AMAZON_FBA_INBOUND_OPERATIONS_GET. [Request example and workflow](/hub/docs/datadoe-actions/fba-inbound#request-placement-options-confirm).",
       "result": "Amazon response fields: `operationId`. Returns an operation ID. Pending work uses WAITING_EXTERNAL_PROCESSING while DataDoe observes the same operation. Wait for SUCCESS before the next workflow step. Includes observation time, warnings and error details when applicable. Document operations include stored File IDs, download links and expiry times.",
       "detailsJsonSchema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -16415,7 +16415,7 @@
       "accountAvailability": "SELLERS_ONLY",
       "marketplaceNote": null,
       "maxItems": null,
-      "description": "Provides the full details for a specific shipment within an inbound plan. The `transportationOptionId` inside `acceptedTransportationSelection` can be used to retrieve the transportation details for the shipment. Amazon getShipment, Fulfillment Inbound 2024-03-20. READ access. No PII permission required. Use an authorized Seller Central connection with the Amazon Fulfillment role. Use inboundPlanId returned by PLANS_ADD or PLANS_FIND; shipmentId comes from PLANS_GET and is distinct from the FBA shipmentConfirmationId. Reads live Amazon state. No pagination input. Output: amazonReferenceId, contactInformation, dates, destination, freightInformation, name, placementOptionId, selectedDeliveryWindow, selectedTransportationOptionId, selfShipAppointmentDetails, shipmentConfirmationId, shipmentId, source, status, trackingDetails. Next Actions: AMAZON_FBA_INBOUND_PLANS_GET. [Request example and workflow](/hub/docs/datadoe-features/actions-amazon-fba-inbound#request-shipments-get).",
+      "description": "Provides the full details for a specific shipment within an inbound plan. The `transportationOptionId` inside `acceptedTransportationSelection` can be used to retrieve the transportation details for the shipment. Amazon getShipment, Fulfillment Inbound 2024-03-20. READ access. No PII permission required. Use an authorized Seller Central connection with the Amazon Fulfillment role. Use inboundPlanId returned by PLANS_ADD or PLANS_FIND; shipmentId comes from PLANS_GET and is distinct from the FBA shipmentConfirmationId. Reads live Amazon state. No pagination input. Output: amazonReferenceId, contactInformation, dates, destination, freightInformation, name, placementOptionId, selectedDeliveryWindow, selectedTransportationOptionId, selfShipAppointmentDetails, shipmentConfirmationId, shipmentId, source, status, trackingDetails. Next Actions: AMAZON_FBA_INBOUND_PLANS_GET. [Request example and workflow](/hub/docs/datadoe-actions/fba-inbound#request-shipments-get).",
       "result": "Amazon response fields: `amazonReferenceId`, `contactInformation`, `dates`, `destination`, `freightInformation`, `name`, `placementOptionId`, `selectedDeliveryWindow`, `selectedTransportationOptionId`, `selfShipAppointmentDetails`, `shipmentConfirmationId`, `shipmentId`, `source`, `status`, `trackingDetails`. Returns the direct Amazon response. Includes observation time, warnings and error details when applicable. Document operations include stored File IDs, download links and expiry times.",
       "detailsJsonSchema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -16463,7 +16463,7 @@
       "accountAvailability": "SELLERS_ONLY",
       "marketplaceNote": null,
       "maxItems": null,
-      "description": "Provides a paginated list of box packages in a shipment. Amazon listShipmentBoxes, Fulfillment Inbound 2024-03-20. READ access. No personal data required. Use an authorized Seller Central connection with the Amazon Fulfillment role. Use inboundPlanId returned by PLANS_ADD or PLANS_FIND; shipmentId comes from PLANS_GET and is distinct from the FBA shipmentConfirmationId. Reads live Amazon state. Returns one page; repeat filters with the unchanged returned continuation token. Output: boxes, pagination. Next Actions: AMAZON_FBA_INBOUND_PLANS_GET. [Request example and workflow](/hub/docs/datadoe-features/actions-amazon-fba-inbound#request-shipment-boxes-find).",
+      "description": "Provides a paginated list of box packages in a shipment. Amazon listShipmentBoxes, Fulfillment Inbound 2024-03-20. READ access. No personal data required. Use an authorized Seller Central connection with the Amazon Fulfillment role. Use inboundPlanId returned by PLANS_ADD or PLANS_FIND; shipmentId comes from PLANS_GET and is distinct from the FBA shipmentConfirmationId. Reads live Amazon state. Returns one page; repeat filters with the unchanged returned continuation token. Output: boxes, pagination. Next Actions: AMAZON_FBA_INBOUND_PLANS_GET. [Request example and workflow](/hub/docs/datadoe-actions/fba-inbound#request-shipment-boxes-find).",
       "result": "Amazon response fields: `boxes`, `pagination`. Returns the direct Amazon response. Includes observation time, warnings and error details when applicable. Document operations include stored File IDs, download links and expiry times.",
       "detailsJsonSchema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -16529,7 +16529,7 @@
       "accountAvailability": "SELLERS_ONLY",
       "marketplaceNote": null,
       "maxItems": null,
-      "description": "Retrieve a paginated list of shipment content update previews for a given shipment. The shipment content update preview is a summary of the requested shipment content changes along with the transportation cost implications of the change that can only be confirmed prior to the expiry date specified. Amazon listShipmentContentUpdatePreviews, Fulfillment Inbound 2024-03-20. READ access. No personal data required. Use an authorized Seller Central connection with the Amazon Fulfillment role. Use inboundPlanId returned by PLANS_ADD or PLANS_FIND; shipmentId comes from PLANS_GET and is distinct from the FBA shipmentConfirmationId. Reads live Amazon state. Returns one page; repeat filters with the unchanged returned continuation token. Output: contentUpdatePreviews, pagination. Next Actions: AMAZON_FBA_INBOUND_PLANS_GET. [Request example and workflow](/hub/docs/datadoe-features/actions-amazon-fba-inbound#request-shipment-content-update-previews-find).",
+      "description": "Retrieve a paginated list of shipment content update previews for a given shipment. The shipment content update preview is a summary of the requested shipment content changes along with the transportation cost implications of the change that can only be confirmed prior to the expiry date specified. Amazon listShipmentContentUpdatePreviews, Fulfillment Inbound 2024-03-20. READ access. No personal data required. Use an authorized Seller Central connection with the Amazon Fulfillment role. Use inboundPlanId returned by PLANS_ADD or PLANS_FIND; shipmentId comes from PLANS_GET and is distinct from the FBA shipmentConfirmationId. Reads live Amazon state. Returns one page; repeat filters with the unchanged returned continuation token. Output: contentUpdatePreviews, pagination. Next Actions: AMAZON_FBA_INBOUND_PLANS_GET. [Request example and workflow](/hub/docs/datadoe-actions/fba-inbound#request-shipment-content-update-previews-find).",
       "result": "Amazon response fields: `contentUpdatePreviews`, `pagination`. Returns the direct Amazon response. Includes observation time, warnings and error details when applicable. Document operations include stored File IDs, download links and expiry times.",
       "detailsJsonSchema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -16595,7 +16595,7 @@
       "accountAvailability": "SELLERS_ONLY",
       "marketplaceNote": null,
       "maxItems": null,
-      "description": "Generate a shipment content update preview given a set of intended boxes and/or items for a shipment with a confirmed carrier. The shipment content update preview will be viewable with the updated costs and contents prior to confirmation. Amazon generateShipmentContentUpdatePreviews, Fulfillment Inbound 2024-03-20. WRITE access. No personal data required. Use an authorized Seller Central connection with the Amazon Fulfillment role. Use inboundPlanId returned by PLANS_ADD or PLANS_FIND; shipmentId comes from PLANS_GET and is distinct from the FBA shipmentConfirmationId. Changes Amazon workflow state; fees or irreversible choices may apply. Follow the seller's approval instructions. No pagination input. Output: operationId. Next Actions: AMAZON_FBA_INBOUND_OPERATIONS_GET, AMAZON_FBA_INBOUND_SHIPMENT_CONTENT_UPDATE_PREVIEWS_FIND. [Request example and workflow](/hub/docs/datadoe-features/actions-amazon-fba-inbound#request-shipment-content-update-previews-generate).",
+      "description": "Generate a shipment content update preview given a set of intended boxes and/or items for a shipment with a confirmed carrier. The shipment content update preview will be viewable with the updated costs and contents prior to confirmation. Amazon generateShipmentContentUpdatePreviews, Fulfillment Inbound 2024-03-20. WRITE access. No personal data required. Use an authorized Seller Central connection with the Amazon Fulfillment role. Use inboundPlanId returned by PLANS_ADD or PLANS_FIND; shipmentId comes from PLANS_GET and is distinct from the FBA shipmentConfirmationId. Changes Amazon workflow state; fees or irreversible choices may apply. Follow the seller's approval instructions. No pagination input. Output: operationId. Next Actions: AMAZON_FBA_INBOUND_OPERATIONS_GET, AMAZON_FBA_INBOUND_SHIPMENT_CONTENT_UPDATE_PREVIEWS_FIND. [Request example and workflow](/hub/docs/datadoe-actions/fba-inbound#request-shipment-content-update-previews-generate).",
       "result": "Amazon response fields: `operationId`. Returns an operation ID. Pending work uses WAITING_EXTERNAL_PROCESSING while DataDoe observes the same operation. Wait for SUCCESS before the next workflow step. Includes observation time, warnings and error details when applicable. Document operations include stored File IDs, download links and expiry times.",
       "detailsJsonSchema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -16892,7 +16892,7 @@
       "accountAvailability": "SELLERS_ONLY",
       "marketplaceNote": null,
       "maxItems": null,
-      "description": "Retrieve a shipment content update preview which provides a summary of the requested shipment content changes along with the transportation cost implications of the change that can only be confirmed prior to the expiry date specified. Amazon getShipmentContentUpdatePreview, Fulfillment Inbound 2024-03-20. READ access. No personal data required. Use an authorized Seller Central connection with the Amazon Fulfillment role. Use inboundPlanId returned by PLANS_ADD or PLANS_FIND; shipmentId comes from PLANS_GET and is distinct from the FBA shipmentConfirmationId. Reads live Amazon state. No pagination input. Output: contentUpdatePreviewId, expiration, requestedUpdates, transportationOption. Next Actions: AMAZON_FBA_INBOUND_PLANS_GET. [Request example and workflow](/hub/docs/datadoe-features/actions-amazon-fba-inbound#request-shipment-content-update-previews-get).",
+      "description": "Retrieve a shipment content update preview which provides a summary of the requested shipment content changes along with the transportation cost implications of the change that can only be confirmed prior to the expiry date specified. Amazon getShipmentContentUpdatePreview, Fulfillment Inbound 2024-03-20. READ access. No personal data required. Use an authorized Seller Central connection with the Amazon Fulfillment role. Use inboundPlanId returned by PLANS_ADD or PLANS_FIND; shipmentId comes from PLANS_GET and is distinct from the FBA shipmentConfirmationId. Reads live Amazon state. No pagination input. Output: contentUpdatePreviewId, expiration, requestedUpdates, transportationOption. Next Actions: AMAZON_FBA_INBOUND_PLANS_GET. [Request example and workflow](/hub/docs/datadoe-actions/fba-inbound#request-shipment-content-update-previews-get).",
       "result": "Amazon response fields: `contentUpdatePreviewId`, `expiration`, `requestedUpdates`, `transportationOption`. Returns the direct Amazon response. Includes observation time, warnings and error details when applicable. Document operations include stored File IDs, download links and expiry times.",
       "detailsJsonSchema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -16948,7 +16948,7 @@
       "accountAvailability": "SELLERS_ONLY",
       "marketplaceNote": null,
       "maxItems": null,
-      "description": "Confirm a shipment content update preview and accept the changes in transportation cost. Amazon confirmShipmentContentUpdatePreview, Fulfillment Inbound 2024-03-20. WRITE access. No personal data required. Use an authorized Seller Central connection with the Amazon Fulfillment role. Use inboundPlanId returned by PLANS_ADD or PLANS_FIND; shipmentId comes from PLANS_GET and is distinct from the FBA shipmentConfirmationId. Changes Amazon workflow state; fees or irreversible choices may apply. Follow the seller's approval instructions. No pagination input. Output: operationId. Next Actions: AMAZON_FBA_INBOUND_OPERATIONS_GET. [Request example and workflow](/hub/docs/datadoe-features/actions-amazon-fba-inbound#request-shipment-content-update-previews-confirm).",
+      "description": "Confirm a shipment content update preview and accept the changes in transportation cost. Amazon confirmShipmentContentUpdatePreview, Fulfillment Inbound 2024-03-20. WRITE access. No personal data required. Use an authorized Seller Central connection with the Amazon Fulfillment role. Use inboundPlanId returned by PLANS_ADD or PLANS_FIND; shipmentId comes from PLANS_GET and is distinct from the FBA shipmentConfirmationId. Changes Amazon workflow state; fees or irreversible choices may apply. Follow the seller's approval instructions. No pagination input. Output: operationId. Next Actions: AMAZON_FBA_INBOUND_OPERATIONS_GET. [Request example and workflow](/hub/docs/datadoe-actions/fba-inbound#request-shipment-content-update-previews-confirm).",
       "result": "Amazon response fields: `operationId`. Returns an operation ID. Pending work uses WAITING_EXTERNAL_PROCESSING while DataDoe observes the same operation. Wait for SUCCESS before the next workflow step. Includes observation time, warnings and error details when applicable. Document operations include stored File IDs, download links and expiry times.",
       "detailsJsonSchema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -17004,7 +17004,7 @@
       "accountAvailability": "SELLERS_ONLY",
       "marketplaceNote": null,
       "maxItems": null,
-      "description": "Provide delivery challan document for PCP transportation in IN marketplace. Amazon getDeliveryChallanDocument, Fulfillment Inbound 2024-03-20. READ access. No PII permission required. Use an authorized Seller Central connection with the Amazon Fulfillment role. Use inboundPlanId returned by PLANS_ADD or PLANS_FIND; shipmentId comes from PLANS_GET and is distinct from the FBA shipmentConfirmationId. Reads live Amazon state. No pagination input. Output: documentDownload. Next Actions: AMAZON_FBA_INBOUND_PLANS_GET. [Request example and workflow](/hub/docs/datadoe-features/actions-amazon-fba-inbound#request-delivery-challan-get).",
+      "description": "Provide delivery challan document for PCP transportation in IN marketplace. Amazon getDeliveryChallanDocument, Fulfillment Inbound 2024-03-20. READ access. No PII permission required. Use an authorized Seller Central connection with the Amazon Fulfillment role. Use inboundPlanId returned by PLANS_ADD or PLANS_FIND; shipmentId comes from PLANS_GET and is distinct from the FBA shipmentConfirmationId. Reads live Amazon state. No pagination input. Output: documentDownload. Next Actions: AMAZON_FBA_INBOUND_PLANS_GET. [Request example and workflow](/hub/docs/datadoe-actions/fba-inbound#request-delivery-challan-get).",
       "result": "Amazon response fields: `documentDownload`. Returns the direct Amazon response. Includes observation time, warnings and error details when applicable. Document operations include stored File IDs, download links and expiry times.",
       "detailsJsonSchema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -17052,7 +17052,7 @@
       "accountAvailability": "SELLERS_ONLY",
       "marketplaceNote": null,
       "maxItems": null,
-      "description": "Retrieves all delivery window options for a shipment. Delivery window options must first be generated by the `generateDeliveryWindowOptions` operation before becoming available. Amazon listDeliveryWindowOptions, Fulfillment Inbound 2024-03-20. READ access. No personal data required. Use an authorized Seller Central connection with the Amazon Fulfillment role. Use inboundPlanId returned by PLANS_ADD or PLANS_FIND; shipmentId comes from PLANS_GET and is distinct from the FBA shipmentConfirmationId. Reads live Amazon state. Returns one page; repeat filters with the unchanged returned continuation token. Output: deliveryWindowOptions, pagination. Next Actions: AMAZON_FBA_INBOUND_PLANS_GET. [Request example and workflow](/hub/docs/datadoe-features/actions-amazon-fba-inbound#request-delivery-windows-find).",
+      "description": "Retrieves all delivery window options for a shipment. Delivery window options must first be generated by the `generateDeliveryWindowOptions` operation before becoming available. Amazon listDeliveryWindowOptions, Fulfillment Inbound 2024-03-20. READ access. No personal data required. Use an authorized Seller Central connection with the Amazon Fulfillment role. Use inboundPlanId returned by PLANS_ADD or PLANS_FIND; shipmentId comes from PLANS_GET and is distinct from the FBA shipmentConfirmationId. Reads live Amazon state. Returns one page; repeat filters with the unchanged returned continuation token. Output: deliveryWindowOptions, pagination. Next Actions: AMAZON_FBA_INBOUND_PLANS_GET. [Request example and workflow](/hub/docs/datadoe-actions/fba-inbound#request-delivery-windows-find).",
       "result": "Amazon response fields: `deliveryWindowOptions`, `pagination`. Returns the direct Amazon response. Includes observation time, warnings and error details when applicable. Document operations include stored File IDs, download links and expiry times.",
       "detailsJsonSchema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -17118,7 +17118,7 @@
       "accountAvailability": "SELLERS_ONLY",
       "marketplaceNote": null,
       "maxItems": null,
-      "description": "Generates available delivery window options for a given shipment. Amazon generateDeliveryWindowOptions, Fulfillment Inbound 2024-03-20. WRITE access. No personal data required. Use an authorized Seller Central connection with the Amazon Fulfillment role. Use inboundPlanId returned by PLANS_ADD or PLANS_FIND; shipmentId comes from PLANS_GET and is distinct from the FBA shipmentConfirmationId. Changes Amazon workflow state; fees or irreversible choices may apply. Follow the seller's approval instructions. No pagination input. Output: operationId. Next Actions: AMAZON_FBA_INBOUND_OPERATIONS_GET, AMAZON_FBA_INBOUND_DELIVERY_WINDOWS_FIND. [Request example and workflow](/hub/docs/datadoe-features/actions-amazon-fba-inbound#request-delivery-windows-generate).",
+      "description": "Generates available delivery window options for a given shipment. Amazon generateDeliveryWindowOptions, Fulfillment Inbound 2024-03-20. WRITE access. No personal data required. Use an authorized Seller Central connection with the Amazon Fulfillment role. Use inboundPlanId returned by PLANS_ADD or PLANS_FIND; shipmentId comes from PLANS_GET and is distinct from the FBA shipmentConfirmationId. Changes Amazon workflow state; fees or irreversible choices may apply. Follow the seller's approval instructions. No pagination input. Output: operationId. Next Actions: AMAZON_FBA_INBOUND_OPERATIONS_GET, AMAZON_FBA_INBOUND_DELIVERY_WINDOWS_FIND. [Request example and workflow](/hub/docs/datadoe-actions/fba-inbound#request-delivery-windows-generate).",
       "result": "Amazon response fields: `operationId`. Returns an operation ID. Pending work uses WAITING_EXTERNAL_PROCESSING while DataDoe observes the same operation. Wait for SUCCESS before the next workflow step. Includes observation time, warnings and error details when applicable. Document operations include stored File IDs, download links and expiry times.",
       "detailsJsonSchema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -17166,7 +17166,7 @@
       "accountAvailability": "SELLERS_ONLY",
       "marketplaceNote": null,
       "maxItems": null,
-      "description": "Confirms the delivery window option for chosen shipment within an inbound plan. A placement option must be confirmed prior to use of this API. Once confirmed, new delivery window options cannot be generated, but the chosen delivery window option can be updated before shipment closure. The window is used to provide the expected time when a shipment will arrive at the warehouse. All transportation options which have the program `CONFIRMED_DELIVERY_WINDOW` require a delivery window to be confirmed prior to transportation option confirmation. Amazon confirmDeliveryWindowOptions, Fulfillment Inbound 2024-03-20. WRITE access. No personal data required. Use an authorized Seller Central connection with the Amazon Fulfillment role. Use inboundPlanId returned by PLANS_ADD or PLANS_FIND; shipmentId comes from PLANS_GET and is distinct from the FBA shipmentConfirmationId. Changes Amazon workflow state; fees or irreversible choices may apply. Follow the seller's approval instructions. No pagination input. Output: operationId. Next Actions: AMAZON_FBA_INBOUND_OPERATIONS_GET. [Request example and workflow](/hub/docs/datadoe-features/actions-amazon-fba-inbound#request-delivery-windows-confirm).",
+      "description": "Confirms the delivery window option for chosen shipment within an inbound plan. A placement option must be confirmed prior to use of this API. Once confirmed, new delivery window options cannot be generated, but the chosen delivery window option can be updated before shipment closure. The window is used to provide the expected time when a shipment will arrive at the warehouse. All transportation options which have the program `CONFIRMED_DELIVERY_WINDOW` require a delivery window to be confirmed prior to transportation option confirmation. Amazon confirmDeliveryWindowOptions, Fulfillment Inbound 2024-03-20. WRITE access. No personal data required. Use an authorized Seller Central connection with the Amazon Fulfillment role. Use inboundPlanId returned by PLANS_ADD or PLANS_FIND; shipmentId comes from PLANS_GET and is distinct from the FBA shipmentConfirmationId. Changes Amazon workflow state; fees or irreversible choices may apply. Follow the seller's approval instructions. No pagination input. Output: operationId. Next Actions: AMAZON_FBA_INBOUND_OPERATIONS_GET. [Request example and workflow](/hub/docs/datadoe-actions/fba-inbound#request-delivery-windows-confirm).",
       "result": "Amazon response fields: `operationId`. Returns an operation ID. Pending work uses WAITING_EXTERNAL_PROCESSING while DataDoe observes the same operation. Wait for SUCCESS before the next workflow step. Includes observation time, warnings and error details when applicable. Document operations include stored File IDs, download links and expiry times.",
       "detailsJsonSchema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -17222,7 +17222,7 @@
       "accountAvailability": "SELLERS_ONLY",
       "marketplaceNote": null,
       "maxItems": null,
-      "description": "Provides a paginated list of item packages in a shipment. Amazon listShipmentItems, Fulfillment Inbound 2024-03-20. READ access. No personal data required. Use an authorized Seller Central connection with the Amazon Fulfillment role. Use inboundPlanId returned by PLANS_ADD or PLANS_FIND; shipmentId comes from PLANS_GET and is distinct from the FBA shipmentConfirmationId. Reads live Amazon state. Returns one page; repeat filters with the unchanged returned continuation token. Output: items, pagination. Next Actions: AMAZON_FBA_INBOUND_PLANS_GET. [Request example and workflow](/hub/docs/datadoe-features/actions-amazon-fba-inbound#request-shipment-items-find).",
+      "description": "Provides a paginated list of item packages in a shipment. Amazon listShipmentItems, Fulfillment Inbound 2024-03-20. READ access. No personal data required. Use an authorized Seller Central connection with the Amazon Fulfillment role. Use inboundPlanId returned by PLANS_ADD or PLANS_FIND; shipmentId comes from PLANS_GET and is distinct from the FBA shipmentConfirmationId. Reads live Amazon state. Returns one page; repeat filters with the unchanged returned continuation token. Output: items, pagination. Next Actions: AMAZON_FBA_INBOUND_PLANS_GET. [Request example and workflow](/hub/docs/datadoe-actions/fba-inbound#request-shipment-items-find).",
       "result": "Amazon response fields: `items`, `pagination`. Returns the direct Amazon response. Includes observation time, warnings and error details when applicable. Document operations include stored File IDs, download links and expiry times.",
       "detailsJsonSchema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -17288,7 +17288,7 @@
       "accountAvailability": "SELLERS_ONLY",
       "marketplaceNote": null,
       "maxItems": null,
-      "description": "Updates the name of an existing shipment. Amazon updateShipmentName, Fulfillment Inbound 2024-03-20. WRITE access. No personal data required. Use an authorized Seller Central connection with the Amazon Fulfillment role. Use inboundPlanId returned by PLANS_ADD or PLANS_FIND; shipmentId comes from PLANS_GET and is distinct from the FBA shipmentConfirmationId. Changes Amazon workflow state; fees or irreversible choices may apply. Follow the seller's approval instructions. No pagination input. Output: no response body, HTTP 204. Next Actions: AMAZON_FBA_INBOUND_PLANS_GET. [Request example and workflow](/hub/docs/datadoe-features/actions-amazon-fba-inbound#request-shipment-name-update).",
+      "description": "Updates the name of an existing shipment. Amazon updateShipmentName, Fulfillment Inbound 2024-03-20. WRITE access. No personal data required. Use an authorized Seller Central connection with the Amazon Fulfillment role. Use inboundPlanId returned by PLANS_ADD or PLANS_FIND; shipmentId comes from PLANS_GET and is distinct from the FBA shipmentConfirmationId. Changes Amazon workflow state; fees or irreversible choices may apply. Follow the seller's approval instructions. No pagination input. Output: no response body, HTTP 204. Next Actions: AMAZON_FBA_INBOUND_PLANS_GET. [Request example and workflow](/hub/docs/datadoe-actions/fba-inbound#request-shipment-name-update).",
       "result": "Amazon returns no response body on success. Returns the direct Amazon response. Includes observation time, warnings and error details when applicable. Document operations include stored File IDs, download links and expiry times.",
       "detailsJsonSchema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -17353,7 +17353,7 @@
       "accountAvailability": "SELLERS_ONLY",
       "marketplaceNote": null,
       "maxItems": null,
-      "description": "Provides a paginated list of pallet packages in a shipment. A palletized shipment will have pallets when the related details are provided after generating Less-Than-Truckload (LTL) carrier shipments. Amazon listShipmentPallets, Fulfillment Inbound 2024-03-20. READ access. No personal data required. Use an authorized Seller Central connection with the Amazon Fulfillment role. Use inboundPlanId returned by PLANS_ADD or PLANS_FIND; shipmentId comes from PLANS_GET and is distinct from the FBA shipmentConfirmationId. Reads live Amazon state. Returns one page; repeat filters with the unchanged returned continuation token. Output: pagination, pallets. Next Actions: AMAZON_FBA_INBOUND_PLANS_GET. [Request example and workflow](/hub/docs/datadoe-features/actions-amazon-fba-inbound#request-shipment-pallets-find).",
+      "description": "Provides a paginated list of pallet packages in a shipment. A palletized shipment will have pallets when the related details are provided after generating Less-Than-Truckload (LTL) carrier shipments. Amazon listShipmentPallets, Fulfillment Inbound 2024-03-20. READ access. No personal data required. Use an authorized Seller Central connection with the Amazon Fulfillment role. Use inboundPlanId returned by PLANS_ADD or PLANS_FIND; shipmentId comes from PLANS_GET and is distinct from the FBA shipmentConfirmationId. Reads live Amazon state. Returns one page; repeat filters with the unchanged returned continuation token. Output: pagination, pallets. Next Actions: AMAZON_FBA_INBOUND_PLANS_GET. [Request example and workflow](/hub/docs/datadoe-actions/fba-inbound#request-shipment-pallets-find).",
       "result": "Amazon response fields: `pagination`, `pallets`. Returns the direct Amazon response. Includes observation time, warnings and error details when applicable. Document operations include stored File IDs, download links and expiry times.",
       "detailsJsonSchema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -17419,7 +17419,7 @@
       "accountAvailability": "SELLERS_ONLY",
       "marketplaceNote": null,
       "maxItems": null,
-      "description": "Cancels a self-ship appointment slot against a shipment. Only available in the following [marketplaces](https://developer-docs.amazon.com/sp-api/docs/marketplace-ids): MX, BR, EG, SA, AE, IN. Amazon cancelSelfShipAppointment, Fulfillment Inbound 2024-03-20. WRITE access. No PII permission required. Use an authorized Seller Central connection with the Amazon Fulfillment role. Use inboundPlanId returned by PLANS_ADD or PLANS_FIND; shipmentId comes from PLANS_GET and is distinct from the FBA shipmentConfirmationId. Changes Amazon workflow state; fees or irreversible choices may apply. Follow the seller's approval instructions. No pagination input. Output: operationId. Next Actions: AMAZON_FBA_INBOUND_OPERATIONS_GET. [Request example and workflow](/hub/docs/datadoe-features/actions-amazon-fba-inbound#request-self-ship-appointments-cancel).",
+      "description": "Cancels a self-ship appointment slot against a shipment. Only available in the following [marketplaces](https://developer-docs.amazon.com/sp-api/docs/marketplace-ids): MX, BR, EG, SA, AE, IN. Amazon cancelSelfShipAppointment, Fulfillment Inbound 2024-03-20. WRITE access. No PII permission required. Use an authorized Seller Central connection with the Amazon Fulfillment role. Use inboundPlanId returned by PLANS_ADD or PLANS_FIND; shipmentId comes from PLANS_GET and is distinct from the FBA shipmentConfirmationId. Changes Amazon workflow state; fees or irreversible choices may apply. Follow the seller's approval instructions. No pagination input. Output: operationId. Next Actions: AMAZON_FBA_INBOUND_OPERATIONS_GET. [Request example and workflow](/hub/docs/datadoe-actions/fba-inbound#request-self-ship-appointments-cancel).",
       "result": "Amazon response fields: `operationId`. Returns an operation ID. Pending work uses WAITING_EXTERNAL_PROCESSING while DataDoe observes the same operation. Wait for SUCCESS before the next workflow step. Includes observation time, warnings and error details when applicable. Document operations include stored File IDs, download links and expiry times.",
       "detailsJsonSchema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -17490,7 +17490,7 @@
       "accountAvailability": "SELLERS_ONLY",
       "marketplaceNote": null,
       "maxItems": null,
-      "description": "Retrieves a list of available self-ship appointment slots used to drop off a shipment at a warehouse. Only available in the following [marketplaces](https://developer-docs.amazon.com/sp-api/docs/marketplace-ids): MX, BR, EG, SA, AE, IN. Amazon getSelfShipAppointmentSlots, Fulfillment Inbound 2024-03-20. READ access. No personal data required. Use an authorized Seller Central connection with the Amazon Fulfillment role. Use inboundPlanId returned by PLANS_ADD or PLANS_FIND; shipmentId comes from PLANS_GET and is distinct from the FBA shipmentConfirmationId. Reads live Amazon state. Returns one page; repeat filters with the unchanged returned continuation token. Output: pagination, selfShipAppointmentSlotsAvailability. Next Actions: AMAZON_FBA_INBOUND_PLANS_GET. [Request example and workflow](/hub/docs/datadoe-features/actions-amazon-fba-inbound#request-self-ship-appointment-slots-get).",
+      "description": "Retrieves a list of available self-ship appointment slots used to drop off a shipment at a warehouse. Only available in the following [marketplaces](https://developer-docs.amazon.com/sp-api/docs/marketplace-ids): MX, BR, EG, SA, AE, IN. Amazon getSelfShipAppointmentSlots, Fulfillment Inbound 2024-03-20. READ access. No personal data required. Use an authorized Seller Central connection with the Amazon Fulfillment role. Use inboundPlanId returned by PLANS_ADD or PLANS_FIND; shipmentId comes from PLANS_GET and is distinct from the FBA shipmentConfirmationId. Reads live Amazon state. Returns one page; repeat filters with the unchanged returned continuation token. Output: pagination, selfShipAppointmentSlotsAvailability. Next Actions: AMAZON_FBA_INBOUND_PLANS_GET. [Request example and workflow](/hub/docs/datadoe-actions/fba-inbound#request-self-ship-appointment-slots-get).",
       "result": "Amazon response fields: `pagination`, `selfShipAppointmentSlotsAvailability`. Returns the direct Amazon response. Includes observation time, warnings and error details when applicable. Document operations include stored File IDs, download links and expiry times.",
       "detailsJsonSchema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -17556,7 +17556,7 @@
       "accountAvailability": "SELLERS_ONLY",
       "marketplaceNote": null,
       "maxItems": null,
-      "description": "Initiates the process of generating the appointment slots list. Only available in the following [marketplaces](https://developer-docs.amazon.com/sp-api/docs/marketplace-ids): MX, BR, EG, SA, AE, IN. Amazon generateSelfShipAppointmentSlots, Fulfillment Inbound 2024-03-20. WRITE access. No personal data required. Use an authorized Seller Central connection with the Amazon Fulfillment role. Use inboundPlanId returned by PLANS_ADD or PLANS_FIND; shipmentId comes from PLANS_GET and is distinct from the FBA shipmentConfirmationId. Changes Amazon workflow state; fees or irreversible choices may apply. Follow the seller's approval instructions. No pagination input. Output: operationId. Next Actions: AMAZON_FBA_INBOUND_OPERATIONS_GET, AMAZON_FBA_INBOUND_SELF_SHIP_APPOINTMENT_SLOTS_GET. [Request example and workflow](/hub/docs/datadoe-features/actions-amazon-fba-inbound#request-self-ship-appointment-slots-generate).",
+      "description": "Initiates the process of generating the appointment slots list. Only available in the following [marketplaces](https://developer-docs.amazon.com/sp-api/docs/marketplace-ids): MX, BR, EG, SA, AE, IN. Amazon generateSelfShipAppointmentSlots, Fulfillment Inbound 2024-03-20. WRITE access. No personal data required. Use an authorized Seller Central connection with the Amazon Fulfillment role. Use inboundPlanId returned by PLANS_ADD or PLANS_FIND; shipmentId comes from PLANS_GET and is distinct from the FBA shipmentConfirmationId. Changes Amazon workflow state; fees or irreversible choices may apply. Follow the seller's approval instructions. No pagination input. Output: operationId. Next Actions: AMAZON_FBA_INBOUND_OPERATIONS_GET, AMAZON_FBA_INBOUND_SELF_SHIP_APPOINTMENT_SLOTS_GET. [Request example and workflow](/hub/docs/datadoe-actions/fba-inbound#request-self-ship-appointment-slots-generate).",
       "result": "Amazon response fields: `operationId`. Returns an operation ID. Pending work uses WAITING_EXTERNAL_PROCESSING while DataDoe observes the same operation. Wait for SUCCESS before the next workflow step. Includes observation time, warnings and error details when applicable. Document operations include stored File IDs, download links and expiry times.",
       "detailsJsonSchema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -17624,7 +17624,7 @@
       "accountAvailability": "SELLERS_ONLY",
       "marketplaceNote": null,
       "maxItems": null,
-      "description": "Confirms or reschedules a self-ship appointment slot against a shipment. Only available in the following [marketplaces](https://developer-docs.amazon.com/sp-api/docs/marketplace-ids): MX, BR, EG, SA, AE, IN. Amazon scheduleSelfShipAppointment, Fulfillment Inbound 2024-03-20. WRITE access. No PII permission required. Use an authorized Seller Central connection with the Amazon Fulfillment role. Use inboundPlanId returned by PLANS_ADD or PLANS_FIND; shipmentId comes from PLANS_GET and is distinct from the FBA shipmentConfirmationId. Changes Amazon workflow state; fees or irreversible choices may apply. Follow the seller's approval instructions. No pagination input. Output: selfShipAppointmentDetails. Next Actions: AMAZON_FBA_INBOUND_PLANS_GET. [Request example and workflow](/hub/docs/datadoe-features/actions-amazon-fba-inbound#request-self-ship-appointments-schedule).",
+      "description": "Confirms or reschedules a self-ship appointment slot against a shipment. Only available in the following [marketplaces](https://developer-docs.amazon.com/sp-api/docs/marketplace-ids): MX, BR, EG, SA, AE, IN. Amazon scheduleSelfShipAppointment, Fulfillment Inbound 2024-03-20. WRITE access. No PII permission required. Use an authorized Seller Central connection with the Amazon Fulfillment role. Use inboundPlanId returned by PLANS_ADD or PLANS_FIND; shipmentId comes from PLANS_GET and is distinct from the FBA shipmentConfirmationId. Changes Amazon workflow state; fees or irreversible choices may apply. Follow the seller's approval instructions. No pagination input. Output: selfShipAppointmentDetails. Next Actions: AMAZON_FBA_INBOUND_PLANS_GET. [Request example and workflow](/hub/docs/datadoe-actions/fba-inbound#request-self-ship-appointments-schedule).",
       "result": "Amazon response fields: `selfShipAppointmentDetails`. Returns the direct Amazon response. Includes observation time, warnings and error details when applicable. Document operations include stored File IDs, download links and expiry times.",
       "detailsJsonSchema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -17703,7 +17703,7 @@
       "accountAvailability": "SELLERS_ONLY",
       "marketplaceNote": null,
       "maxItems": null,
-      "description": "Updates the source address of an existing shipment. The shipment source address can only be updated prior to the confirmation of the shipment carriers. As a result of the updated source address, existing transportation options will be invalidated and will need to be regenerated to capture the potential difference in transportation options and quotes due to the new source address. Amazon updateShipmentSourceAddress, Fulfillment Inbound 2024-03-20. WRITE access. No PII permission required. Use an authorized Seller Central connection with the Amazon Fulfillment role. Use inboundPlanId returned by PLANS_ADD or PLANS_FIND; shipmentId comes from PLANS_GET and is distinct from the FBA shipmentConfirmationId. Changes Amazon workflow state; fees or irreversible choices may apply. Follow the seller's approval instructions. No pagination input. Output: operationId. Next Actions: AMAZON_FBA_INBOUND_OPERATIONS_GET. [Request example and workflow](/hub/docs/datadoe-features/actions-amazon-fba-inbound#request-shipment-source-address-update).",
+      "description": "Updates the source address of an existing shipment. The shipment source address can only be updated prior to the confirmation of the shipment carriers. As a result of the updated source address, existing transportation options will be invalidated and will need to be regenerated to capture the potential difference in transportation options and quotes due to the new source address. Amazon updateShipmentSourceAddress, Fulfillment Inbound 2024-03-20. WRITE access. No PII permission required. Use an authorized Seller Central connection with the Amazon Fulfillment role. Use inboundPlanId returned by PLANS_ADD or PLANS_FIND; shipmentId comes from PLANS_GET and is distinct from the FBA shipmentConfirmationId. Changes Amazon workflow state; fees or irreversible choices may apply. Follow the seller's approval instructions. No pagination input. Output: operationId. Next Actions: AMAZON_FBA_INBOUND_OPERATIONS_GET. [Request example and workflow](/hub/docs/datadoe-actions/fba-inbound#request-shipment-source-address-update).",
       "result": "Amazon response fields: `operationId`. Returns an operation ID. Pending work uses WAITING_EXTERNAL_PROCESSING while DataDoe observes the same operation. Wait for SUCCESS before the next workflow step. Includes observation time, warnings and error details when applicable. Document operations include stored File IDs, download links and expiry times.",
       "detailsJsonSchema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -17844,7 +17844,7 @@
       "accountAvailability": "SELLERS_ONLY",
       "marketplaceNote": null,
       "maxItems": null,
-      "description": "Updates a shipment's tracking details. Amazon updateShipmentTrackingDetails, Fulfillment Inbound 2024-03-20. WRITE access. No personal data required. Use an authorized Seller Central connection with the Amazon Fulfillment role. Use inboundPlanId returned by PLANS_ADD or PLANS_FIND; shipmentId comes from PLANS_GET and is distinct from the FBA shipmentConfirmationId. Changes Amazon workflow state; fees or irreversible choices may apply. Follow the seller's approval instructions. No pagination input. Output: operationId. Next Actions: AMAZON_FBA_INBOUND_OPERATIONS_GET. [Request example and workflow](/hub/docs/datadoe-features/actions-amazon-fba-inbound#request-shipment-tracking-update).",
+      "description": "Updates a shipment's tracking details. Amazon updateShipmentTrackingDetails, Fulfillment Inbound 2024-03-20. WRITE access. No personal data required. Use an authorized Seller Central connection with the Amazon Fulfillment role. Use inboundPlanId returned by PLANS_ADD or PLANS_FIND; shipmentId comes from PLANS_GET and is distinct from the FBA shipmentConfirmationId. Changes Amazon workflow state; fees or irreversible choices may apply. Follow the seller's approval instructions. No pagination input. Output: operationId. Next Actions: AMAZON_FBA_INBOUND_OPERATIONS_GET. [Request example and workflow](/hub/docs/datadoe-actions/fba-inbound#request-shipment-tracking-update).",
       "result": "Amazon response fields: `operationId`. Returns an operation ID. Pending work uses WAITING_EXTERNAL_PROCESSING while DataDoe observes the same operation. Wait for SUCCESS before the next workflow step. Includes observation time, warnings and error details when applicable. Document operations include stored File IDs, download links and expiry times.",
       "detailsJsonSchema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -17975,7 +17975,7 @@
       "accountAvailability": "SELLERS_ONLY",
       "marketplaceNote": null,
       "maxItems": null,
-      "description": "Retrieves all transportation options for a shipment. Transportation options must first be generated by the `generateTransportationOptions` operation before becoming available. Amazon listTransportationOptions, Fulfillment Inbound 2024-03-20. READ access. No personal data required. Use an authorized Seller Central connection with the Amazon Fulfillment role. Use inboundPlanId returned by PLANS_ADD or PLANS_FIND; shipmentId comes from PLANS_GET and is distinct from the FBA shipmentConfirmationId. Reads live Amazon state. Returns one page; repeat filters with the unchanged returned continuation token. Output: pagination, transportationOptions. Next Actions: AMAZON_FBA_INBOUND_PLANS_GET. [Request example and workflow](/hub/docs/datadoe-features/actions-amazon-fba-inbound#request-transportation-options-find).",
+      "description": "Retrieves all transportation options for a shipment. Transportation options must first be generated by the `generateTransportationOptions` operation before becoming available. Amazon listTransportationOptions, Fulfillment Inbound 2024-03-20. READ access. No personal data required. Use an authorized Seller Central connection with the Amazon Fulfillment role. Use inboundPlanId returned by PLANS_ADD or PLANS_FIND; shipmentId comes from PLANS_GET and is distinct from the FBA shipmentConfirmationId. Reads live Amazon state. Returns one page; repeat filters with the unchanged returned continuation token. Output: pagination, transportationOptions. Next Actions: AMAZON_FBA_INBOUND_PLANS_GET. [Request example and workflow](/hub/docs/datadoe-actions/fba-inbound#request-transportation-options-find).",
       "result": "Amazon response fields: `pagination`, `transportationOptions`. Returns the direct Amazon response. Includes observation time, warnings and error details when applicable. Document operations include stored File IDs, download links and expiry times.",
       "detailsJsonSchema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -18047,7 +18047,7 @@
       "accountAvailability": "SELLERS_ONLY",
       "marketplaceNote": null,
       "maxItems": null,
-      "description": "Generates available transportation options for a given placement option. Amazon generateTransportationOptions, Fulfillment Inbound 2024-03-20. WRITE access. No PII permission required. Use an authorized Seller Central connection with the Amazon Fulfillment role. Use inboundPlanId returned by PLANS_ADD or PLANS_FIND; shipmentId comes from PLANS_GET and is distinct from the FBA shipmentConfirmationId. Changes Amazon workflow state; fees or irreversible choices may apply. Follow the seller's approval instructions. No pagination input. Output: operationId. Next Actions: AMAZON_FBA_INBOUND_OPERATIONS_GET, AMAZON_FBA_INBOUND_TRANSPORTATION_OPTIONS_FIND. [Request example and workflow](/hub/docs/datadoe-features/actions-amazon-fba-inbound#request-transportation-options-generate).",
+      "description": "Generates available transportation options for a given placement option. Amazon generateTransportationOptions, Fulfillment Inbound 2024-03-20. WRITE access. No PII permission required. Use an authorized Seller Central connection with the Amazon Fulfillment role. Use inboundPlanId returned by PLANS_ADD or PLANS_FIND; shipmentId comes from PLANS_GET and is distinct from the FBA shipmentConfirmationId. Changes Amazon workflow state; fees or irreversible choices may apply. Follow the seller's approval instructions. No pagination input. Output: operationId. Next Actions: AMAZON_FBA_INBOUND_OPERATIONS_GET, AMAZON_FBA_INBOUND_TRANSPORTATION_OPTIONS_FIND. [Request example and workflow](/hub/docs/datadoe-actions/fba-inbound#request-transportation-options-generate).",
       "result": "Amazon response fields: `operationId`. Returns an operation ID. Pending work uses WAITING_EXTERNAL_PROCESSING while DataDoe observes the same operation. Wait for SUCCESS before the next workflow step. Includes observation time, warnings and error details when applicable. Document operations include stored File IDs, download links and expiry times.",
       "detailsJsonSchema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -18300,7 +18300,7 @@
       "accountAvailability": "SELLERS_ONLY",
       "marketplaceNote": null,
       "maxItems": null,
-      "description": "Confirms all the transportation options for an inbound plan. A placement option must be confirmed prior to use of this API. Once confirmed, new transportation options can not be generated or confirmed for the Inbound Plan. Amazon confirmTransportationOptions, Fulfillment Inbound 2024-03-20. WRITE access. No PII permission required. Use an authorized Seller Central connection with the Amazon Fulfillment role. Use inboundPlanId returned by PLANS_ADD or PLANS_FIND; shipmentId comes from PLANS_GET and is distinct from the FBA shipmentConfirmationId. Changes Amazon workflow state; fees or irreversible choices may apply. Follow the seller's approval instructions. No pagination input. Output: operationId. Next Actions: AMAZON_FBA_INBOUND_OPERATIONS_GET. [Request example and workflow](/hub/docs/datadoe-features/actions-amazon-fba-inbound#request-transportation-options-confirm).",
+      "description": "Confirms all the transportation options for an inbound plan. A placement option must be confirmed prior to use of this API. Once confirmed, new transportation options can not be generated or confirmed for the Inbound Plan. Amazon confirmTransportationOptions, Fulfillment Inbound 2024-03-20. WRITE access. No PII permission required. Use an authorized Seller Central connection with the Amazon Fulfillment role. Use inboundPlanId returned by PLANS_ADD or PLANS_FIND; shipmentId comes from PLANS_GET and is distinct from the FBA shipmentConfirmationId. Changes Amazon workflow state; fees or irreversible choices may apply. Follow the seller's approval instructions. No pagination input. Output: operationId. Next Actions: AMAZON_FBA_INBOUND_OPERATIONS_GET. [Request example and workflow](/hub/docs/datadoe-actions/fba-inbound#request-transportation-options-confirm).",
       "result": "Amazon response fields: `operationId`. Returns an operation ID. Pending work uses WAITING_EXTERNAL_PROCESSING while DataDoe observes the same operation. Wait for SUCCESS before the next workflow step. Includes observation time, warnings and error details when applicable. Document operations include stored File IDs, download links and expiry times.",
       "detailsJsonSchema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -18410,7 +18410,7 @@
       "accountAvailability": "SELLERS_ONLY",
       "marketplaceNote": null,
       "maxItems": null,
-      "description": "List the inbound compliance details for MSKUs in a given marketplace. Supply raw MSKUs. DataDoe applies the required URL encoding. Amazon listItemComplianceDetails, Fulfillment Inbound 2024-03-20. READ access. No personal data required. Use an authorized Seller Central connection with the Amazon Fulfillment role. Reads live Amazon state. No pagination input. Output: complianceDetails. Next Actions: AMAZON_FBA_INBOUND_PLANS_FIND. [Request example and workflow](/hub/docs/datadoe-features/actions-amazon-fba-inbound#request-item-compliance-details-find).",
+      "description": "List the inbound compliance details for MSKUs in a given marketplace. Supply raw MSKUs. DataDoe applies the required URL encoding. Amazon listItemComplianceDetails, Fulfillment Inbound 2024-03-20. READ access. No personal data required. Use an authorized Seller Central connection with the Amazon Fulfillment role. Reads live Amazon state. No pagination input. Output: complianceDetails. Next Actions: AMAZON_FBA_INBOUND_PLANS_FIND. [Request example and workflow](/hub/docs/datadoe-actions/fba-inbound#request-item-compliance-details-find).",
       "result": "Amazon response fields: `complianceDetails`. Returns the direct Amazon response. Includes observation time, warnings and error details when applicable. Document operations include stored File IDs, download links and expiry times.",
       "detailsJsonSchema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -18461,7 +18461,7 @@
       "accountAvailability": "SELLERS_ONLY",
       "marketplaceNote": null,
       "maxItems": null,
-      "description": "Update compliance details for a list of MSKUs. The details provided here are only used for the India (IN - A21TJRUUN4KGV) marketplace compliance validation. Amazon updateItemComplianceDetails, Fulfillment Inbound 2024-03-20. WRITE access. No personal data required. Use an authorized Seller Central connection with the Amazon Fulfillment role. Changes Amazon workflow state; fees or irreversible choices may apply. Follow the seller's approval instructions. No pagination input. Output: operationId. Next Actions: AMAZON_FBA_INBOUND_OPERATIONS_GET. [Request example and workflow](/hub/docs/datadoe-features/actions-amazon-fba-inbound#request-item-compliance-details-update).",
+      "description": "Update compliance details for a list of MSKUs. The details provided here are only used for the India (IN - A21TJRUUN4KGV) marketplace compliance validation. Amazon updateItemComplianceDetails, Fulfillment Inbound 2024-03-20. WRITE access. No personal data required. Use an authorized Seller Central connection with the Amazon Fulfillment role. Changes Amazon workflow state; fees or irreversible choices may apply. Follow the seller's approval instructions. No pagination input. Output: operationId. Next Actions: AMAZON_FBA_INBOUND_OPERATIONS_GET. [Request example and workflow](/hub/docs/datadoe-actions/fba-inbound#request-item-compliance-details-update).",
       "result": "Amazon response fields: `operationId`. Returns an operation ID. Pending work uses WAITING_EXTERNAL_PROCESSING while DataDoe observes the same operation. Wait for SUCCESS before the next workflow step. Includes observation time, warnings and error details when applicable. Document operations include stored File IDs, download links and expiry times.",
       "detailsJsonSchema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -18577,7 +18577,7 @@
       "accountAvailability": "SELLERS_ONLY",
       "marketplaceNote": null,
       "maxItems": null,
-      "description": "For a given marketplace - creates labels for a list of MSKUs. Amazon createMarketplaceItemLabels, Fulfillment Inbound 2024-03-20. READ access. No personal data required. Use an authorized Seller Central connection with the Amazon Fulfillment role. Reads live Amazon state. No pagination input. Output: documentDownloads. Next Actions: AMAZON_FBA_INBOUND_PLANS_FIND. [Request example and workflow](/hub/docs/datadoe-features/actions-amazon-fba-inbound#request-item-labels-create).",
+      "description": "For a given marketplace - creates labels for a list of MSKUs. Amazon createMarketplaceItemLabels, Fulfillment Inbound 2024-03-20. READ access. No personal data required. Use an authorized Seller Central connection with the Amazon Fulfillment role. Reads live Amazon state. No pagination input. Output: documentDownloads. Next Actions: AMAZON_FBA_INBOUND_PLANS_FIND. [Request example and workflow](/hub/docs/datadoe-actions/fba-inbound#request-item-labels-create).",
       "result": "Amazon response fields: `documentDownloads`. Returns the direct Amazon response. Includes observation time, warnings and error details when applicable. Document operations include stored File IDs, download links and expiry times.",
       "detailsJsonSchema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -18690,7 +18690,7 @@
       "accountAvailability": "SELLERS_ONLY",
       "marketplaceNote": null,
       "maxItems": null,
-      "description": "Get preparation details for a list of MSKUs in a specified marketplace. Supply raw MSKUs. DataDoe applies the required URL encoding. Amazon listPrepDetails, Fulfillment Inbound 2024-03-20. READ access. No personal data required. Use an authorized Seller Central connection with the Amazon Fulfillment role. Reads live Amazon state. No pagination input. Output: mskuPrepDetails. Next Actions: AMAZON_FBA_INBOUND_PLANS_FIND. [Request example and workflow](/hub/docs/datadoe-features/actions-amazon-fba-inbound#request-prep-details-find).",
+      "description": "Get preparation details for a list of MSKUs in a specified marketplace. Supply raw MSKUs. DataDoe applies the required URL encoding. Amazon listPrepDetails, Fulfillment Inbound 2024-03-20. READ access. No personal data required. Use an authorized Seller Central connection with the Amazon Fulfillment role. Reads live Amazon state. No pagination input. Output: mskuPrepDetails. Next Actions: AMAZON_FBA_INBOUND_PLANS_FIND. [Request example and workflow](/hub/docs/datadoe-actions/fba-inbound#request-prep-details-find).",
       "result": "Amazon response fields: `mskuPrepDetails`. Returns the direct Amazon response. Includes observation time, warnings and error details when applicable. Document operations include stored File IDs, download links and expiry times.",
       "detailsJsonSchema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -18741,7 +18741,7 @@
       "accountAvailability": "SELLERS_ONLY",
       "marketplaceNote": null,
       "maxItems": null,
-      "description": "Set the preparation details for a list of MSKUs in a specified marketplace. Amazon setPrepDetails, Fulfillment Inbound 2024-03-20. WRITE access. No personal data required. Use an authorized Seller Central connection with the Amazon Fulfillment role. Changes Amazon workflow state; fees or irreversible choices may apply. Follow the seller's approval instructions. No pagination input. Output: operationId. Next Actions: AMAZON_FBA_INBOUND_OPERATIONS_GET. [Request example and workflow](/hub/docs/datadoe-features/actions-amazon-fba-inbound#request-prep-details-set).",
+      "description": "Set the preparation details for a list of MSKUs in a specified marketplace. Amazon setPrepDetails, Fulfillment Inbound 2024-03-20. WRITE access. No personal data required. Use an authorized Seller Central connection with the Amazon Fulfillment role. Changes Amazon workflow state; fees or irreversible choices may apply. Follow the seller's approval instructions. No pagination input. Output: operationId. Next Actions: AMAZON_FBA_INBOUND_OPERATIONS_GET. [Request example and workflow](/hub/docs/datadoe-actions/fba-inbound#request-prep-details-set).",
       "result": "Amazon response fields: `operationId`. Returns an operation ID. Pending work uses WAITING_EXTERNAL_PROCESSING while DataDoe observes the same operation. Wait for SUCCESS before the next workflow step. Includes observation time, warnings and error details when applicable. Document operations include stored File IDs, download links and expiry times.",
       "detailsJsonSchema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -18852,7 +18852,7 @@
       "accountAvailability": "SELLERS_ONLY",
       "marketplaceNote": null,
       "maxItems": null,
-      "description": "Gets the status of the processing of an asynchronous API call. Amazon getInboundOperationStatus, Fulfillment Inbound 2024-03-20. READ access. No PII permission required. Use an authorized Seller Central connection with the Amazon Fulfillment role. Reads live Amazon state. No pagination input. Output: operation, operationId, operationProblems, operationStatus. Next Actions: AMAZON_FBA_INBOUND_PLANS_FIND. [Request example and workflow](/hub/docs/datadoe-features/actions-amazon-fba-inbound#request-operations-get).",
+      "description": "Gets the status of the processing of an asynchronous API call. Amazon getInboundOperationStatus, Fulfillment Inbound 2024-03-20. READ access. No PII permission required. Use an authorized Seller Central connection with the Amazon Fulfillment role. Reads live Amazon state. No pagination input. Output: operation, operationId, operationProblems, operationStatus. Next Actions: AMAZON_FBA_INBOUND_PLANS_FIND. [Request example and workflow](/hub/docs/datadoe-actions/fba-inbound#request-operations-get).",
       "result": "Amazon response fields: `operation`, `operationId`, `operationProblems`, `operationStatus`. Returns the direct Amazon response. Includes observation time, warnings and error details when applicable. Document operations include stored File IDs, download links and expiry times.",
       "detailsJsonSchema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -18892,7 +18892,7 @@
       "accountAvailability": "SELLERS_ONLY",
       "marketplaceNote": null,
       "maxItems": null,
-      "description": "Returns package/pallet labels for faster and more accurate shipment processing at the Amazon fulfillment center. Amazon getLabels, Fulfillment Inbound v0. WRITE access. No PII permission required. Use an authorized Seller Central connection with the Amazon Fulfillment role. Use the FBA shipmentConfirmationId for legacy shipment paths. Query names retain Amazon capitalization. Changes Amazon workflow state; fees or irreversible choices may apply. Follow the seller's approval instructions. No pagination input. Output: payload, errors. Next Actions: AMAZON_FBA_INBOUND_PLANS_FIND. [Request example and workflow](/hub/docs/datadoe-features/actions-amazon-fba-inbound#request-shipment-labels-get).",
+      "description": "Returns package/pallet labels for faster and more accurate shipment processing at the Amazon fulfillment center. Amazon getLabels, Fulfillment Inbound v0. WRITE access. No PII permission required. Use an authorized Seller Central connection with the Amazon Fulfillment role. Use the FBA shipmentConfirmationId for legacy shipment paths. Query names retain Amazon capitalization. Changes Amazon workflow state; fees or irreversible choices may apply. Follow the seller's approval instructions. No pagination input. Output: payload, errors. Next Actions: AMAZON_FBA_INBOUND_PLANS_FIND. [Request example and workflow](/hub/docs/datadoe-actions/fba-inbound#request-shipment-labels-get).",
       "result": "Amazon response fields: `payload`, `errors`. Returns the direct Amazon response. Includes observation time, warnings and error details when applicable. Document operations include stored File IDs, download links and expiry times.",
       "detailsJsonSchema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -19000,7 +19000,7 @@
       "accountAvailability": "SELLERS_ONLY",
       "marketplaceNote": null,
       "maxItems": null,
-      "description": "Returns a bill of lading for a Less Than Truckload/Full Truckload (LTL/FTL) shipment. The getBillOfLading operation returns PDF document data for printing a bill of lading for an Amazon-partnered Less Than Truckload/Full Truckload (LTL/FTL) inbound shipment. Amazon getBillOfLading, Fulfillment Inbound v0. READ access. No PII permission required. Use an authorized Seller Central connection with the Amazon Fulfillment role. Use the FBA shipmentConfirmationId for legacy shipment paths. Query names retain Amazon capitalization. Reads live Amazon state. No pagination input. Output: payload, errors. Next Actions: AMAZON_FBA_INBOUND_PLANS_FIND. [Request example and workflow](/hub/docs/datadoe-features/actions-amazon-fba-inbound#request-bill-of-lading-get).",
+      "description": "Returns a bill of lading for a Less Than Truckload/Full Truckload (LTL/FTL) shipment. The getBillOfLading operation returns PDF document data for printing a bill of lading for an Amazon-partnered Less Than Truckload/Full Truckload (LTL/FTL) inbound shipment. Amazon getBillOfLading, Fulfillment Inbound v0. READ access. No PII permission required. Use an authorized Seller Central connection with the Amazon Fulfillment role. Use the FBA shipmentConfirmationId for legacy shipment paths. Query names retain Amazon capitalization. Reads live Amazon state. No pagination input. Output: payload, errors. Next Actions: AMAZON_FBA_INBOUND_PLANS_FIND. [Request example and workflow](/hub/docs/datadoe-actions/fba-inbound#request-bill-of-lading-get).",
       "result": "Amazon response fields: `payload`, `errors`. Returns the direct Amazon response. Includes observation time, warnings and error details when applicable. Document operations include stored File IDs, download links and expiry times.",
       "detailsJsonSchema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -19039,7 +19039,7 @@
       "accountAvailability": "SELLERS_ONLY",
       "marketplaceNote": null,
       "maxItems": null,
-      "description": "Returns a list of inbound shipments based on criteria that you specify. Amazon getShipments, Fulfillment Inbound v0. READ access. No PII permission required. Use an authorized Seller Central connection with the Amazon Fulfillment role. Use the FBA shipmentConfirmationId for legacy shipment paths. Query names retain Amazon capitalization. Reads live Amazon state. Returns one page; repeat filters with the unchanged returned continuation token. Output: payload, errors. Next Actions: AMAZON_FBA_INBOUND_PLANS_FIND. [Request example and workflow](/hub/docs/datadoe-features/actions-amazon-fba-inbound#request-legacy-shipments-find).",
+      "description": "Returns a list of inbound shipments based on criteria that you specify. Amazon getShipments, Fulfillment Inbound v0. READ access. No PII permission required. Use an authorized Seller Central connection with the Amazon Fulfillment role. Use the FBA shipmentConfirmationId for legacy shipment paths. Query names retain Amazon capitalization. Reads live Amazon state. Returns one page; repeat filters with the unchanged returned continuation token. Output: payload, errors. Next Actions: AMAZON_FBA_INBOUND_PLANS_FIND. [Request example and workflow](/hub/docs/datadoe-actions/fba-inbound#request-legacy-shipments-find).",
       "result": "Amazon response fields: `payload`, `errors`. Returns the direct Amazon response. Includes observation time, warnings and error details when applicable. Document operations include stored File IDs, download links and expiry times.",
       "detailsJsonSchema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -19130,7 +19130,7 @@
       "accountAvailability": "SELLERS_ONLY",
       "marketplaceNote": null,
       "maxItems": null,
-      "description": "Returns a list of items in a specified inbound shipment. Amazon getShipmentItemsByShipmentId, Fulfillment Inbound v0. READ access. No personal data required. Use an authorized Seller Central connection with the Amazon Fulfillment role. Use the FBA shipmentConfirmationId for legacy shipment paths. Query names retain Amazon capitalization. Reads live Amazon state. No pagination input. Output: payload, errors. Next Actions: AMAZON_FBA_INBOUND_PLANS_FIND. [Request example and workflow](/hub/docs/datadoe-features/actions-amazon-fba-inbound#request-legacy-shipment-items-get).",
+      "description": "Returns a list of items in a specified inbound shipment. Amazon getShipmentItemsByShipmentId, Fulfillment Inbound v0. READ access. No personal data required. Use an authorized Seller Central connection with the Amazon Fulfillment role. Use the FBA shipmentConfirmationId for legacy shipment paths. Query names retain Amazon capitalization. Reads live Amazon state. No pagination input. Output: payload, errors. Next Actions: AMAZON_FBA_INBOUND_PLANS_FIND. [Request example and workflow](/hub/docs/datadoe-actions/fba-inbound#request-legacy-shipment-items-get).",
       "result": "Amazon response fields: `payload`, `errors`. Returns the direct Amazon response. Includes observation time, warnings and error details when applicable. Document operations include stored File IDs, download links and expiry times.",
       "detailsJsonSchema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -19179,7 +19179,7 @@
       "accountAvailability": "SELLERS_ONLY",
       "marketplaceNote": null,
       "maxItems": null,
-      "description": "Returns a list of items in a specified inbound shipment, or a list of items that were updated within a specified time frame. Amazon getShipmentItems, Fulfillment Inbound v0. READ access. No personal data required. Use an authorized Seller Central connection with the Amazon Fulfillment role. Use the FBA shipmentConfirmationId for legacy shipment paths. Query names retain Amazon capitalization. Reads live Amazon state. Returns one page; repeat filters with the unchanged returned continuation token. Output: payload, errors. Next Actions: AMAZON_FBA_INBOUND_PLANS_FIND. [Request example and workflow](/hub/docs/datadoe-features/actions-amazon-fba-inbound#request-legacy-shipment-items-find).",
+      "description": "Returns a list of items in a specified inbound shipment, or a list of items that were updated within a specified time frame. Amazon getShipmentItems, Fulfillment Inbound v0. READ access. No personal data required. Use an authorized Seller Central connection with the Amazon Fulfillment role. Use the FBA shipmentConfirmationId for legacy shipment paths. Query names retain Amazon capitalization. Reads live Amazon state. Returns one page; repeat filters with the unchanged returned continuation token. Output: payload, errors. Next Actions: AMAZON_FBA_INBOUND_PLANS_FIND. [Request example and workflow](/hub/docs/datadoe-actions/fba-inbound#request-legacy-shipment-items-find).",
       "result": "Amazon response fields: `payload`, `errors`. Returns the direct Amazon response. Includes observation time, warnings and error details when applicable. Document operations include stored File IDs, download links and expiry times.",
       "detailsJsonSchema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -19244,7 +19244,7 @@
         "api": 1,
         "mcp": 1
       },
-      "description": "Seller Central only. One Action handles one shipment operation. Requires the Amazon role Direct-to-Consumer Shipping (Restricted) on a Seller Central account. Requires PII access because a shipment can include a recipient. Use status ACCEPTED for new merchant-fulfilled shipments. CREATED means Amazon could not auto-accept the order. Optional filters are location, marketplace, channel name, last-updated range, page size and pagination token. Repeat the same filters when a page is empty but a next token is present. Amazon operation getShipments. Next, read one shipment. See [External Fulfillment shipping](/hub/docs/datadoe-features/actions-amazon-external-fulfillment).",
+      "description": "Seller Central only. One Action handles one shipment operation. Requires the Amazon role Direct-to-Consumer Shipping (Restricted) on a Seller Central account. Requires PII access because a shipment can include a recipient. Use status ACCEPTED for new merchant-fulfilled shipments. CREATED means Amazon could not auto-accept the order. Optional filters are location, marketplace, channel name, last-updated range, page size and pagination token. Repeat the same filters when a page is empty but a next token is present. Amazon operation getShipments. Next, read one shipment. See [External Fulfillment shipping](/hub/docs/datadoe-actions/external-fulfillment).",
       "result": "Returns the Amazon response with document content and temporary download URLs removed, plus stored File IDs and authenticated download links. Includes observation time, warnings and Amazon error details. An HTTP 204 response has no body. Label results include each package status. A mixed label result is partial, not a full success.",
       "detailsJsonSchema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -19321,7 +19321,7 @@
         "api": 1,
         "mcp": 1
       },
-      "description": "Seller Central only. One Action handles one shipment operation. Requires the Amazon role Direct-to-Consumer Shipping (Restricted) on a Seller Central account. Requires PII access. Returns line items, package IDs, shipment status, substatus and reason, channel and shipping type, and optional package tracking. Missing tracking is valid. Tracking details are returned by Amazon and cannot be sent on a write. Amazon operation getShipment. Next, confirm or reject the shipment. See [External Fulfillment shipping](/hub/docs/datadoe-features/actions-amazon-external-fulfillment).",
+      "description": "Seller Central only. One Action handles one shipment operation. Requires the Amazon role Direct-to-Consumer Shipping (Restricted) on a Seller Central account. Requires PII access. Returns line items, package IDs, shipment status, substatus and reason, channel and shipping type, and optional package tracking. Missing tracking is valid. Tracking details are returned by Amazon and cannot be sent on a write. Amazon operation getShipment. Next, confirm or reject the shipment. See [External Fulfillment shipping](/hub/docs/datadoe-actions/external-fulfillment).",
       "result": "Returns the Amazon response with document content and temporary download URLs removed, plus stored File IDs and authenticated download links. Includes observation time, warnings and Amazon error details. An HTTP 204 response has no body. Label results include each package status. A mixed label result is partial, not a full success.",
       "detailsJsonSchema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -19353,7 +19353,7 @@
         "api": 1,
         "mcp": 1
       },
-      "description": "Seller Central only. One Action handles one shipment operation. Requires the Amazon role Direct-to-Consumer Shipping (Restricted) on a Seller Central account. An optional acknowledgement can name the accepted line items. This does not buy a shipping label. Amazon operation processShipment with operation CONFIRM. A timeout or server error is ambiguous: read the shipment before confirming again. Next, create packages. See [External Fulfillment shipping](/hub/docs/datadoe-features/actions-amazon-external-fulfillment).",
+      "description": "Seller Central only. One Action handles one shipment operation. Requires the Amazon role Direct-to-Consumer Shipping (Restricted) on a Seller Central account. An optional acknowledgement can name the accepted line items. This does not buy a shipping label. Amazon operation processShipment with operation CONFIRM. A timeout or server error is ambiguous: read the shipment before confirming again. Next, create packages. See [External Fulfillment shipping](/hub/docs/datadoe-actions/external-fulfillment).",
       "result": "Returns the Amazon response with document content and temporary download URLs removed, plus stored File IDs and authenticated download links. Includes observation time, warnings and Amazon error details. An HTTP 204 response has no body. Label results include each package status. A mixed label result is partial, not a full success.",
       "detailsJsonSchema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -19438,7 +19438,7 @@
         "api": 1,
         "mcp": 1
       },
-      "description": "Seller Central only. One Action handles one shipment operation. Requires the Amazon role Direct-to-Consumer Shipping (Restricted) on a Seller Central account. This rejects the fulfillment shipment. It does not cancel an order and it does not cancel a Buy Shipping label. Amazon operation processShipment with operation REJECT. A timeout or server error is ambiguous: read the shipment before rejecting again. See [External Fulfillment shipping](/hub/docs/datadoe-features/actions-amazon-external-fulfillment).",
+      "description": "Seller Central only. One Action handles one shipment operation. Requires the Amazon role Direct-to-Consumer Shipping (Restricted) on a Seller Central account. This rejects the fulfillment shipment. It does not cancel an order and it does not cancel a Buy Shipping label. Amazon operation processShipment with operation REJECT. A timeout or server error is ambiguous: read the shipment before rejecting again. See [External Fulfillment shipping](/hub/docs/datadoe-actions/external-fulfillment).",
       "result": "Returns the Amazon response with document content and temporary download URLs removed, plus stored File IDs and authenticated download links. Includes observation time, warnings and Amazon error details. An HTTP 204 response has no body. Label results include each package status. A mixed label result is partial, not a full success.",
       "detailsJsonSchema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -19523,7 +19523,7 @@
         "api": 1,
         "mcp": 1
       },
-      "description": "Seller Central only. One Action handles one shipment operation. Requires the Amazon role Direct-to-Consumer Shipping (Restricted) on a Seller Central account. Send at least one full package, including dimensions, weight and line-item quantities. Add serial numbers, hazmat labels, country of origin and item value when the program requires them. Easy Ship cross-border packages need country of origin and item value. Do not send tracking details. Amazon operation createPackages. Next, read shipping options or replace a package. See [External Fulfillment shipping](/hub/docs/datadoe-features/actions-amazon-external-fulfillment).",
+      "description": "Seller Central only. One Action handles one shipment operation. Requires the Amazon role Direct-to-Consumer Shipping (Restricted) on a Seller Central account. Send at least one full package, including dimensions, weight and line-item quantities. Add serial numbers, hazmat labels, country of origin and item value when the program requires them. Easy Ship cross-border packages need country of origin and item value. Do not send tracking details. Amazon operation createPackages. Next, read shipping options or replace a package. See [External Fulfillment shipping](/hub/docs/datadoe-actions/external-fulfillment).",
       "result": "Returns the Amazon response with document content and temporary download URLs removed, plus stored File IDs and authenticated download links. Includes observation time, warnings and Amazon error details. An HTTP 204 response has no body. Label results include each package status. A mixed label result is partial, not a full success.",
       "detailsJsonSchema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -19769,7 +19769,7 @@
         "api": 1,
         "mcp": 1
       },
-      "description": "Seller Central only. One Action handles one shipment operation. Requires the Amazon role Direct-to-Consumer Shipping (Restricted) on a Seller Central account. Send the full package. This is not a partial update. Do not send tracking details. Amazon operation updatePackage. Next, read shipping options. See [External Fulfillment shipping](/hub/docs/datadoe-features/actions-amazon-external-fulfillment).",
+      "description": "Seller Central only. One Action handles one shipment operation. Requires the Amazon role Direct-to-Consumer Shipping (Restricted) on a Seller Central account. Send the full package. This is not a partial update. Do not send tracking details. Amazon operation updatePackage. Next, read shipping options. See [External Fulfillment shipping](/hub/docs/datadoe-actions/external-fulfillment).",
       "result": "Returns the Amazon response with document content and temporary download URLs removed, plus stored File IDs and authenticated download links. Includes observation time, warnings and Amazon error details. An HTTP 204 response has no body. Label results include each package status. A mixed label result is partial, not a full success.",
       "detailsJsonSchema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -20016,7 +20016,7 @@
         "api": 1,
         "mcp": 1
       },
-      "description": "Seller Central only. One Action handles one shipment operation. Requires the Amazon role Direct-to-Consumer Shipping (Restricted) on a Seller Central account. Seller Flex uses status SHIPPED and is required only in the UK, Spain, France, Germany and Italy. Self Delivery and MFN Self Delivery require one allowed status, substatus and reason. Mark out for delivery and delivered on the same calendar day. If the attempt is on another day, send out for delivery again. Send updates only between 6 AM and 11:59 PM local time. Easy Ship updates status automatically, so this Action rejects Easy Ship. Amazon operation updatePackageStatus. See [External Fulfillment shipping](/hub/docs/datadoe-features/actions-amazon-external-fulfillment).",
+      "description": "Seller Central only. One Action handles one shipment operation. Requires the Amazon role Direct-to-Consumer Shipping (Restricted) on a Seller Central account. Seller Flex uses status SHIPPED and is required only in the UK, Spain, France, Germany and Italy. Self Delivery and MFN Self Delivery require one allowed status, substatus and reason. Mark out for delivery and delivered on the same calendar day. If the attempt is on another day, send out for delivery again. Send updates only between 6 AM and 11:59 PM local time. Easy Ship updates status automatically, so this Action rejects Easy Ship. Amazon operation updatePackageStatus. See [External Fulfillment shipping](/hub/docs/datadoe-actions/external-fulfillment).",
       "result": "Returns the Amazon response with document content and temporary download URLs removed, plus stored File IDs and authenticated download links. Includes observation time, warnings and Amazon error details. An HTTP 204 response has no body. Label results include each package status. A mixed label result is partial, not a full success.",
       "detailsJsonSchema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -20112,7 +20112,7 @@
         "api": 1,
         "mcp": 1
       },
-      "description": "Seller Central only. One Action handles one shipment operation. Requires the Amazon role Direct-to-Consumer Shipping (Restricted) on a Seller Central account. Requires PII access because an option can include a handover address. An empty or null option list is valid when Amazon has no option yet. Amazon operation retrieveShippingOptions. Next, generate an invoice when the program requires one, or generate labels. See [External Fulfillment shipping](/hub/docs/datadoe-features/actions-amazon-external-fulfillment).",
+      "description": "Seller Central only. One Action handles one shipment operation. Requires the Amazon role Direct-to-Consumer Shipping (Restricted) on a Seller Central account. Requires PII access because an option can include a handover address. An empty or null option list is valid when Amazon has no option yet. Amazon operation retrieveShippingOptions. Next, generate an invoice when the program requires one, or generate labels. See [External Fulfillment shipping](/hub/docs/datadoe-actions/external-fulfillment).",
       "result": "Returns the Amazon response with document content and temporary download URLs removed, plus stored File IDs and authenticated download links. Includes observation time, warnings and Amazon error details. An HTTP 204 response has no body. Label results include each package status. A mixed label result is partial, not a full success.",
       "detailsJsonSchema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -20150,7 +20150,7 @@
         "api": 1,
         "mcp": 1
       },
-      "description": "Seller Central only. One Action handles one shipment operation. Requires the Amazon role Direct-to-Consumer Shipping (Restricted) on a Seller Central account. Requires PII access because the invoice can contain a recipient. Easy Ship invoices are supported only for the India store. The invoice file is stored as a DataDoe File with an authenticated, expiring download. Amazon operation generateInvoice. Next, retrieve the invoice or generate labels. See [External Fulfillment shipping](/hub/docs/datadoe-features/actions-amazon-external-fulfillment).",
+      "description": "Seller Central only. One Action handles one shipment operation. Requires the Amazon role Direct-to-Consumer Shipping (Restricted) on a Seller Central account. Requires PII access because the invoice can contain a recipient. Easy Ship invoices are supported only for the India store. The invoice file is stored as a DataDoe File with an authenticated, expiring download. Amazon operation generateInvoice. Next, retrieve the invoice or generate labels. See [External Fulfillment shipping](/hub/docs/datadoe-actions/external-fulfillment).",
       "result": "Returns the Amazon response with document content and temporary download URLs removed, plus stored File IDs and authenticated download links. Includes observation time, warnings and Amazon error details. An HTTP 204 response has no body. Label results include each package status. A mixed label result is partial, not a full success.",
       "detailsJsonSchema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -20198,7 +20198,7 @@
         "api": 1,
         "mcp": 1
       },
-      "description": "Seller Central only. One Action handles one shipment operation. Requires the Amazon role Direct-to-Consumer Shipping (Restricted) on a Seller Central account. Requires PII access. Easy Ship invoices are supported only for the India store. The invoice file is stored as a DataDoe File with an authenticated, expiring download. Amazon operation retrieveInvoice. Next, generate labels. See [External Fulfillment shipping](/hub/docs/datadoe-features/actions-amazon-external-fulfillment).",
+      "description": "Seller Central only. One Action handles one shipment operation. Requires the Amazon role Direct-to-Consumer Shipping (Restricted) on a Seller Central account. Requires PII access. Easy Ship invoices are supported only for the India store. The invoice file is stored as a DataDoe File with an authenticated, expiring download. Amazon operation retrieveInvoice. Next, generate labels. See [External Fulfillment shipping](/hub/docs/datadoe-actions/external-fulfillment).",
       "result": "Returns the Amazon response with document content and temporary download URLs removed, plus stored File IDs and authenticated download links. Includes observation time, warnings and Amazon error details. An HTTP 204 response has no body. Label results include each package status. A mixed label result is partial, not a full success.",
       "detailsJsonSchema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -20246,7 +20246,7 @@
         "api": 1,
         "mcp": 1
       },
-      "description": "Seller Central only. One Action handles one shipment operation. Requires the Amazon role Direct-to-Consumer Shipping (Restricted) on a Seller Central account. Requires PII access because a label can contain an address. operation GENERATE also retrieves labels that already exist. operation REGENERATE replaces them. Send at most 50 package IDs. Send the shipping option ID when Amazon requires one, and courier tracking only for a supported self-delivery label. A failure for one package is a partial result, not a full success. Label files are stored as DataDoe Files. Amazon operation generateShipLabels. Next, update package status only when the program requires it. See [External Fulfillment shipping](/hub/docs/datadoe-features/actions-amazon-external-fulfillment).",
+      "description": "Seller Central only. One Action handles one shipment operation. Requires the Amazon role Direct-to-Consumer Shipping (Restricted) on a Seller Central account. Requires PII access because a label can contain an address. operation GENERATE also retrieves labels that already exist. operation REGENERATE replaces them. Send at most 50 package IDs. Send the shipping option ID when Amazon requires one, and courier tracking only for a supported self-delivery label. A failure for one package is a partial result, not a full success. Label files are stored as DataDoe Files. Amazon operation generateShipLabels. Next, update package status only when the program requires it. See [External Fulfillment shipping](/hub/docs/datadoe-actions/external-fulfillment).",
       "result": "Returns the Amazon response with document content and temporary download URLs removed, plus stored File IDs and authenticated download links. Includes observation time, warnings and Amazon error details. An HTTP 204 response has no body. Label results include each package status. A mixed label result is partial, not a full success.",
       "detailsJsonSchema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -21653,7 +21653,7 @@
                         "email": {
                           "type": "string",
                           "format": "email",
-                          "pattern": "^(?!\\.)(?!.*\\.\\.)([A-Za-z0-9_'+\\-\\.]*)[A-Za-z0-9_+-]@([A-Za-z0-9][A-Za-z0-9\\-]*\\.)+[A-Za-z]{2,}$"
+                          "pattern": "^(?:[A-Za-z0-9_'+\\-]+\\.)*[A-Za-z0-9_'+\\-]*[A-Za-z0-9_+-]@(?:[A-Za-z0-9][A-Za-z0-9\\-]*\\.)+[A-Za-z]{2,}$"
                         },
                         "shipmentReferenceNumber": {
                           "type": "string",
@@ -31190,13 +31190,9 @@
                 },
                 "kpiValue": {
                   "description": "Optional Amazon Ads API v1 CREATE/UPDATE optimizations.goalSettings.kpiValue. UPDATE accepts a value without kpi; null clears the value.",
-                  "anyOf": [
-                    {
-                      "type": "number"
-                    },
-                    {
-                      "type": "null"
-                    }
+                  "type": [
+                    "number",
+                    "null"
                   ]
                 },
                 "goal": {
@@ -31264,13 +31260,9 @@
                       ]
                     },
                     "kpiValue": {
-                      "anyOf": [
-                        {
-                          "type": "number"
-                        },
-                        {
-                          "type": "null"
-                        }
+                      "type": [
+                        "number",
+                        "null"
                       ]
                     }
                   },
@@ -31966,13 +31958,9 @@
                 },
                 "kpiValue": {
                   "description": "Optional Amazon Ads API v1 CREATE/UPDATE optimizations.goalSettings.kpiValue. UPDATE accepts a value without kpi; null clears the value.",
-                  "anyOf": [
-                    {
-                      "type": "number"
-                    },
-                    {
-                      "type": "null"
-                    }
+                  "type": [
+                    "number",
+                    "null"
                   ]
                 },
                 "goal": {
@@ -32040,13 +32028,9 @@
                       ]
                     },
                     "kpiValue": {
-                      "anyOf": [
-                        {
-                          "type": "number"
-                        },
-                        {
-                          "type": "null"
-                        }
+                      "type": [
+                        "number",
+                        "null"
                       ]
                     }
                   },
@@ -32068,13 +32052,9 @@
                 },
                 "roasTarget": {
                   "description": "Sponsored Products UPDATE only. Rule-based bidding ROAS target as a ratio, so 2.2 stays 2.2. This is not kpi or kpiValue. Omit it to leave the current target unchanged. Null, zero, and negative values are rejected. Send bidStrategy RULE_BASED, or omit bidStrategy when the campaign is already rule-based.",
-                  "anyOf": [
-                    {
-                      "type": "number"
-                    },
-                    {
-                      "type": "null"
-                    }
+                  "type": [
+                    "number",
+                    "null"
                   ]
                 },
                 "placementBidAdjustments": {
@@ -32745,13 +32725,9 @@
                 },
                 "kpiValue": {
                   "description": "Optional Amazon Ads API v1 CREATE/UPDATE optimizations.goalSettings.kpiValue. UPDATE accepts a value without kpi; null clears the value.",
-                  "anyOf": [
-                    {
-                      "type": "number"
-                    },
-                    {
-                      "type": "null"
-                    }
+                  "type": [
+                    "number",
+                    "null"
                   ]
                 },
                 "goal": {
@@ -32819,13 +32795,9 @@
                       ]
                     },
                     "kpiValue": {
-                      "anyOf": [
-                        {
-                          "type": "number"
-                        },
-                        {
-                          "type": "null"
-                        }
+                      "type": [
+                        "number",
+                        "null"
                       ]
                     }
                   },
@@ -39294,13 +39266,9 @@
                   "type": "object",
                   "properties": {
                     "amount": {
-                      "anyOf": [
-                        {
-                          "type": "number"
-                        },
-                        {
-                          "type": "null"
-                        }
+                      "type": [
+                        "number",
+                        "null"
                       ]
                     },
                     "currencyCode": {
@@ -39444,13 +39412,9 @@
                   "type": "object",
                   "properties": {
                     "amount": {
-                      "anyOf": [
-                        {
-                          "type": "number"
-                        },
-                        {
-                          "type": "null"
-                        }
+                      "type": [
+                        "number",
+                        "null"
                       ]
                     },
                     "currencyCode": {
@@ -43148,7 +43112,7 @@
                       "type": "string",
                       "maxLength": 320,
                       "format": "email",
-                      "pattern": "^(?!\\.)(?!.*\\.\\.)([A-Za-z0-9_'+\\-\\.]*)[A-Za-z0-9_+-]@([A-Za-z0-9][A-Za-z0-9\\-]*\\.)+[A-Za-z]{2,}$"
+                      "pattern": "^(?:[A-Za-z0-9_'+\\-]+\\.)*[A-Za-z0-9_'+\\-]*[A-Za-z0-9_+-]@(?:[A-Za-z0-9][A-Za-z0-9\\-]*\\.)+[A-Za-z]{2,}$"
                     },
                     "phoneNumber": {
                       "description": "E.164 phone number, such as +442071234567. Required when channel is PHONE.",
