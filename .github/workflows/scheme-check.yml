@@ -1,0 +1,80 @@
+# Checks every day that scheme/ matches the public DataDoe specification and posts to Slack when it does not.
+# Runs only from the default branch (schedule or manual dispatch), so pull requests from forks never get the Slack secret.
+name: Daily scheme check
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 7 * * *'
+      timezone: 'Europe/Warsaw'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: scheme-check
+  cancel-in-progress: false
+
+env:
+  RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+
+jobs:
+  check-scheme:
+    name: Check scheme
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    environment: scheme-check
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24.14.1
+
+      - name: Assert SLACK_WEBHOOK is set
+        env:
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+        run: test -n "${SLACK_WEBHOOK}"
+
+      # The sync script uses only Node.js built-ins, so no dependencies are installed.
+      - name: Sync scheme from the public specification
+        id: sync
+        run: node scripts/sync-scheme.mjs
+
+      - name: Check scheme is up to date
+        id: diff
+        run: |
+          set -euo pipefail
+          changed="$(git status --porcelain -- scheme)"
+          if [[ -z "${changed}" ]]; then
+            echo 'scheme/ matches the public specification.'
+            exit 0
+          fi
+          count="$(wc -l <<< "${changed}" | tr -d ' ')"
+          files="$(head -n 10 <<< "${changed}" | awk '{print "- " $2}')"
+          {
+            echo 'details<<EOF'
+            echo "${count} files in scheme/ differ from the public specification. Run yarn sync:scheme and open a PR."
+            echo "${files}"
+            echo 'EOF'
+          } >> "${GITHUB_OUTPUT}"
+          echo "::error::${count} files in scheme/ differ from the public specification."
+          echo "${changed}"
+          exit 1
+
+      - name: Notify Slack
+        if: ${{ failure() }}
+        env:
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+          SLACK_TEXT: datadoe-mcp scheme check
+          SLACK_STATUS_OUTCOME: failure
+          SLACK_DETAILS: ${{ steps.diff.outputs.details || (steps.sync.outcome == 'failure' && 'Scheme sync could not download the public specification.') || 'The scheme check failed before it compared the files.' }}
+        run: |
+          set -euo pipefail
+          if ! bash .github/scripts/notify-slack.sh; then
+            echo '::error::Slack failure notification was not delivered.'
+            echo 'Slack failure notification was not delivered.' >> "${GITHUB_STEP_SUMMARY}"
+            exit 1
+          fi
