@@ -107,7 +107,7 @@ Actions let AI agents and integrations read and change Amazon data through DataD
 - Requires PII access: no
 - Max items: 5000 (API) / 300 (MCP)
 - Description: Find Amazon listings by given identifier (like SKU, ASIN, or UPC).
-- Result: Full models of found listings. Each item includes `content` with the title, description, keywords, highlight and up to five bullets.
+- Result: Full models of found listings. Each item includes `content` with the title, description, keywords, highlight and up to five bullets. Consumer offers can include `offers[].replenishmentDiscount.discountPercentage`, the seller-funded Subscribe & Save discount in percentage points. Zero means the seller funds no discount. Amazon can omit the object.
 
 #### `AMAZON_LISTINGS_FEES_ESTIMATE`: Estimate listing fees
 
