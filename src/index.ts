@@ -31,7 +31,7 @@ import {
 export const MCP_SERVER_NAME = 'DataDoe MCP' as const;
 export const MCP_SERVER_DESCRIPTION =
     'DataDoe is one place to connect, analyze, and act on Amazon data: query Seller Central, Vendor Central, and Amazon Ads data, then run write Actions like updating listings, managing orders, and optimizing Amazon Ads campaigns.' as const;
-export const MCP_SERVER_VERSION = '0.7.0' as const;
+export const MCP_SERVER_VERSION = '0.7.1' as const;
 export const MCP_SERVER_INSTRUCTIONS =
     'DataDoe provides tools for reading Amazon Seller and Vendor data, running Actions, and managing saved Plugins. This is the public schema facade of DataDoe MCP: exports_sources_get, exports_source_get and actions_details_schema_get return the public DataDoe data scheme and Action scheme, and the resources hold the full data, Action and webhook schemes. Other tools do nothing here. To work with live Amazon data, connect to https://mcp.datadoe.com/mcp/v1 with a DataDoe MCP key.' as const;
 export const MCP_SERVER_WEBSITE_URL = 'https://app.datadoe.com/integrations/mcp' as const;
