@@ -4,7 +4,7 @@
 - Available in: Seller Central
 - Data scheme index: ../data-scheme.md
 
-One row per connection, marketplace, SKU, and price audience. Audiences include ALL for every buyer, B2B for Amazon Business, and industry audiences such as B2B_EDUCATION when the seller is enrolled. unit_price is the single-unit price. quantity_discount_tiers lists quantity discounts from the listing attributes. Prices come from listing attributes when Amazon sends them, and from the offers summary when the attribute price is missing. This view does not change prices.
+One row per connection, marketplace, SKU, and price audience. Audiences include ALL for every buyer, B2B for Amazon Business, and industry audiences such as B2B_EDUCATION when the seller is enrolled. unit_price is the single-unit price. quantity_discount_tiers lists quantity discounts from the listing attributes. subscribe_and_save_discount_percentage is the seller-funded subscription discount for consumer offers. Prices come from listing attributes when Amazon sends them, and from the offers summary when the attribute price is missing. This view does not change prices.
 
 - Source type: `SELLER_CENTRAL`
 - Source ID: `2dd9e60fba83da8ce54079c7df35d8d4da1aa50bea79e4cdc6274b3e149e379e`
@@ -34,7 +34,7 @@ actions_details_schema_get reports whether each Action type is enabled for the O
 - quantity discount
 - ivp
 
-## Columns (14)
+## Columns (15)
 
 - `marketplace_id` (`TEXT`, required) — Amazon provided ID that represents a specific country where the Seller or Vendor operates.
 - `marketplace_country_code` (`TEXT`, required) — ISO country code for the Amazon marketplace.
@@ -50,6 +50,7 @@ actions_details_schema_get reports whether each Action type is enabled for the O
 - `unit_price` (`NUMBER`, nullable) — Single-unit price for this audience. Taken from listing attributes when present, otherwise from the offers summary.
 - `quantity_discount_tiers` (`JSON`, nullable) — Quantity discount tiers for this audience. Each item has discount_type, lower_bound, and value. Null when the listing attributes do not include a quantity discount plan. When discount_type is percent, value is the percentage points off the single-unit price. When discount_type is fixed, value is the unit price for that tier in the marketplace currency.
 - `last_seen_at` (`DATE`, required)
+- `subscribe_and_save_discount_percentage` (`NUMBER`, nullable) — Current seller-funded Subscribe & Save discount from the consumer offer for audience ALL, in percentage points from 0 to 100. A value of 5 means 5% off. Zero means the seller funds no discount. Null for missing, invalid, conflicting, or inapplicable values. Separate from unit_price and quantity_discount_tiers.
 
 ---
 

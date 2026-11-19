@@ -2121,7 +2121,7 @@
         "mcp": 300
       },
       "description": "Find Amazon listings by given identifier (like SKU, ASIN, or UPC).",
-      "result": "Full models of found listings. Each item includes `content` with the title, description, keywords, highlight and up to five bullets.",
+      "result": "Full models of found listings. Each item includes `content` with the title, description, keywords, highlight and up to five bullets. Consumer offers can include `offers[].replenishmentDiscount.discountPercentage`, the seller-funded Subscribe & Save discount in percentage points. Zero means the seller funds no discount. Amazon can omit the object.",
       "detailsJsonSchema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
         "type": "object",

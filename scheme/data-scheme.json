@@ -328,8 +328,15 @@
           "name": "awd_fees",
           "type": "NUMBER",
           "nullable": false,
-          "description": "AWD fees from Amazon settlements. Stored as a positive cost. Subtract from sales.",
+          "description": "AWD fees from Amazon settlements that carry this SKU. Stored as a positive cost. Subtract from sales. Amazon posts AWD processing, transportation and storage fees without a SKU, so this is usually 0; awd_fees_allocated estimates processing and transportation per SKU.",
           "definition": "sum(amazon_settlements_with_cogs.settlement_type !== 'REFUND' ? 0 - ((amazon_settlements_with_cogs.awd_processing_fee ?? 0) + (amazon_settlements_with_cogs.awd_transportation_fee ?? 0) + (amazon_settlements_with_cogs.awd_storage_fee ?? 0) + (amazon_settlements_with_cogs.awd_processing_fee_discount ?? 0) + (amazon_settlements_with_cogs.awd_storage_fee_discount ?? 0) + (amazon_settlements_with_cogs.awd_transportation_fee_discount ?? 0)) : 0)"
+        },
+        {
+          "name": "awd_fees_allocated",
+          "type": "NUMBER",
+          "nullable": false,
+          "description": "Estimated AWD processing and transportation fees of this SKU, stored as a positive cost. Amazon posts these fees without a SKU; each fee is split across the SKUs of its AWD replenishment order or inbound shipment by quantity (inbound quantities can be cases), in whole cents, on the date the fee posted. It is an allocation, not an amount Amazon reports per SKU. Not included in total_fees, total_cost or profit: subtract it from profit for an AWD-inclusive SKU profit. AWD storage and AGL freight and duty are not allocated. A SKU and date with only allocated fees has its own row, with empty traffic.",
+          "definition": "sum((amazon_settlements_with_cogs.settlement_type !== 'REFUND' && String(amazon_settlements_with_cogs.sku ?? '').trim() === '' ? 0 - ((amazon_settlements_with_cogs.awd_processing_fee ?? 0) + (amazon_settlements_with_cogs.awd_processing_fee_discount ?? 0) + (amazon_settlements_with_cogs.awd_transportation_fee ?? 0) + (amazon_settlements_with_cogs.awd_transportation_fee_discount ?? 0)) : 0) * skuQuantity / recordQuantity), where the record is amazon_settlements_with_cogs.amazon_order_id on the same sp_connection_id: 'repl-…' is amazon_awd_replenishment_order_line_items.awd_replenishment_order_id with skuQuantity amazon_awd_replenishment_order_line_items.quantity of line_item_source 'products'; 'IB_<date>_STAR-…' is amazon_awd_inbound_shipment_line_items.awd_inbound_shipment_id with skuQuantity received_quantity.quantity, or expected_quantity.quantity while nothing is received. Line items come from the latest sync of their record, each fee is split in whole cents by largest remainder, and a fee whose record has no SKU quantity is left out."
         },
         {
           "name": "ad_spend",
@@ -773,7 +780,11 @@
         "raw_sp_api_report_flat_file_returns_data_by_return_date",
         "refined_ads_estimated_dsp_performance_by_asin",
         "refined_sp_api_finances_transactions",
-        "refined_products_by_child_asin"
+        "refined_products_by_child_asin",
+        "raw_sp_api_awd_replenishment_orders",
+        "raw_sp_api_awd_replenishment_order_line_items",
+        "raw_sp_api_awd_inbound_shipments",
+        "raw_sp_api_awd_inbound_shipment_line_items"
       ],
       "containsPii": false,
       "initialLoadProgress": null,
@@ -2900,6 +2911,12 @@
           "type": "DATE",
           "nullable": false,
           "description": null
+        },
+        {
+          "name": "subscribe_and_save_discount_percentage",
+          "type": "NUMBER",
+          "nullable": true,
+          "description": "Current seller-funded Subscribe & Save discount from the consumer offer for audience ALL, in percentage points from 0 to 100. A value of 5 means 5% off. Zero means the seller funds no discount. Null for missing, invalid, conflicting, or inapplicable values. Separate from unit_price and quantity_discount_tiers."
         }
       ],
       "userManaged": false,
@@ -2907,7 +2924,7 @@
       "defaultDataset": false,
       "enabled": true,
       "rowCountBilling": true,
-      "description": "One row per connection, marketplace, SKU, and price audience. Audiences include ALL for every buyer, B2B for Amazon Business, and industry audiences such as B2B_EDUCATION when the seller is enrolled. unit_price is the single-unit price. quantity_discount_tiers lists quantity discounts from the listing attributes. Prices come from listing attributes when Amazon sends them, and from the offers summary when the attribute price is missing. This view does not change prices.",
+      "description": "One row per connection, marketplace, SKU, and price audience. Audiences include ALL for every buyer, B2B for Amazon Business, and industry audiences such as B2B_EDUCATION when the seller is enrolled. unit_price is the single-unit price. quantity_discount_tiers lists quantity discounts from the listing attributes. subscribe_and_save_discount_percentage is the seller-funded subscription discount for consumer offers. Prices come from listing attributes when Amazon sends them, and from the offers summary when the attribute price is missing. This view does not change prices.",
       "requiresDatePeriod": false,
       "issues": [],
       "relatedActions": [
