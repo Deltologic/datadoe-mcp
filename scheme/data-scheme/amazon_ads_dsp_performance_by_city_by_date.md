@@ -19,7 +19,7 @@ Amazon DSP performance per advertiser, date, order, line item, and city. Amazon 
 ## Fetch periods
 
 - `INITIAL` (28 days)
-- `RECURRING_DAILY` (7 days)
+- `RECURRING_DAILY` (15 days)
 - `RECURRING_MONTHLY` (28 days)
 
 ## Search aliases
