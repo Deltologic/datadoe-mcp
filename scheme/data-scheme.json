@@ -8296,6 +8296,301 @@
       "initialLoadProgress": null
     },
     {
+      "id": "a08d1aa0e826749de9ac5abc59f37eb368924aa2e279520a938216b406726240",
+      "name": "FBA Inbound Performance",
+      "tableName": "amazon_fba_inbound_performance",
+      "type": "SELLER_CENTRAL",
+      "columns": [
+        {
+          "name": "marketplace_id",
+          "type": "TEXT",
+          "nullable": false,
+          "description": "Amazon provided ID that represents a specific country where the Seller or Vendor operates."
+        },
+        {
+          "name": "marketplace_country_code",
+          "type": "TEXT",
+          "nullable": false,
+          "description": "ISO country code for the Amazon marketplace."
+        },
+        {
+          "name": "marketplace_country_name",
+          "type": "TEXT",
+          "nullable": false,
+          "description": "Human-readable country name for the marketplace (derived from marketplace_id)."
+        },
+        {
+          "name": "seller_or_vendor_id",
+          "type": "TEXT",
+          "nullable": false,
+          "description": "DataDoe account identifier used by MCP/API calls (sellers_and_vendors_list, exports). Not unique in amazon_sellers_and_vendors_context when one account has multiple connection contexts — join that table on connection_context_id instead."
+        },
+        {
+          "name": "seller_or_vendor_name",
+          "type": "TEXT",
+          "nullable": false,
+          "description": "DataDoe connection context display name for the seller or vendor."
+        },
+        {
+          "name": "marketplace_seller_id",
+          "type": "TEXT",
+          "nullable": true,
+          "description": "Amazon Seller Central seller ID from the connection (connection_seller_id). Null when the connection has no seller ID."
+        },
+        {
+          "name": "regional_account_id",
+          "type": "TEXT",
+          "nullable": true,
+          "description": "Amazon seller account of the row: <organization_id>:<seller_id>:<region> (NA, EU or FE). Null when the connection has no seller ID."
+        },
+        {
+          "name": "attribution_method",
+          "type": "TEXT",
+          "nullable": false,
+          "description": "How the row is tied to a marketplace. connection: the row belongs to the marketplace connection that supplied the report."
+        },
+        {
+          "name": "source_connection_id",
+          "type": "TEXT",
+          "nullable": false,
+          "description": "Connection that supplied the report."
+        },
+        {
+          "name": "warehouse_country",
+          "type": "TEXT",
+          "nullable": true,
+          "description": "Empty. DataDoe does not infer a country from a fulfillment center code."
+        },
+        {
+          "name": "date",
+          "type": "DATE",
+          "nullable": false,
+          "description": "Snapshot calendar date from the time Amazon created the report, in the source marketplace time zone. It is not the issue date or the import date."
+        },
+        {
+          "name": "snapshot_time",
+          "type": "DATE",
+          "nullable": false,
+          "description": "Time Amazon created the report. Retries of the same report keep this time."
+        },
+        {
+          "name": "report_id",
+          "type": "TEXT",
+          "nullable": false,
+          "description": "Amazon report identifier."
+        },
+        {
+          "name": "report_processing_end_time",
+          "type": "DATE",
+          "nullable": true,
+          "description": "Time Amazon finished the report. Empty when Amazon did not return it."
+        },
+        {
+          "name": "data_start_time",
+          "type": "DATE",
+          "nullable": false,
+          "description": "Start of the issue window Amazon used for this report."
+        },
+        {
+          "name": "data_end_time",
+          "type": "DATE",
+          "nullable": false,
+          "description": "End of the issue window Amazon used for this report."
+        },
+        {
+          "name": "source_row_number",
+          "type": "NUMBER",
+          "nullable": false,
+          "description": "1-based row number in the Amazon file. Rows that share a problem key stay separate."
+        },
+        {
+          "name": "problem_key",
+          "type": "TEXT",
+          "nullable": false,
+          "description": "Stable hash of the seller, marketplace, issue time, shipment, carton, fulfillment center, SKU, FNSKU, ASIN, problem type, problem level and measurement unit. It is not an Amazon problem ID. Alert status, coaching, quantities, fees and product text are not part of it."
+        },
+        {
+          "name": "is_latest_daily_snapshot",
+          "type": "LOGIC",
+          "nullable": false,
+          "description": "True for every row of the latest complete report for this connection and marketplace on this snapshot date."
+        },
+        {
+          "name": "is_latest_snapshot",
+          "type": "LOGIC",
+          "nullable": false,
+          "description": "True for every row of the latest complete report for this connection and marketplace."
+        },
+        {
+          "name": "dt_created",
+          "type": "DATE",
+          "nullable": false,
+          "description": "Time DataDoe exported the row."
+        },
+        {
+          "name": "dt_updated",
+          "type": "DATE",
+          "nullable": false,
+          "description": "Time DataDoe last exported the row."
+        },
+        {
+          "name": "issue_reported_date",
+          "type": "DATE",
+          "nullable": false,
+          "description": "Time Amazon reported the problem, stored in UTC."
+        },
+        {
+          "name": "shipment_creation_date",
+          "type": "DATE",
+          "nullable": true,
+          "description": "Time Amazon recorded for shipment creation, stored in UTC. Empty when Amazon leaves the cell blank."
+        },
+        {
+          "name": "shipment_confirmation_id",
+          "type": "TEXT",
+          "nullable": true,
+          "description": "FBA shipment confirmation ID. Join amazon_fba_inbound_shipments on this value, not the v2024 internal shipment ID."
+        },
+        {
+          "name": "fba_carton_id",
+          "type": "TEXT",
+          "nullable": true,
+          "description": null
+        },
+        {
+          "name": "fulfillment_center_id",
+          "type": "TEXT",
+          "nullable": true,
+          "description": null
+        },
+        {
+          "name": "seller_sku",
+          "type": "TEXT",
+          "nullable": true,
+          "description": "Seller SKU from the report. Empty when Amazon leaves the cell blank. DataDoe does not fill it from another table."
+        },
+        {
+          "name": "fnsku",
+          "type": "TEXT",
+          "nullable": true,
+          "description": null
+        },
+        {
+          "name": "child_asin",
+          "type": "TEXT",
+          "nullable": true,
+          "description": null
+        },
+        {
+          "name": "product_name",
+          "type": "TEXT",
+          "nullable": true,
+          "description": null
+        },
+        {
+          "name": "problem_type",
+          "type": "TEXT",
+          "nullable": true,
+          "description": "Problem type as Amazon reported it, including values DataDoe has not seen before."
+        },
+        {
+          "name": "problem_quantity",
+          "type": "NUMBER",
+          "nullable": true,
+          "description": null
+        },
+        {
+          "name": "expected_quantity",
+          "type": "NUMBER",
+          "nullable": true,
+          "description": null
+        },
+        {
+          "name": "received_quantity",
+          "type": "NUMBER",
+          "nullable": true,
+          "description": "Quantity Amazon received. Zero stays zero. A blank cell is empty."
+        },
+        {
+          "name": "performance_measurement_unit",
+          "type": "TEXT",
+          "nullable": true,
+          "description": null
+        },
+        {
+          "name": "coaching_level",
+          "type": "TEXT",
+          "nullable": true,
+          "description": null
+        },
+        {
+          "name": "fee_type",
+          "type": "TEXT",
+          "nullable": true,
+          "description": null
+        },
+        {
+          "name": "currency",
+          "type": "TEXT",
+          "nullable": true,
+          "description": "Currency Amazon reported for the fee. A blank amount does not add a currency."
+        },
+        {
+          "name": "fee_total",
+          "type": "NUMBER",
+          "nullable": true,
+          "description": "Fee amount as Amazon reported it. A blank cell is empty, not zero."
+        },
+        {
+          "name": "problem_level",
+          "type": "TEXT",
+          "nullable": true,
+          "description": null
+        },
+        {
+          "name": "alert_status",
+          "type": "TEXT",
+          "nullable": true,
+          "description": "Alert status as Amazon reported it, including NONE, ACKNOWLEDGED and later values. A blank cell is empty."
+        }
+      ],
+      "userManaged": false,
+      "isPremium": false,
+      "defaultDataset": false,
+      "enabled": true,
+      "rowCountBilling": true,
+      "description": "FBA shipment problems from Amazon's FBA Inbound Performance report. Each row is one problem on one collected report. DataDoe requests the report at 2am and 1pm in the marketplace time zone. Each request asks for problems reported in the previous 120 days. Amazon may return the same file, because it generates this report at most every 4 hours. Rows appear after Amazon generates the file and after DataDoe imports and exports it. Each collected file is kept. History starts with the first collected file. Use is_latest_daily_snapshot for the latest file of a local day, and is_latest_snapshot for the current file. A missing row is not a resolved problem.",
+      "requiresDatePeriod": true,
+      "issues": [],
+      "fetchPeriods": [
+        {
+          "type": "INITIAL",
+          "numberOfDays": 120
+        },
+        {
+          "type": "RECURRING_DAILY",
+          "numberOfDays": 120
+        }
+      ],
+      "dataAvailability": {
+        "type": "INTRADAY",
+        "description": "DataDoe requests this report at 2am and 1pm in the source marketplace time zone. Each request asks for problems reported in the previous 120 days. Amazon may return the same file, because it generates this report at most every 4 hours. Rows appear after Amazon generates the file and after DataDoe imports and exports it. Each collected file is kept. History starts with the first collected file.",
+        "refreshAt": "2am, 1pm"
+      },
+      "sources": [
+        "connections",
+        "raw_sp_api_report_fba_inbound_performance"
+      ],
+      "containsPii": false,
+      "initialLoadProgress": null,
+      "searchAliases": [
+        "shipment problems",
+        "inbound performance",
+        "fba inbound",
+        "inbound noncompliance"
+      ]
+    },
+    {
       "id": "1d28c4f8606f6babd56ec9b1db2f2de874cfde04f54424cdae912e347ea98671",
       "name": "Remote Fulfillment Eligibility",
       "tableName": "amazon_remote_fulfillment_eligibility",
@@ -37516,6 +37811,321 @@
         "dsp geo",
         "dsp country",
         "delivery country"
+      ]
+    },
+    {
+      "id": "6859b955ee3cf23c465ed5375e8b404703675c4fca2e6a845cebc4dd7e0250ed",
+      "name": "DSP Performance by Region & Date",
+      "tableName": "amazon_ads_dsp_performance_by_region_by_date",
+      "type": "AMAZON_ADS",
+      "columns": [
+        {
+          "name": "marketplace_id",
+          "type": "TEXT",
+          "nullable": false,
+          "description": "Amazon marketplace of the DataDoe DSP slot the advertiser is fetched for."
+        },
+        {
+          "name": "marketplace_country_code",
+          "type": "TEXT",
+          "nullable": false,
+          "description": "ISO country code for the Amazon marketplace."
+        },
+        {
+          "name": "marketplace_country_name",
+          "type": "TEXT",
+          "nullable": false,
+          "description": "Human-readable country name for the marketplace (derived from marketplace_id)."
+        },
+        {
+          "name": "seller_or_vendor_id",
+          "type": "TEXT",
+          "nullable": true,
+          "description": "DataDoe account identifier the DSP advertiser is mapped to, used by MCP/API calls (sellers_and_vendors_list, exports). Null when the advertiser is not mapped to a seller or vendor."
+        },
+        {
+          "name": "seller_or_vendor_name",
+          "type": "TEXT",
+          "nullable": true,
+          "description": "DataDoe connection context display name of the mapped seller or vendor. Null when the advertiser is not mapped."
+        },
+        {
+          "name": "marketplace_seller_id",
+          "type": "TEXT",
+          "nullable": true,
+          "description": "Amazon selling partner id of the mapped seller. Null for vendors, unmapped advertisers, and contexts without a seller id."
+        },
+        {
+          "name": "amazon_ads_profile_id",
+          "type": "TEXT",
+          "nullable": true,
+          "description": "Amazon Ads profile identifier."
+        },
+        {
+          "name": "dsp_advertiser_id",
+          "type": "TEXT",
+          "nullable": false,
+          "description": "Amazon DSP advertiser identifier. Join amazon_sellers_and_vendors_context on organization_id, store_id, ads_dsp_connection_id = ads_connection_id, and dsp_advertiser_id."
+        },
+        {
+          "name": "dsp_advertiser_name",
+          "type": "TEXT",
+          "nullable": true,
+          "description": "Amazon DSP advertiser name."
+        },
+        {
+          "name": "date",
+          "type": "DATE",
+          "nullable": false,
+          "description": "Report date (Amazon DSP daily report)."
+        },
+        {
+          "name": "dt_created",
+          "type": "DATE",
+          "nullable": false,
+          "description": "Timestamp when DataDoe first stored this row."
+        },
+        {
+          "name": "dt_updated",
+          "type": "DATE",
+          "nullable": false,
+          "description": "Timestamp when DataDoe last updated this row."
+        },
+        {
+          "name": "dsp_order_id",
+          "type": "TEXT",
+          "nullable": false,
+          "description": "Amazon DSP order identifier. An order is a campaign in the new Amazon DSP naming."
+        },
+        {
+          "name": "dsp_order_name",
+          "type": "TEXT",
+          "nullable": true,
+          "description": "Amazon DSP order (campaign) name."
+        },
+        {
+          "name": "dsp_line_item_id",
+          "type": "TEXT",
+          "nullable": false,
+          "description": "Amazon DSP line item identifier. A line item is an ad group in the new Amazon DSP naming."
+        },
+        {
+          "name": "dsp_line_item_name",
+          "type": "TEXT",
+          "nullable": true,
+          "description": "Amazon DSP line item (ad group) name."
+        },
+        {
+          "name": "region",
+          "type": "TEXT",
+          "nullable": true,
+          "description": "Region where the ad was delivered, as a name reported by Amazon DSP. Names have no country or code and may refer to regions in different countries. Repeated names are combined. Unallocated or null when Amazon could not attribute a region."
+        },
+        {
+          "name": "ad_currency",
+          "type": "TEXT",
+          "nullable": true,
+          "description": "Currency of all monetary Amazon DSP values in the row (order currency)."
+        },
+        {
+          "name": "ad_impressions",
+          "type": "NUMBER",
+          "nullable": false,
+          "description": "Amazon DSP impressions after Amazon removed invalid traffic. Gross impressions, including invalid traffic, are ad_gross_impressions."
+        },
+        {
+          "name": "ad_viewable_impressions",
+          "type": "NUMBER",
+          "nullable": false,
+          "description": "Impressions that met the Amazon DSP viewability standard."
+        },
+        {
+          "name": "ad_clicks",
+          "type": "NUMBER",
+          "nullable": false,
+          "description": "Amazon DSP click-throughs after Amazon removed invalid traffic."
+        },
+        {
+          "name": "ad_spend",
+          "type": "NUMBER",
+          "nullable": false,
+          "description": "Amazon DSP totalCost: supply cost plus Amazon fees (ad_supply_cost + ad_fees_total), excluding third-party fees paid by the agency. In ad_currency."
+        },
+        {
+          "name": "ad_agency_fee",
+          "type": "NUMBER",
+          "nullable": false,
+          "description": "Agency fee reported by Amazon DSP. In ad_currency."
+        },
+        {
+          "name": "ad_sales",
+          "type": "NUMBER",
+          "nullable": false,
+          "description": "Attributed sales (DSP totalSales). Promoted ASINs plus brand halo (non-promoted ASINs of the same brands). Amazon DSP 14-day attribution after an ad view or click. In ad_currency."
+        },
+        {
+          "name": "ad_sales_promoted",
+          "type": "NUMBER",
+          "nullable": false,
+          "description": "Attributed sales (DSP sales). Promoted ASINs of the line item only, excluding brand halo. Amazon DSP 14-day attribution after an ad view or click. In ad_currency."
+        },
+        {
+          "name": "ad_orders",
+          "type": "NUMBER",
+          "nullable": false,
+          "description": "Attributed purchases (DSP totalPurchases). Promoted ASINs plus brand halo (non-promoted ASINs of the same brands). Amazon DSP 14-day attribution after an ad view or click."
+        },
+        {
+          "name": "ad_orders_promoted",
+          "type": "NUMBER",
+          "nullable": false,
+          "description": "Attributed purchases (DSP purchases). Promoted ASINs of the line item only, excluding brand halo. Amazon DSP 14-day attribution after an ad view or click."
+        },
+        {
+          "name": "ad_units_sold",
+          "type": "NUMBER",
+          "nullable": false,
+          "description": "Attributed units sold (DSP totalUnitsSold). Promoted ASINs plus brand halo (non-promoted ASINs of the same brands). Amazon DSP 14-day attribution after an ad view or click."
+        },
+        {
+          "name": "ad_units_sold_promoted",
+          "type": "NUMBER",
+          "nullable": false,
+          "description": "Attributed units sold (DSP unitsSold). Promoted ASINs of the line item only, excluding brand halo. Amazon DSP 14-day attribution after an ad view or click."
+        },
+        {
+          "name": "ad_sales_new_to_brand",
+          "type": "NUMBER",
+          "nullable": false,
+          "description": "New-to-brand sales (DSP totalNewToBrandSales): sales to customers who did not buy the brand in the past 12 months. Promoted ASINs plus brand halo (non-promoted ASINs of the same brands). Amazon DSP 14-day attribution after an ad view or click. In ad_currency."
+        },
+        {
+          "name": "ad_sales_new_to_brand_promoted",
+          "type": "NUMBER",
+          "nullable": false,
+          "description": "New-to-brand sales (DSP newToBrandProductSales). Promoted ASINs of the line item only, excluding brand halo. Amazon DSP 14-day attribution after an ad view or click. In ad_currency."
+        },
+        {
+          "name": "ad_orders_new_to_brand",
+          "type": "NUMBER",
+          "nullable": false,
+          "description": "New-to-brand purchases (DSP totalNewToBrandPurchases). Promoted ASINs plus brand halo (non-promoted ASINs of the same brands). Amazon DSP 14-day attribution after an ad view or click."
+        },
+        {
+          "name": "ad_orders_new_to_brand_promoted",
+          "type": "NUMBER",
+          "nullable": false,
+          "description": "New-to-brand purchases (DSP newToBrandPurchases). Promoted ASINs of the line item only, excluding brand halo. Amazon DSP 14-day attribution after an ad view or click."
+        },
+        {
+          "name": "ad_detail_page_views",
+          "type": "NUMBER",
+          "nullable": false,
+          "description": "Attributed detail page views (DSP totalDetailPageView). Promoted ASINs plus brand halo (non-promoted ASINs of the same brands). Amazon DSP 14-day attribution after an ad view or click."
+        },
+        {
+          "name": "ad_detail_page_views_promoted",
+          "type": "NUMBER",
+          "nullable": false,
+          "description": "Attributed detail page views (DSP detailPageViews). Promoted ASINs of the line item only, excluding brand halo. Amazon DSP 14-day attribution after an ad view or click."
+        },
+        {
+          "name": "ad_add_to_cart",
+          "type": "NUMBER",
+          "nullable": false,
+          "description": "Attributed add-to-cart events (DSP totalAddToCart). Promoted ASINs plus brand halo (non-promoted ASINs of the same brands). Amazon DSP 14-day attribution after an ad view or click."
+        },
+        {
+          "name": "ad_add_to_cart_promoted",
+          "type": "NUMBER",
+          "nullable": false,
+          "description": "Attributed add-to-cart events (DSP addToCart). Promoted ASINs of the line item only, excluding brand halo. Amazon DSP 14-day attribution after an ad view or click."
+        },
+        {
+          "name": "ad_gross_impressions",
+          "type": "NUMBER",
+          "nullable": false,
+          "description": "Times the ad was displayed, including invalid traffic (fraudulent, non-human, and other illegitimate impressions). ad_impressions excludes that traffic."
+        },
+        {
+          "name": "ad_invalid_impressions",
+          "type": "NUMBER",
+          "nullable": false,
+          "description": "Impressions removed by the traffic quality filter. Not included in ad_impressions."
+        },
+        {
+          "name": "kindle_edition_normalized_pages_read",
+          "type": "NUMBER",
+          "nullable": true,
+          "description": "Kindle Edition Normalized Pages (KENP) read, attributed to the ad. A page count, not money. Amazon DSP reports no attribution window for Kindle metrics. Null when the report has no value."
+        },
+        {
+          "name": "kindle_edition_normalized_pages_read_from_clicks",
+          "type": "NUMBER",
+          "nullable": true,
+          "description": "Part of kindle_edition_normalized_pages_read attributed to ad clicks. Amazon DSP reports no attribution window for Kindle metrics. Null when the report has no value."
+        },
+        {
+          "name": "kindle_edition_normalized_pages_read_from_views",
+          "type": "NUMBER",
+          "nullable": true,
+          "description": "Part of kindle_edition_normalized_pages_read attributed to ad views. Amazon DSP reports no attribution window for Kindle metrics. Null when the report has no value."
+        },
+        {
+          "name": "ad_kindle_detail_page_views",
+          "type": "NUMBER",
+          "nullable": true,
+          "description": "Attributed Kindle detail page views (DSP kindleDetailPageView). Amazon DSP reports no attribution window for Kindle metrics. Null when the report has no value."
+        },
+        {
+          "name": "ad_kindle_detail_page_views_from_clicks",
+          "type": "NUMBER",
+          "nullable": true,
+          "description": "Part of ad_kindle_detail_page_views attributed to ad clicks. Amazon DSP reports no attribution window for Kindle metrics. Null when the report has no value."
+        },
+        {
+          "name": "ad_kindle_detail_page_views_from_views",
+          "type": "NUMBER",
+          "nullable": true,
+          "description": "Part of ad_kindle_detail_page_views attributed to ad views. Amazon DSP reports no attribution window for Kindle metrics. Null when the report has no value."
+        }
+      ],
+      "userManaged": false,
+      "isPremium": false,
+      "defaultDataset": false,
+      "enabled": true,
+      "rowCountBilling": true,
+      "description": "Amazon DSP performance per advertiser, date, order, line item, and reported region label. Amazon DSP only (DataDoe DSP slot of a seller or vendor), refreshed once a day, not intraday. Rows map to a seller or vendor through seller_or_vendor_id, which is null when the DSP advertiser is not mapped. DSP order = campaign and line item = ad group in the new Amazon DSP naming. Region names are not qualified by country. Rows with the same name are combined, including regions in different countries. Use amazon_ads_dsp_performance_by_country_by_date to analyze delivery outside a country. Region, country and city are alternative breakdowns of the same delivery; never add them together.",
+      "requiresDatePeriod": true,
+      "issues": [],
+      "fetchPeriods": [
+        {
+          "type": "INITIAL",
+          "numberOfDays": 28
+        },
+        {
+          "type": "RECURRING_DAILY",
+          "numberOfDays": 7
+        },
+        {
+          "type": "RECURRING_MONTHLY",
+          "numberOfDays": 28
+        }
+      ],
+      "sources": [
+        "connections",
+        "raw_ads_api_report_geo_region_dsp"
+      ],
+      "containsPii": false,
+      "initialLoadProgress": null,
+      "searchAliases": [
+        "dsp",
+        "amazon dsp",
+        "dsp geo",
+        "dsp region",
+        "delivery region",
+        "dsp state",
+        "dsp province"
       ]
     },
     {

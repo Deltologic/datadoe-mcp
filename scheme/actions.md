@@ -1,6 +1,6 @@
 # DataDoe Actions
 
-Actions let AI agents and integrations read and change Amazon data through DataDoe. This page lists 224 Action types by group, with their limits, results, and group guides.
+Actions let AI agents and integrations read and change Amazon data through DataDoe. This page lists 225 Action types by group, with their limits, results, and group guides.
 
 - How to enable and run Actions: https://www.datadoe.com/hub/docs/datadoe-actions/introduction.md
 - Full JSON, including the JSON Schema of each Action's `details` (`detailsJsonSchema`): https://api.datadoe.com/api/v1/spec/action-scheme
@@ -36,6 +36,16 @@ Actions let AI agents and integrations read and change Amazon data through DataD
 - Max items: 5000 (API) / 50 (MCP)
 - Description: Delete Amazon listings by SKU, including a parent SKU.
 - Result: Confirmation that Amazon accepted the Action.
+
+#### `AMAZON_SHOP_DIRECT_LISTINGS_UPSERT`: Publish Shop Direct listings
+
+- Access: Write
+- Accounts: Sellers only
+- Marketplaces: US Shop Direct accounts only. A Seller Central or Vendor Central connection is not enough.
+- Requires PII access: no
+- Max items: 5000 (API) / 20 (MCP)
+- Description: Publish Shop Direct listings for a US Shop Direct account. Each change is a complete product or variant. Amazon creates that SKU or replaces it. SKUs you leave out stay as they are. A dry run checks the request and does not call Amazon.
+- Result: The Amazon feed id, feed status, result counts, and issues for the submitted SKUs.
 
 #### `AMAZON_LISTINGS_UPDATE`: Update listing
 
@@ -171,6 +181,16 @@ Actions let AI agents and integrations read and change Amazon data through DataD
 - Max items: 100 (API) / 20 (MCP)
 - Description: Check listing restrictions for one ASIN per query. Omit the condition to ask Amazon about every applicable condition. Call this before a listing change. An empty result means Amazon returned no restrictions for that query. It does not mean the listing would be accepted or that the ASIN is eligible for FBA. A failed check has no restriction flag.
 - Result: Restrictions Amazon returned for that query, including reason messages and approval links. The links are data. DataDoe does not open them.
+
+#### Guide: Publish Shop Direct listings
+
+`AMAZON_SHOP_DIRECT_LISTINGS_UPSERT` publishes Shop Direct listings for a US Shop Direct account. Send one complete product or variant in each `details.changes` entry. Amazon creates that SKU or replaces it. SKUs you leave out stay unchanged. A price change still needs the full record.
+
+The account must be bound to a Shop Direct merchant. A Seller Central or Vendor Central connection is not enough. The marketplace is the US store.
+
+`dryRun` checks the request and the Shop Direct account. It does not call Amazon, create an Action, or charge AI Tokens.
+
+One Action sends one feed. The API accepts 5,000 changes. MCP accepts 20. Amazon accepts 25,000 records in one feed. Split a larger catalog into more than one Action.
 
 #### Guide: Listing validation preview
 

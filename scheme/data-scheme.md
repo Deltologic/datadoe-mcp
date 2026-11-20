@@ -6,7 +6,7 @@ DataDoe syncs Amazon Seller Central, Vendor Central and Amazon Ads data into rea
 - Have a DataDoe account? Connect the DataDoe MCP and use `exports_sources_get` / `exports_source_get` — they return the tables available for your connected accounts.
 - Interactive explorer: https://www.datadoe.com/hub/data-scheme
 
-## Seller Central (102 tables)
+## Seller Central (103 tables)
 
 ### Profit by SKU & Date
 
@@ -255,6 +255,14 @@ FBA replacement shipments with original and replacement order references.
 - Markdown: data-scheme/amazon_fba_restock_recommendations.md
 
 FBA restock recommendations with inventory levels, sales velocity, and replenishment guidance stored as daily snapshots.
+
+### FBA Inbound Performance
+
+- Table name: `amazon_fba_inbound_performance`
+- Columns: 42
+- Markdown: data-scheme/amazon_fba_inbound_performance.md
+
+FBA shipment problems from Amazon's FBA Inbound Performance report. Each row is one problem on one collected report. DataDoe requests the report at 2am and 1pm in the marketplace time zone. Each request asks for problems reported in the previous 120 days. Amazon may return the same file, because it generates this report at most every 4 hours. Rows appear after Amazon generates the file and after DataDoe imports and exports it. Each collected file is kept. History starts with the first collected file. Use is_latest_daily_snapshot for the latest file of a local day, and is_latest_snapshot for the current file. A missing row is not a resolved problem.
 
 ### Remote Fulfillment Eligibility
 
@@ -1258,7 +1266,7 @@ WePay/collect Vendor Retail Procurement shipments (submitted or requested for ro
 
 Lookup of DataDoe Amazon accounts for Seller Central, Vendor Central, Amazon Ads, and Amazon DSP. One row per connection, plus one row per Amazon DSP advertiser mapped to a seller or vendor on a shared agency Ads account. A DSP-only agency seat is not its own seller. seller_or_vendor_id equals connection_context_id and is not unique: one context can have a Seller Central row, an Amazon Ads row, and one row per DSP advertiser. Join Seller Central and Vendor Central facts on sp_connection_id or vendor_connection_id. Attribute DSP facts on organization_id, store_id, ads_dsp_connection_id, and dsp_advertiser_id.
 
-## Amazon Ads (83 tables)
+## Amazon Ads (84 tables)
 
 ### Ad Performance by ASIN & Date
 
@@ -1307,6 +1315,14 @@ Amazon DSP performance per advertiser, date, order, line item, and city. Amazon 
 - Markdown: data-scheme/amazon_ads_dsp_performance_by_country_by_date.md
 
 Amazon DSP performance per advertiser, date, order, line item, and delivery country. Amazon DSP only (DataDoe DSP slot of a seller or vendor), refreshed once a day, not intraday. Rows map to a seller or vendor through seller_or_vendor_id, which is null when the DSP advertiser is not mapped. DSP order = campaign and line item = ad group in the new Amazon DSP naming. country is where the ad was delivered and can differ from marketplace_country_code, the marketplace of the seller or vendor; filter on country to find line items that deliver outside their marketplace. Country and city rows break down the same delivery, so never add them together.
+
+### DSP Performance by Region & Date
+
+- Table name: `amazon_ads_dsp_performance_by_region_by_date`
+- Columns: 45
+- Markdown: data-scheme/amazon_ads_dsp_performance_by_region_by_date.md
+
+Amazon DSP performance per advertiser, date, order, line item, and reported region label. Amazon DSP only (DataDoe DSP slot of a seller or vendor), refreshed once a day, not intraday. Rows map to a seller or vendor through seller_or_vendor_id, which is null when the DSP advertiser is not mapped. DSP order = campaign and line item = ad group in the new Amazon DSP naming. Region names are not qualified by country. Rows with the same name are combined, including regions in different countries. Use amazon_ads_dsp_performance_by_country_by_date to analyze delivery outside a country. Region, country and city are alternative breakdowns of the same delivery; never add them together.
 
 ### DSP Performance by Audience & Date
 
