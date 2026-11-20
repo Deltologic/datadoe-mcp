@@ -19,6 +19,11 @@
       "description": null,
       "guides": [
         {
+          "id": "shop-direct-listings",
+          "title": "Publish Shop Direct listings",
+          "markdown": "`AMAZON_SHOP_DIRECT_LISTINGS_UPSERT` publishes Shop Direct listings for a US Shop Direct account. Send one complete product or variant in each `details.changes` entry. Amazon creates that SKU or replaces it. SKUs you leave out stay unchanged. A price change still needs the full record.\n\nThe account must be bound to a Shop Direct merchant. A Seller Central or Vendor Central connection is not enough. The marketplace is the US store.\n\n`dryRun` checks the request and the Shop Direct account. It does not call Amazon, create an Action, or charge AI Tokens.\n\nOne Action sends one feed. The API accepts 5,000 changes. MCP accepts 20. Amazon accepts 25,000 records in one feed. Split a larger catalog into more than one Action."
+        },
+        {
           "id": "listing-validation-preview",
           "title": "Listing validation preview",
           "markdown": "`AMAZON_LISTINGS_CREATE_VERIFY`, `AMAZON_LISTINGS_UPDATE_VERIFY`, `AMAZON_LISTINGS_DETAILS_UPDATE_VERIFY`, and `AMAZON_LISTINGS_PRICING_UPDATE_VERIFY` call Amazon Listings Items with `mode=VALIDATION_PREVIEW`. Each call checks one SKU and returns Amazon status, submission ID, and issues. The preview does not create or change the listing. Amazon validation preview does not accept a merge. DataDoe previews a merge with replace and the same values. The write still sends merge.\n\nVERIFY Actions accept up to five distinct SKUs through the API or MCP. All changes for each SKU are sent together in one Amazon request. Update previews also keep the matching write Action’s total change limit: 5,000 through the API or 50 through MCP.\n\n`dryRun` is a different check. It validates the DataDoe request and does not submit the change. For create and details updates, `dryRun` also checks the product-type schema. A pricing dry run checks that schema when the change includes `productType`. A basic listing update dry run does not fetch it. A delete dry run checks the SKU list and does not call Amazon.\n\nTo check a listing before a write, run `dryRun`, then the matching VERIFY Action, then the write Action. Pricing preview is Seller Central only, matching `AMAZON_LISTINGS_PRICING_UPDATE`."
@@ -730,6 +735,254 @@
           "skus"
         ],
         "additionalProperties": false
+      }
+    },
+    {
+      "type": "AMAZON_SHOP_DIRECT_LISTINGS_UPSERT",
+      "label": "Publish Shop Direct listings",
+      "group": "listings",
+      "entity": "Listings",
+      "access": "WRITE",
+      "requiresPii": false,
+      "accountAvailability": "SELLERS_ONLY",
+      "marketplaceNote": "US Shop Direct accounts only. A Seller Central or Vendor Central connection is not enough.",
+      "maxItems": {
+        "api": 5000,
+        "mcp": 20
+      },
+      "description": "Publish Shop Direct listings for a US Shop Direct account. Each change is a complete product or variant. Amazon creates that SKU or replaces it. SKUs you leave out stay as they are. A dry run checks the request and does not call Amazon.",
+      "result": "The Amazon feed id, feed status, result counts, and issues for the submitted SKUs.",
+      "detailsJsonSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "changes": {
+            "minItems": 1,
+            "maxItems": 5000,
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "sku": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 50,
+                  "description": "Merchant SKU. DataDoe trims it and keeps its case. The same SKU replaces the existing Shop Direct item."
+                },
+                "title": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 150,
+                  "description": "Product title."
+                },
+                "description": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 5000,
+                  "description": "Product description."
+                },
+                "productUrl": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 2000,
+                  "description": "Storefront page for this item. DataDoe keeps the URL as submitted."
+                },
+                "imageUrl": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 2000,
+                  "description": "Main product image URL."
+                },
+                "price": {
+                  "type": "object",
+                  "properties": {
+                    "amount": {
+                      "type": "string",
+                      "pattern": "^(?:0|[1-9]\\d*)\\.\\d{2}$",
+                      "description": "Decimal amount in USD. DataDoe does not convert it through a floating-point number."
+                    },
+                    "currency": {
+                      "type": "string",
+                      "const": "USD",
+                      "description": "Currency. Shop Direct listings use USD."
+                    }
+                  },
+                  "required": [
+                    "amount",
+                    "currency"
+                  ],
+                  "additionalProperties": false,
+                  "description": "Price in US dollars."
+                },
+                "availability": {
+                  "type": "string",
+                  "enum": [
+                    "in_stock",
+                    "out_of_stock",
+                    "preorder",
+                    "backorder"
+                  ],
+                  "description": "Availability: in_stock, out_of_stock, preorder, or backorder."
+                },
+                "additionalImageUrls": {
+                  "description": "Extra image URLs, in display order. At most 10.",
+                  "maxItems": 10,
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 2000,
+                    "description": "Absolute http or https URL. DataDoe does not fetch it."
+                  }
+                },
+                "salePrice": {
+                  "description": "Sale price in USD. It must be lower than price. Omit it when the item is not on sale.",
+                  "type": "object",
+                  "properties": {
+                    "amount": {
+                      "type": "string",
+                      "pattern": "^(?:0|[1-9]\\d*)\\.\\d{2}$",
+                      "description": "Decimal amount in USD. DataDoe does not convert it through a floating-point number."
+                    },
+                    "currency": {
+                      "type": "string",
+                      "const": "USD",
+                      "description": "Currency. Shop Direct listings use USD."
+                    }
+                  },
+                  "required": [
+                    "amount",
+                    "currency"
+                  ],
+                  "additionalProperties": false
+                },
+                "availabilityDate": {
+                  "description": "Date the item becomes available. Required for preorder and backorder. Use an ISO date, or a time with a timezone.",
+                  "type": "string",
+                  "pattern": "^\\d{4}-\\d{2}-\\d{2}(?:T\\d{2}:\\d{2}(?::\\d{2})?(?:Z|[+-]\\d{2}:\\d{2})?)?$"
+                },
+                "condition": {
+                  "description": "Item condition: new, refurbished, or used.",
+                  "type": "string",
+                  "enum": [
+                    "new",
+                    "refurbished",
+                    "used"
+                  ]
+                },
+                "googleProductCategory": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 200,
+                  "description": "Google product category. Include the attributes Google requires for that category."
+                },
+                "productType": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 200,
+                  "description": "Your own product category. This is not an Amazon product type."
+                },
+                "brand": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 200,
+                  "description": "Product brand."
+                },
+                "gtin": {
+                  "description": "GTIN, UPC, EAN, or ISBN with a valid check digit.",
+                  "type": "string",
+                  "pattern": "^(?:\\d{8}|\\d{12}|\\d{13}|\\d{14})$"
+                },
+                "mpn": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 200,
+                  "description": "Manufacturer part number."
+                },
+                "identifierExists": {
+                  "description": "Set false when the item has no GTIN, brand, or MPN. Otherwise send a GTIN, or both a brand and an MPN.",
+                  "type": "boolean"
+                },
+                "variant": {
+                  "type": "object",
+                  "properties": {
+                    "itemGroupId": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 50,
+                      "description": "Shared id for listings in one variation family. The same value groups those SKUs."
+                    },
+                    "color": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 200,
+                      "description": "Variant color."
+                    },
+                    "size": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 200,
+                      "description": "Variant size."
+                    },
+                    "material": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 200,
+                      "description": "Variant material."
+                    },
+                    "pattern": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 200,
+                      "description": "Variant pattern."
+                    },
+                    "ageGroup": {
+                      "description": "Variant age group: newborn, infant, toddler, kids, or adult.",
+                      "type": "string",
+                      "enum": [
+                        "newborn",
+                        "infant",
+                        "toddler",
+                        "kids",
+                        "adult"
+                      ]
+                    },
+                    "gender": {
+                      "description": "Variant gender: male, female, or unisex.",
+                      "type": "string",
+                      "enum": [
+                        "male",
+                        "female",
+                        "unisex"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "itemGroupId"
+                  ],
+                  "additionalProperties": false,
+                  "description": "Variation family. Omit variant for a standalone item. A grouped item needs itemGroupId and one supported attribute."
+                }
+              },
+              "required": [
+                "sku",
+                "title",
+                "description",
+                "productUrl",
+                "imageUrl",
+                "price",
+                "availability"
+              ],
+              "additionalProperties": false,
+              "description": "One complete Shop Direct product or variant. Amazon creates the SKU or replaces that SKU. A price-only edit still needs the complete record."
+            }
+          }
+        },
+        "required": [
+          "changes"
+        ],
+        "additionalProperties": false,
+        "description": "Shop Direct listings to create or replace. Each change is one SKU. Omitted SKUs are left unchanged. Shipping, returns, destinations, and campaign fields are not accepted."
       }
     },
     {
