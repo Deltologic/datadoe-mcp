@@ -37480,7 +37480,7 @@
         },
         {
           "type": "RECURRING_DAILY",
-          "numberOfDays": 7
+          "numberOfDays": 15
         },
         {
           "type": "RECURRING_MONTHLY",
