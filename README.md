@@ -294,11 +294,24 @@ If your Organization uses its own domain prefix, copy the full server URL from t
 | `amc_operation_get` | Amazon Marketing Cloud | Returns the status of an AMC operation. |
 | `amc_query_templates_find` | Amazon Marketing Cloud | Lists ready-made AMC query templates. |
 | `amc_query_template_get` | Amazon Marketing Cloud | Returns one AMC query template. |
+| `studio_get` | DataDoe Studio | Returns whether Studio is set up, what to do next and its limits. |
+| `studio_solutions_create` | DataDoe Studio | Builds a new Flow or Agent from your description. |
+| `studio_solutions_list` | DataDoe Studio | Lists your Flows and Agents. |
+| `studio_solutions_get` | DataDoe Studio | Returns one Flow or Agent, with its trigger and input and output schemas. |
+| `studio_solutions_configure` | DataDoe Studio | Pauses or resumes a Flow or Agent, or changes how it starts. |
+| `studio_solutions_update` | DataDoe Studio | Changes a Flow or Agent from your description. |
+| `studio_solutions_delete` | DataDoe Studio | Deletes a Flow or Agent. |
+| `studio_jobs_get` | DataDoe Studio | Returns the status of a build, change or delete. |
+| `studio_solutions_execute` | DataDoe Studio | Runs a Flow or Agent. |
+| `studio_executions_get` | DataDoe Studio | Returns the status and result of a run. |
+| `studio_executions_list` | DataDoe Studio | Lists the runs of a Flow or Agent. |
 | `datadoe_support_ticket_create` | Support | Sends a request to DataDoe support. |
 | `datadoe_support_ticket_check` | Support | Reads a support request and its reply. |
 | `datadoe_support_ticket_update` | Support | Adds information to a support request. |
 
 The [tool definitions file](scheme/mcp-tools.json) has the input and output schema of every tool. Amazon Marketing Cloud (AMC) is in beta. Read the [Amazon Marketing Cloud guide](https://www.datadoe.com/hub/docs/datadoe-features/amc).
+
+DataDoe Studio is coming soon. Until it is available for your Organization, the Studio tools tell you how to join the beta waiting list.
 
 ---
 

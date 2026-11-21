@@ -1184,9 +1184,29 @@
                 ]
               },
               "historicalDataStillLoadingNotice": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "failureReason": {
+                "description": "Set when status is ERROR for a reason the request can fix, such as a scan limit. Follow its message, then create a new export.",
                 "anyOf": [
                   {
-                    "type": "string"
+                    "type": "object",
+                    "properties": {
+                      "code": {
+                        "type": "string"
+                      },
+                      "message": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "code",
+                      "message"
+                    ],
+                    "additionalProperties": false
                   },
                   {
                     "type": "null"
@@ -1403,9 +1423,29 @@
                 ]
               },
               "historicalDataStillLoadingNotice": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "failureReason": {
+                "description": "Set when status is ERROR for a reason the request can fix, such as a scan limit. Follow its message, then create a new export.",
                 "anyOf": [
                   {
-                    "type": "string"
+                    "type": "object",
+                    "properties": {
+                      "code": {
+                        "type": "string"
+                      },
+                      "message": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "code",
+                      "message"
+                    ],
+                    "additionalProperties": false
                   },
                   {
                     "type": "null"
@@ -1940,7 +1980,7 @@
     {
       "name": "actions_details_schema_get",
       "title": "Get details schema for starting an Action",
-      "description": "Returns the JSON Schema for the `details` object of a given action type required to start an Action, plus its access mode (READ or WRITE), whether it always requires Organization and principal PII access (requiresPii), whether that Action type is enabled for the Organization, and start tool (actions_start). When enabled is false, an Organization owner enables this Action type in the DataDoe app under Settings > Actions. A live start is rejected until then. A request with dryRun set to true still validates the payload. When requiresPii is true, the Action request, result, or generated documents contain personal data (PII). actions_start rejects it, including dryRun, unless PII access is enabled for the Organization and the principal has data.pii permission. DataDoe enables PII access on request. Conditional checks also apply when requiresPii is false: AMAZON_ORDERS_FIND with BUYER, RECIPIENT, or TAX includedData; AMAZON_MCF_DELIVERY_OFFERS_PREVIEW with a destination deliveryAddress or ipAddress; and AMAZON_FBA_REMOVAL_ORDERS_ADD with a return removalDisposition. Seller Central accounts support non-Ads listing, order, FBA, A+, and MCF action types. For accountType VENDOR (Vendor Central), non-Ads actions are limited to AMAZON_LISTINGS_UPDATE, AMAZON_LISTINGS_UPDATE_VERIFY, AMAZON_LISTINGS_DETAILS_UPDATE, AMAZON_LISTINGS_DETAILS_UPDATE_VERIFY, AMAZON_LISTINGS_CREATE, AMAZON_LISTINGS_CREATE_VERIFY, AMAZON_LISTINGS_DELETE, AMAZON_LISTINGS_FIND, AMAZON_LISTINGS_PRODUCT_TYPES_FIND, AMAZON_LISTINGS_PRODUCT_TYPE_SUGGEST, AMAZON_LISTINGS_PRODUCT_TYPE_DEFINITION_FIND, AMAZON_APLUS_CONTENT_*, AMAZON_APLUS_MEDIA_*, AMAZON_SHIPMENT_TRACKING_SUBSCRIBE (US Tracking API only), and AMAZON_VENDOR_* purchase order Actions (Retail Procurement and Direct Fulfillment acknowledgements, shipments, labels, packing slips, invoices, and transaction status). AMAZON_VENDOR_DF_SHIPPING_LABELS_CREATE, AMAZON_VENDOR_DF_SHIPPING_LABEL_GET, AMAZON_VENDOR_DF_PACKING_SLIP_GET, and AMAZON_VENDOR_DF_CUSTOMER_INVOICE_GET require PII access. AMAZON_VENDOR_DF_CUSTOMER_INVOICE_GET is India only. Vendor Central rejects order, FBA, MCF, AMAZON_LISTINGS_RESTRICTIONS_FIND, AMAZON_LISTINGS_PRICING_UPDATE, AMAZON_LISTINGS_FEES_ESTIMATE, AMAZON_LISTINGS_FEATURED_PRICE_ESTIMATE, AMAZON_LISTINGS_COMPETITIVE_SUMMARY_FIND, AMAZON_FINANCES_BALANCES_FIND, AMAZON_FINANCES_PAYOUTS_FIND, AMAZON_FINANCES_EXPECTED_PAYOUTS_FIND, AMAZON_ACTION_ITEMS_FIND, AMAZON_ACTION_ITEMS_GET, AMAZON_ACTION_ITEMS_DISMISS, AMAZON_ACTION_PLANS_FIND, AMAZON_ACTION_PLANS_GET, AMAZON_ACTION_PLANS_PREVIEW, AMAZON_ACTION_PLANS_ADD, and any other unlisted non-Ads action type. Amazon Ads action types apply to any Seller or Vendor with amazonAdsConnection, including accountType ADS_ONLY. If the action or feature you need is not found, you can open a ticket to the DataDoe team with datadoe_support_ticket_create. Group items into one Action. A standard read Action costs 0.5 AI Tokens for up to 100 items, then 0.25 AI Tokens for each additional 100 items. A standard write Action costs 3 AI Tokens for up to 100 items, then 1 AI Token for each additional 100 items. Each separate Action pays the starting price again. A dry run does not spend AI Tokens. FBA inbound Actions have fixed prices of 0.1 AI Token per read Action and 0.3 AI Token per write Action, regardless of item or shipment count. Campaign, ad group, target, ad, ad association, ad extension, portfolio, brand, and communication FIND Actions count as 1 item per call. Per-audience AMC prices and free AMC audience Actions stay the same. When a FIND Action's entity is in the DataDoe data scheme, use an Export or a BigQuery query. Use FIND only when you need live Amazon data that the warehouse does not have yet. One standard Export costs 2 AI Tokens. One integrated BigQuery query costs 0.2 AI Tokens. Compare the total cost of repeated FIND Actions with one Export or query.",
+      "description": "Returns the JSON Schema for the `details` object of a given action type required to start an Action, plus its access mode (READ or WRITE), whether it always requires Organization and principal PII access (requiresPii), whether that Action type is enabled for the Organization, and start tool (actions_start). It also returns the Action type documentation: description, result, group, item limit, and group guides. To browse Action types by group, read the 'Action types: <group>' pages of datadoe_user_docs_table_of_contents_get. When enabled is false, an Organization owner enables this Action type in the DataDoe app under Settings > Actions. A live start is rejected until then. A request with dryRun set to true still validates the payload. When requiresPii is true, the Action request, result, or generated documents contain personal data (PII). actions_start rejects it, including dryRun, unless PII access is enabled for the Organization and the principal has data.pii permission. DataDoe enables PII access on request. A conditional check also applies when requiresPii is false: AMAZON_ORDERS_FIND with BUYER, RECIPIENT, or TAX includedData. MCF, FBA inbound, FBA removal order, and Buy Shipping (AMAZON_ORDERS_GET_SHIPPING_RATES, AMAZON_ORDERS_GET_SHIPPING_ADDITIONAL_INPUTS, AMAZON_ORDERS_CREATE_SHIPMENT, AMAZON_ORDERS_GET_SHIPMENT_DOCS) Actions do not require PII access. Seller Central accounts support non-Ads listing, order, FBA, A+, and MCF action types. For accountType VENDOR (Vendor Central), non-Ads actions are limited to AMAZON_LISTINGS_UPDATE, AMAZON_LISTINGS_UPDATE_VERIFY, AMAZON_LISTINGS_DETAILS_UPDATE, AMAZON_LISTINGS_DETAILS_UPDATE_VERIFY, AMAZON_LISTINGS_CREATE, AMAZON_LISTINGS_CREATE_VERIFY, AMAZON_LISTINGS_DELETE, AMAZON_LISTINGS_FIND, AMAZON_LISTINGS_PRODUCT_TYPES_FIND, AMAZON_LISTINGS_PRODUCT_TYPE_SUGGEST, AMAZON_LISTINGS_PRODUCT_TYPE_DEFINITION_FIND, AMAZON_APLUS_CONTENT_*, AMAZON_APLUS_MEDIA_*, AMAZON_SHIPMENT_TRACKING_SUBSCRIBE and AMAZON_SHIPMENT_TRACKING_GET (US Tracking API only), and AMAZON_VENDOR_* purchase order Actions (Retail Procurement and Direct Fulfillment acknowledgements, shipments, labels, packing slips, invoices, and transaction status). AMAZON_VENDOR_DF_SHIPPING_LABELS_CREATE, AMAZON_VENDOR_DF_SHIPPING_LABEL_GET, AMAZON_VENDOR_DF_PACKING_SLIP_GET, and AMAZON_VENDOR_DF_CUSTOMER_INVOICE_GET require PII access. AMAZON_VENDOR_DF_CUSTOMER_INVOICE_GET is India only. Vendor Central rejects order, FBA, MCF, AMAZON_SHOP_DIRECT_LISTINGS_UPSERT, AMAZON_LISTINGS_RESTRICTIONS_FIND, AMAZON_LISTINGS_PRICING_UPDATE, AMAZON_LISTINGS_FEES_ESTIMATE, AMAZON_LISTINGS_FEATURED_PRICE_ESTIMATE, AMAZON_LISTINGS_COMPETITIVE_SUMMARY_FIND, AMAZON_FINANCES_BALANCES_FIND, AMAZON_FINANCES_PAYOUTS_FIND, AMAZON_FINANCES_EXPECTED_PAYOUTS_FIND, AMAZON_ACTION_ITEMS_FIND, AMAZON_ACTION_ITEMS_GET, AMAZON_ACTION_ITEMS_DISMISS, AMAZON_ACTION_PLANS_FIND, AMAZON_ACTION_PLANS_GET, AMAZON_ACTION_PLANS_PREVIEW, AMAZON_ACTION_PLANS_ADD, and any other unlisted non-Ads action type. Amazon Ads action types apply to any Seller or Vendor with amazonAdsConnection, including accountType ADS_ONLY. If the action or feature you need is not found, you can open a ticket to the DataDoe team with datadoe_support_ticket_create. Group items into one Action. A standard read Action costs 0.5 AI Tokens for up to 100 items, then 0.25 AI Tokens for each additional 100 items. A standard write Action costs 3 AI Tokens for up to 100 items, then 1 AI Token for each additional 100 items. Each separate Action pays the starting price again. A dry run does not spend AI Tokens. FBA inbound Actions have fixed prices of 0.1 AI Token per read Action and 0.3 AI Token per write Action, regardless of item or shipment count. Campaign, ad group, target, ad, ad association, ad extension, portfolio, brand, and communication FIND Actions count as 1 item per call. Per-audience AMC prices and free AMC audience Actions stay the same. When a FIND Action's entity is in the DataDoe data scheme, use an Export or a BigQuery query. Use FIND only when you need live Amazon data that the warehouse does not have yet. One standard Export costs 2 AI Tokens. One integrated BigQuery query costs 0.2 AI Tokens. Compare the total cost of repeated FIND Actions with one Export or query.",
       "inputSchema": {
         "type": "object",
         "properties": {
@@ -2015,6 +2055,7 @@
               "AMAZON_LISTINGS_DETAILS_UPDATE",
               "AMAZON_LISTINGS_CREATE",
               "AMAZON_LISTINGS_DELETE",
+              "AMAZON_SHOP_DIRECT_LISTINGS_UPSERT",
               "AMAZON_LISTINGS_CREATE_VERIFY",
               "AMAZON_LISTINGS_UPDATE_VERIFY",
               "AMAZON_LISTINGS_DETAILS_UPDATE_VERIFY",
@@ -2023,6 +2064,7 @@
               "AMAZON_LISTINGS_FEES_ESTIMATE",
               "AMAZON_LISTINGS_FEATURED_PRICE_ESTIMATE",
               "AMAZON_LISTINGS_COMPETITIVE_SUMMARY_FIND",
+              "AMAZON_LISTINGS_PRICING_FIND",
               "AMAZON_LISTINGS_PRODUCT_TYPES_FIND",
               "AMAZON_LISTINGS_PRODUCT_TYPE_SUGGEST",
               "AMAZON_LISTINGS_PRODUCT_TYPE_DEFINITION_FIND",
@@ -2137,6 +2179,7 @@
               "AMAZON_MCF_RETURNS_REASON_CODES_FIND",
               "AMAZON_MCF_RETURNS_ADD",
               "AMAZON_SHIPMENT_TRACKING_SUBSCRIBE",
+              "AMAZON_SHIPMENT_TRACKING_GET",
               "AMAZON_VENDOR_PURCHASE_ORDERS_ACKNOWLEDGE",
               "AMAZON_VENDOR_SHIPMENTS_SUBMIT",
               "AMAZON_VENDOR_SHIPMENT_CONFIRMATIONS_SUBMIT",
@@ -2228,6 +2271,89 @@
                     "type": "boolean",
                     "description": "True when this Action type is enabled for the Organization. When enabled is false, an Organization owner enables this Action type in the DataDoe app under Settings > Actions. A live start is rejected until then. A request with dryRun set to true still validates the payload."
                   },
+                  "label": {
+                    "type": "string"
+                  },
+                  "summary": {
+                    "type": "string"
+                  },
+                  "description": {
+                    "description": "Markdown.",
+                    "type": "string"
+                  },
+                  "result": {
+                    "description": "Markdown description of a finished Action result.",
+                    "type": "string"
+                  },
+                  "group": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string"
+                      },
+                      "label": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "label"
+                    ],
+                    "additionalProperties": false
+                  },
+                  "entity": {
+                    "type": "string"
+                  },
+                  "accountAvailability": {
+                    "type": "string",
+                    "enum": [
+                      "SELLERS_AND_VENDORS",
+                      "SELLERS_ONLY",
+                      "VENDORS_ONLY"
+                    ]
+                  },
+                  "marketplaceNote": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "maxItems": {
+                    "description": "Item limit of one MCP request; null when each call counts as one item.",
+                    "anyOf": [
+                      {
+                        "type": "integer",
+                        "exclusiveMinimum": 0,
+                        "maximum": 9007199254740991
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "guides": {
+                    "description": "Group guides; their content is on the docsPageName page.",
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "title": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "title"
+                      ],
+                      "additionalProperties": false
+                    }
+                  },
+                  "docsPageName": {
+                    "description": "datadoe_user_docs_page_get page with every Action type of the group and its guides.",
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
                   "jsonSchema": {
                     "description": "JSON Schema for the details object passed to actions_start."
                   }
@@ -2273,7 +2399,7 @@
     {
       "name": "actions_start",
       "title": "Start an Action",
-      "description": "Starts a READ or WRITE Action for a selected Seller or Vendor. Live Actions create tracked jobs and incur usage charges. Optional caller key, recommended for live writes and retries. Scoped to the Organization and principal. The same key and request return the original Action, including failures; a different request conflicts. Replayed reads are not fresh. Dry runs do not reserve keys. Receipts do not expire automatically; purged results return 410. Use a UUID or stable operation ID without credentials or personal data. Group items into one Action. A standard read Action costs 0.5 AI Tokens for up to 100 items, then 0.25 AI Tokens for each additional 100 items. A standard write Action costs 3 AI Tokens for up to 100 items, then 1 AI Token for each additional 100 items. Each separate Action pays the starting price again. A dry run does not spend AI Tokens. FBA inbound Actions have fixed prices of 0.1 AI Token per read Action and 0.3 AI Token per write Action, regardless of item or shipment count. Campaign, ad group, target, ad, ad association, ad extension, portfolio, brand, and communication FIND Actions count as 1 item per call. Per-audience AMC prices and free AMC audience Actions stay the same. When a FIND Action's entity is in the DataDoe data scheme, use an Export or a BigQuery query. Use FIND only when you need live Amazon data that the warehouse does not have yet. One standard Export costs 2 AI Tokens. One integrated BigQuery query costs 0.2 AI Tokens. Compare the total cost of repeated FIND Actions with one Export or query. Seller Central accounts support non-Ads listing, order, FBA, A+, and MCF action types. For accountType VENDOR (Vendor Central), non-Ads actions are limited to AMAZON_LISTINGS_UPDATE, AMAZON_LISTINGS_UPDATE_VERIFY, AMAZON_LISTINGS_DETAILS_UPDATE, AMAZON_LISTINGS_DETAILS_UPDATE_VERIFY, AMAZON_LISTINGS_CREATE, AMAZON_LISTINGS_CREATE_VERIFY, AMAZON_LISTINGS_DELETE, AMAZON_LISTINGS_FIND, AMAZON_LISTINGS_PRODUCT_TYPES_FIND, AMAZON_LISTINGS_PRODUCT_TYPE_SUGGEST, AMAZON_LISTINGS_PRODUCT_TYPE_DEFINITION_FIND, AMAZON_APLUS_CONTENT_*, AMAZON_APLUS_MEDIA_*, AMAZON_SHIPMENT_TRACKING_SUBSCRIBE (US Tracking API only), and AMAZON_VENDOR_* purchase order Actions (Retail Procurement and Direct Fulfillment acknowledgements, shipments, labels, packing slips, invoices, and transaction status). AMAZON_VENDOR_DF_SHIPPING_LABELS_CREATE, AMAZON_VENDOR_DF_SHIPPING_LABEL_GET, AMAZON_VENDOR_DF_PACKING_SLIP_GET, and AMAZON_VENDOR_DF_CUSTOMER_INVOICE_GET require PII access. AMAZON_VENDOR_DF_CUSTOMER_INVOICE_GET is India only. Vendor Central rejects order, FBA, MCF, AMAZON_LISTINGS_RESTRICTIONS_FIND, AMAZON_LISTINGS_PRICING_UPDATE, AMAZON_LISTINGS_FEES_ESTIMATE, AMAZON_LISTINGS_FEATURED_PRICE_ESTIMATE, AMAZON_LISTINGS_COMPETITIVE_SUMMARY_FIND, AMAZON_FINANCES_BALANCES_FIND, AMAZON_FINANCES_PAYOUTS_FIND, AMAZON_FINANCES_EXPECTED_PAYOUTS_FIND, AMAZON_ACTION_ITEMS_FIND, AMAZON_ACTION_ITEMS_GET, AMAZON_ACTION_ITEMS_DISMISS, AMAZON_ACTION_PLANS_FIND, AMAZON_ACTION_PLANS_GET, AMAZON_ACTION_PLANS_PREVIEW, AMAZON_ACTION_PLANS_ADD, and any other unlisted non-Ads action type. Amazon Ads actions require amazonAdsConnection (accountType SELLER, VENDOR, or ADS_ONLY with Ads attached). Each action type has a specific details schema, which you can retrieve with the actions_details_schema_get tool. Check enabled on that result before a live start. A live start is rejected when the Action type is disabled for the Organization. A start, including dryRun, is rejected when the Action is disabled for the selected Seller or Vendor. Users also need access through their roles. An Organization owner enables the type in the DataDoe app under Settings > Actions. A live write Action is rejected when the Seller or Vendor access level is Read only. Read Actions can run with Read only access. Set the access level to Read and write on the Accounts page to run write Actions. The access mode comes from actions_details_schema_get. An Action with requiresPii true is rejected, including dryRun, unless PII access is enabled for the Organization and the principal has data.pii permission. AMAZON_MCF_DELIVERY_OFFERS_PREVIEW also requires PII access when destination includes deliveryAddress or ipAddress. AMAZON_FBA_REMOVAL_ORDERS_ADD requires it when any removalOrders item has removalDisposition return. You can validate the request without creating or queuing the action by setting dryRun=true. A request with dryRun set to true still validates a disabled Action type. Listing VERIFY Actions (AMAZON_LISTINGS_CREATE_VERIFY, AMAZON_LISTINGS_UPDATE_VERIFY, AMAZON_LISTINGS_DETAILS_UPDATE_VERIFY, and AMAZON_LISTINGS_PRICING_UPDATE_VERIFY) call Amazon Listings Items with mode=VALIDATION_PREVIEW and return status, submissionId, and issues. They do not submit the listing. Amazon validation preview does not accept merge. DataDoe previews a merge with replace and the same values. The write still sends merge. dryRun does not submit the listing. It checks the DataDoe request and, for create, details, and pricing changes that include productType, the product-type schema. Preview before a write by running dryRun, then the matching VERIFY Action, then the write Action. One SKU per Amazon call. Limits count distinct SKUs; all changes for a SKU are validated together. AMAZON_ORDERS_FIND and AMAZON_ORDERS_GET_METRICS are a live preview of current orders. For large volumes and long-term analysis, use Exports or a direct BigQuery integration, which also refresh during the day. AMAZON_ORDERS_FIND accepts one search per Action. Its marketplaceIds can include only marketplaces connected as Sellers in the same Organization for the same selling partner. AMAZON_ORDERS_GET_METRICS fills marketplaceIds from the connection and uses from and to instead of an interval string. For campaign, ad group, target, and ad FIND actions, adProductFilter.include must contain exactly one ad product type; use separate requests to query multiple product types. One ID filter (for example campaignIdFilter) in these FIND actions can have more than 100 IDs; DataDoe queries them in groups of 100, and you page with the returned nextToken and the same query. AMC audience Actions (AMAZON_ADS_AMC_AUDIENCES_*, AMAZON_ADS_AMC_LOOKALIKE_AUDIENCES_ADD) need AMC enabled for the Seller or Vendor. Amazon builds an audience asynchronously and lists it in Sponsored Ads about 24 to 48 hours after it SUCCEEDED; DataDoe does not attach it later, so poll AMAZON_ADS_AMC_AUDIENCES_FIND, then get the audienceId with AMAZON_ADS_TARGETABLE_AUDIENCES_FIND and attach it with AMAZON_ADS_CAMPAIGNS_UPDATE audienceBidAdjustments or AMAZON_ADS_TARGETS_ADD. Details, flows, and best practices for Actions are available in the Actions documentation.",
+      "description": "Starts a READ or WRITE Action for a selected Seller or Vendor. Live Actions create tracked jobs and incur usage charges. Optional caller key, recommended for live writes and retries. Scoped to the Organization and principal. The same key and request return the original Action, including failures; a different request conflicts. Replayed reads are not fresh. Dry runs do not reserve keys. Receipts do not expire automatically; purged results return 410. Use a UUID or stable operation ID without credentials or personal data. Group items into one Action. A standard read Action costs 0.5 AI Tokens for up to 100 items, then 0.25 AI Tokens for each additional 100 items. A standard write Action costs 3 AI Tokens for up to 100 items, then 1 AI Token for each additional 100 items. Each separate Action pays the starting price again. A dry run does not spend AI Tokens. FBA inbound Actions have fixed prices of 0.1 AI Token per read Action and 0.3 AI Token per write Action, regardless of item or shipment count. Campaign, ad group, target, ad, ad association, ad extension, portfolio, brand, and communication FIND Actions count as 1 item per call. Per-audience AMC prices and free AMC audience Actions stay the same. When a FIND Action's entity is in the DataDoe data scheme, use an Export or a BigQuery query. Use FIND only when you need live Amazon data that the warehouse does not have yet. One standard Export costs 2 AI Tokens. One integrated BigQuery query costs 0.2 AI Tokens. Compare the total cost of repeated FIND Actions with one Export or query. Seller Central accounts support non-Ads listing, order, FBA, A+, and MCF action types. For accountType VENDOR (Vendor Central), non-Ads actions are limited to AMAZON_LISTINGS_UPDATE, AMAZON_LISTINGS_UPDATE_VERIFY, AMAZON_LISTINGS_DETAILS_UPDATE, AMAZON_LISTINGS_DETAILS_UPDATE_VERIFY, AMAZON_LISTINGS_CREATE, AMAZON_LISTINGS_CREATE_VERIFY, AMAZON_LISTINGS_DELETE, AMAZON_LISTINGS_FIND, AMAZON_LISTINGS_PRODUCT_TYPES_FIND, AMAZON_LISTINGS_PRODUCT_TYPE_SUGGEST, AMAZON_LISTINGS_PRODUCT_TYPE_DEFINITION_FIND, AMAZON_APLUS_CONTENT_*, AMAZON_APLUS_MEDIA_*, AMAZON_SHIPMENT_TRACKING_SUBSCRIBE and AMAZON_SHIPMENT_TRACKING_GET (US Tracking API only), and AMAZON_VENDOR_* purchase order Actions (Retail Procurement and Direct Fulfillment acknowledgements, shipments, labels, packing slips, invoices, and transaction status). AMAZON_VENDOR_DF_SHIPPING_LABELS_CREATE, AMAZON_VENDOR_DF_SHIPPING_LABEL_GET, AMAZON_VENDOR_DF_PACKING_SLIP_GET, and AMAZON_VENDOR_DF_CUSTOMER_INVOICE_GET require PII access. AMAZON_VENDOR_DF_CUSTOMER_INVOICE_GET is India only. Vendor Central rejects order, FBA, MCF, AMAZON_SHOP_DIRECT_LISTINGS_UPSERT, AMAZON_LISTINGS_RESTRICTIONS_FIND, AMAZON_LISTINGS_PRICING_UPDATE, AMAZON_LISTINGS_FEES_ESTIMATE, AMAZON_LISTINGS_FEATURED_PRICE_ESTIMATE, AMAZON_LISTINGS_COMPETITIVE_SUMMARY_FIND, AMAZON_FINANCES_BALANCES_FIND, AMAZON_FINANCES_PAYOUTS_FIND, AMAZON_FINANCES_EXPECTED_PAYOUTS_FIND, AMAZON_ACTION_ITEMS_FIND, AMAZON_ACTION_ITEMS_GET, AMAZON_ACTION_ITEMS_DISMISS, AMAZON_ACTION_PLANS_FIND, AMAZON_ACTION_PLANS_GET, AMAZON_ACTION_PLANS_PREVIEW, AMAZON_ACTION_PLANS_ADD, and any other unlisted non-Ads action type. Amazon Ads actions require amazonAdsConnection (accountType SELLER, VENDOR, or ADS_ONLY with Ads attached). Each action type has a specific details schema, which you can retrieve with the actions_details_schema_get tool. Check enabled on that result before a live start. A live start is rejected when the Action type is disabled for the Organization. A start, including dryRun, is rejected when the Action is disabled for the selected Seller or Vendor. Users also need access through their roles. An Organization owner enables the type in the DataDoe app under Settings > Actions. A live write Action is rejected when the Seller or Vendor access level is Read only. Read Actions can run with Read only access. Set the access level to Read and write on the Accounts page to run write Actions. The access mode comes from actions_details_schema_get. An Action with requiresPii true is rejected, including dryRun, unless PII access is enabled for the Organization and the principal has data.pii permission. AMAZON_ORDERS_FIND also requires PII access when includedData has BUYER, RECIPIENT, or TAX. MCF, FBA inbound, FBA removal order, and Buy Shipping (AMAZON_ORDERS_GET_SHIPPING_RATES, AMAZON_ORDERS_GET_SHIPPING_ADDITIONAL_INPUTS, AMAZON_ORDERS_CREATE_SHIPMENT, AMAZON_ORDERS_GET_SHIPMENT_DOCS) Actions do not require PII access. You can validate the request without creating or queuing the action by setting dryRun=true. A request with dryRun set to true still validates a disabled Action type. Listing VERIFY Actions (AMAZON_LISTINGS_CREATE_VERIFY, AMAZON_LISTINGS_UPDATE_VERIFY, AMAZON_LISTINGS_DETAILS_UPDATE_VERIFY, and AMAZON_LISTINGS_PRICING_UPDATE_VERIFY) call Amazon Listings Items with mode=VALIDATION_PREVIEW and return status, submissionId, and issues. They do not submit the listing. Amazon validation preview does not accept merge. DataDoe previews a merge with replace and the same values. The write still sends merge. dryRun does not submit the listing. It checks the DataDoe request and, for create, details, and pricing changes that include productType, the product-type schema. Preview before a write by running dryRun, then the matching VERIFY Action, then the write Action. One SKU per Amazon call. Limits count distinct SKUs; all changes for a SKU are validated together. AMAZON_ORDERS_FIND and AMAZON_ORDERS_GET_METRICS are a live preview of current orders. For large volumes and long-term analysis, use Exports or a direct BigQuery integration, which also refresh during the day. AMAZON_ORDERS_FIND accepts one search per Action. Its marketplaceIds can include only marketplaces connected as Sellers in the same Organization for the same selling partner. AMAZON_ORDERS_GET_METRICS fills marketplaceIds from the connection and uses from and to instead of an interval string. For campaign, ad group, target, and ad FIND actions, adProductFilter.include must contain exactly one ad product type; use separate requests to query multiple product types. One ID filter (for example campaignIdFilter) in these FIND actions can have more than 100 IDs; DataDoe queries them in groups of 100, and you page with the returned nextToken and the same query. AMC audience Actions (AMAZON_ADS_AMC_AUDIENCES_*, AMAZON_ADS_AMC_LOOKALIKE_AUDIENCES_ADD) need AMC enabled for the Seller or Vendor. Amazon builds an audience asynchronously and lists it in Sponsored Ads about 24 to 48 hours after it SUCCEEDED; DataDoe does not attach it later, so poll AMAZON_ADS_AMC_AUDIENCES_FIND, then get the audienceId with AMAZON_ADS_TARGETABLE_AUDIENCES_FIND and attach it with AMAZON_ADS_CAMPAIGNS_UPDATE audienceBidAdjustments or AMAZON_ADS_TARGETS_ADD. Details, flows, and best practices for Actions are available in the Actions documentation.",
       "inputSchema": {
         "type": "object",
         "properties": {
@@ -2348,6 +2474,7 @@
               "AMAZON_LISTINGS_DETAILS_UPDATE",
               "AMAZON_LISTINGS_CREATE",
               "AMAZON_LISTINGS_DELETE",
+              "AMAZON_SHOP_DIRECT_LISTINGS_UPSERT",
               "AMAZON_LISTINGS_CREATE_VERIFY",
               "AMAZON_LISTINGS_UPDATE_VERIFY",
               "AMAZON_LISTINGS_DETAILS_UPDATE_VERIFY",
@@ -2356,6 +2483,7 @@
               "AMAZON_LISTINGS_FEES_ESTIMATE",
               "AMAZON_LISTINGS_FEATURED_PRICE_ESTIMATE",
               "AMAZON_LISTINGS_COMPETITIVE_SUMMARY_FIND",
+              "AMAZON_LISTINGS_PRICING_FIND",
               "AMAZON_LISTINGS_PRODUCT_TYPES_FIND",
               "AMAZON_LISTINGS_PRODUCT_TYPE_SUGGEST",
               "AMAZON_LISTINGS_PRODUCT_TYPE_DEFINITION_FIND",
@@ -2470,6 +2598,7 @@
               "AMAZON_MCF_RETURNS_REASON_CODES_FIND",
               "AMAZON_MCF_RETURNS_ADD",
               "AMAZON_SHIPMENT_TRACKING_SUBSCRIBE",
+              "AMAZON_SHIPMENT_TRACKING_GET",
               "AMAZON_VENDOR_PURCHASE_ORDERS_ACKNOWLEDGE",
               "AMAZON_VENDOR_SHIPMENTS_SUBMIT",
               "AMAZON_VENDOR_SHIPMENT_CONFIRMATIONS_SUBMIT",
@@ -2792,6 +2921,7 @@
                 "AMAZON_LISTINGS_DETAILS_UPDATE",
                 "AMAZON_LISTINGS_CREATE",
                 "AMAZON_LISTINGS_DELETE",
+                "AMAZON_SHOP_DIRECT_LISTINGS_UPSERT",
                 "AMAZON_LISTINGS_CREATE_VERIFY",
                 "AMAZON_LISTINGS_UPDATE_VERIFY",
                 "AMAZON_LISTINGS_DETAILS_UPDATE_VERIFY",
@@ -2800,6 +2930,7 @@
                 "AMAZON_LISTINGS_FEES_ESTIMATE",
                 "AMAZON_LISTINGS_FEATURED_PRICE_ESTIMATE",
                 "AMAZON_LISTINGS_COMPETITIVE_SUMMARY_FIND",
+                "AMAZON_LISTINGS_PRICING_FIND",
                 "AMAZON_LISTINGS_PRODUCT_TYPES_FIND",
                 "AMAZON_LISTINGS_PRODUCT_TYPE_SUGGEST",
                 "AMAZON_LISTINGS_PRODUCT_TYPE_DEFINITION_FIND",
@@ -2914,6 +3045,7 @@
                 "AMAZON_MCF_RETURNS_REASON_CODES_FIND",
                 "AMAZON_MCF_RETURNS_ADD",
                 "AMAZON_SHIPMENT_TRACKING_SUBSCRIBE",
+                "AMAZON_SHIPMENT_TRACKING_GET",
                 "AMAZON_VENDOR_PURCHASE_ORDERS_ACKNOWLEDGE",
                 "AMAZON_VENDOR_SHIPMENTS_SUBMIT",
                 "AMAZON_VENDOR_SHIPMENT_CONFIRMATIONS_SUBMIT",
@@ -3062,7 +3194,7 @@
     {
       "name": "cogs_upsert",
       "title": "Upsert COGS",
-      "description": "Creates or updates Your uploaded product cost. Select accountType VENDOR for Vendor Central, especially on dual accounts. Vendor rows use an ASIN or a uniquely matching vendor SKU and an effective date. Optional vendorCode, fulfillmentMethod and purchaseOrderNumber identify a separate cost history. When both ASIN and SKU are supplied, they must agree. Seller defaults and SKU keys are unchanged. Costs are per ASIN unit in marketplace currency. Zero is valid. The latest fromDate on or before the report date applies until the next dated row. Backdated corrections change historical estimates. These costs do not change Amazon-reported costs or Amazon procurement prices.",
+      "description": "Creates or updates Your uploaded product cost. Select accountType VENDOR for Vendor Central, especially on dual accounts. Vendor rows use an ASIN or a uniquely matching vendor SKU and an effective date. Optional vendorCode, fulfillmentMethod and purchaseOrderNumber identify a separate cost history. When both ASIN and SKU are supplied, they must agree. Seller rows need a SKU. If you leave the ASIN empty, DataDoe uses the ASIN when the SKU matches exactly one seller listing. If too many cost updates run at once, the tool returns HTTP 429. Wait for the Retry-After time, then send fewer requests in parallel. Costs are per ASIN unit in marketplace currency. Zero is valid. The latest fromDate on or before the report date applies until the next dated row. Backdated corrections change historical estimates. These costs do not change Amazon-reported costs or Amazon procurement prices.",
       "inputSchema": {
         "type": "object",
         "properties": {
@@ -4091,13 +4223,9 @@
                       "minLength": 1
                     },
                     "description": {
-                      "anyOf": [
-                        {
-                          "type": "string"
-                        },
-                        {
-                          "type": "null"
-                        }
+                      "type": [
+                        "string",
+                        "null"
                       ]
                     },
                     "scope": {
@@ -6707,13 +6835,9 @@
                           "minLength": 1
                         },
                         "description": {
-                          "anyOf": [
-                            {
-                              "type": "string"
-                            },
-                            {
-                              "type": "null"
-                            }
+                          "type": [
+                            "string",
+                            "null"
                           ]
                         },
                         "fieldCount": {
@@ -6767,13 +6891,9 @@
                           "minLength": 1
                         },
                         "description": {
-                          "anyOf": [
-                            {
-                              "type": "string"
-                            },
-                            {
-                              "type": "null"
-                            }
+                          "type": [
+                            "string",
+                            "null"
                           ]
                         },
                         "fields": {
@@ -6793,13 +6913,9 @@
                                 "type": "boolean"
                               },
                               "description": {
-                                "anyOf": [
-                                  {
-                                    "type": "string"
-                                  },
-                                  {
-                                    "type": "null"
-                                  }
+                                "type": [
+                                  "string",
+                                  "null"
                                 ]
                               }
                             },
@@ -6991,13 +7107,9 @@
                 "maximum": 9007199254740991
               },
               "resourceId": {
-                "anyOf": [
-                  {
-                    "type": "string"
-                  },
-                  {
-                    "type": "null"
-                  }
+                "type": [
+                  "string",
+                  "null"
                 ]
               },
               "error": {
@@ -7078,19 +7190,11 @@
                           "type": "string"
                         },
                         "additionalProperties": {
-                          "anyOf": [
-                            {
-                              "type": "string"
-                            },
-                            {
-                              "type": "number"
-                            },
-                            {
-                              "type": "boolean"
-                            },
-                            {
-                              "type": "null"
-                            }
+                          "type": [
+                            "string",
+                            "number",
+                            "boolean",
+                            "null"
                           ]
                         }
                       }
@@ -7713,6 +7817,2691 @@
       }
     },
     {
+      "name": "studio_get",
+      "title": "Get DataDoe Studio status",
+      "description": "DataDoe Studio builds and runs solutions for this Organization. A Flow is scripted logic that calls the DataDoe API. An Agent is an AI agent that uses DataDoe MCP. Only Organization admins can use DataDoe Studio. Gets the status of DataDoe Studio, what to do next in requiredAction, the link to manage it in the app in manageUrl, and the limits. Call this first. If Studio is not set up, an admin can set it up in the app.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "summary": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 1024,
+            "description": "Brief summary of the tool response."
+          },
+          "isError": {
+            "description": "True if the tool response is an error.",
+            "type": "boolean"
+          },
+          "data": {
+            "anyOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "status": {
+                    "type": "string",
+                    "enum": [
+                      "NOT_ENABLED",
+                      "SETTING_UP",
+                      "READY",
+                      "FAILED",
+                      "NEEDS_REPAIR",
+                      "DELETING"
+                    ]
+                  },
+                  "requiredAction": {
+                    "anyOf": [
+                      {
+                        "type": "string",
+                        "enum": [
+                          "JOIN_BETA_WAITING_LIST",
+                          "OPEN_STUDIO",
+                          "RETRY_LATER",
+                          "CHANGE_REQUEST",
+                          "CONTACT_SUPPORT"
+                        ]
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "message": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "manageUrl": {
+                    "type": "string",
+                    "format": "uri"
+                  },
+                  "readyAt": {
+                    "anyOf": [
+                      {
+                        "type": "string",
+                        "format": "date-time",
+                        "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "limits": {
+                    "type": "object",
+                    "properties": {
+                      "maxSolutions": {
+                        "type": "integer",
+                        "minimum": 0,
+                        "maximum": 9007199254740991
+                      },
+                      "maxRunningJobs": {
+                        "type": "integer",
+                        "minimum": 0,
+                        "maximum": 9007199254740991
+                      },
+                      "maxQueuedJobs": {
+                        "type": "integer",
+                        "minimum": 0,
+                        "maximum": 9007199254740991
+                      },
+                      "maxJobsPerDay": {
+                        "type": "integer",
+                        "minimum": 0,
+                        "maximum": 9007199254740991
+                      },
+                      "maxCiAttemptsPerJob": {
+                        "type": "integer",
+                        "minimum": 0,
+                        "maximum": 9007199254740991
+                      },
+                      "maxActiveExecutionsPerSolution": {
+                        "type": "integer",
+                        "minimum": 0,
+                        "maximum": 9007199254740991
+                      },
+                      "maxExecutionsPerDay": {
+                        "type": "integer",
+                        "minimum": 0,
+                        "maximum": 9007199254740991
+                      },
+                      "maxInputBytes": {
+                        "type": "integer",
+                        "minimum": 0,
+                        "maximum": 9007199254740991
+                      },
+                      "maxOutputBytes": {
+                        "type": "integer",
+                        "minimum": 0,
+                        "maximum": 9007199254740991
+                      },
+                      "promptMinLength": {
+                        "type": "integer",
+                        "minimum": 0,
+                        "maximum": 9007199254740991
+                      },
+                      "promptMaxLength": {
+                        "type": "integer",
+                        "minimum": 0,
+                        "maximum": 9007199254740991
+                      },
+                      "minScheduleIntervalMinutes": {
+                        "type": "integer",
+                        "minimum": 1,
+                        "maximum": 9007199254740991
+                      }
+                    },
+                    "required": [
+                      "maxSolutions",
+                      "maxRunningJobs",
+                      "maxQueuedJobs",
+                      "maxJobsPerDay",
+                      "maxCiAttemptsPerJob",
+                      "maxActiveExecutionsPerSolution",
+                      "maxExecutionsPerDay",
+                      "maxInputBytes",
+                      "maxOutputBytes",
+                      "promptMinLength",
+                      "promptMaxLength",
+                      "minScheduleIntervalMinutes"
+                    ],
+                    "additionalProperties": false
+                  }
+                },
+                "required": [
+                  "status",
+                  "requiredAction",
+                  "message",
+                  "manageUrl",
+                  "readyAt",
+                  "limits"
+                ],
+                "additionalProperties": false
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "summary",
+          "data"
+        ],
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false
+      },
+      "annotations": {
+        "title": "Get DataDoe Studio status",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      }
+    },
+    {
+      "name": "studio_solutions_create",
+      "title": "Create Studio solution",
+      "description": "DataDoe Studio builds and runs solutions for this Organization. A Flow is scripted logic that calls the DataDoe API. An Agent is an AI agent that uses DataDoe MCP. Only Organization admins can use DataDoe Studio. Asks DataDoe Studio to build a new solution from your brief. It returns a job straight away. Building takes several minutes. Call studio_jobs_get with jobId until the status is SUCCEEDED, FAILED or CANCELED. An HTTP_REQUEST trigger runs the solution when you call studio_solutions_execute. A SCHEDULE trigger runs it on a UTC cron schedule. Send a requestId to make the request safe to retry.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "prompt": {
+            "type": "string",
+            "minLength": 50,
+            "maxLength": 8000,
+            "description": "What the solution must do, in plain English, between 50 and 8,000 characters. Write a good brief:\n- Ask for one outcome per request.\n- Say what starts it: a request to its endpoint or a schedule.\n- Name the DataDoe data it reads, such as tables and Sellers or Vendors.\n- List each input with its type and an example value.\n- List the exact output fields and their types.\n- Describe edge cases, such as missing data or no results.\n- Say what it must not do.\n- Do not include passwords, keys or personal data.\n- For an update, describe only the change."
+          },
+          "type": {
+            "default": "AUTO",
+            "description": "AUTO lets DataDoe choose. FLOW is scripted logic that calls the DataDoe API. AGENT is an AI agent that uses DataDoe MCP. APP is not available yet.",
+            "type": "string",
+            "enum": [
+              "AUTO",
+              "FLOW",
+              "AGENT",
+              "APP"
+            ]
+          },
+          "trigger": {
+            "oneOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "const": "HTTP_REQUEST"
+                  }
+                },
+                "required": [
+                  "type"
+                ],
+                "additionalProperties": false,
+                "description": "Runs when you send a request to the solution execution endpoint."
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "const": "SCHEDULE"
+                  },
+                  "cron": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 120,
+                    "pattern": "^[0-9A-Za-z*/,-]+( [0-9A-Za-z*/,-]+){4}$",
+                    "description": "Schedule as a 5-field cron expression in UTC: minute, hour, day of month, month and day of week, separated by single spaces. For example \"0 6 * * 1\" runs every Monday at 06:00 UTC. It can run at most every 15 minutes."
+                  }
+                },
+                "required": [
+                  "type",
+                  "cron"
+                ],
+                "additionalProperties": false,
+                "description": "Runs on a UTC schedule. The solution must accept an empty object as input."
+              }
+            ]
+          },
+          "name": {
+            "description": "Optional display name. DataDoe chooses one when you leave it out.",
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 80
+          },
+          "requestId": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+            "description": "Optional UUID that makes the request safe to retry. Send the same requestId only with an identical request."
+          }
+        },
+        "required": [
+          "prompt",
+          "trigger"
+        ],
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "summary": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 1024,
+            "description": "Brief summary of the tool response."
+          },
+          "isError": {
+            "description": "True if the tool response is an error.",
+            "type": "boolean"
+          },
+          "data": {
+            "anyOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "jobId": {
+                    "type": "string",
+                    "format": "uuid",
+                    "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                  },
+                  "type": {
+                    "type": "string",
+                    "enum": [
+                      "WORKSPACE_SETUP",
+                      "SOLUTION_CREATE",
+                      "SOLUTION_UPDATE",
+                      "SOLUTION_DELETE",
+                      "WORKSPACE_DELETE"
+                    ]
+                  },
+                  "status": {
+                    "type": "string",
+                    "enum": [
+                      "PENDING",
+                      "RUNNING",
+                      "SUCCEEDED",
+                      "FAILED",
+                      "CANCELED"
+                    ]
+                  },
+                  "phase": {
+                    "type": "string",
+                    "enum": [
+                      "QUEUED",
+                      "SEEDING",
+                      "BUILDING",
+                      "VALIDATING",
+                      "TESTING",
+                      "PUBLISH",
+                      "COMMIT",
+                      "SNAPSHOT",
+                      "ACTIVATE",
+                      "DRAINING",
+                      "REMOVING",
+                      "DONE"
+                    ]
+                  },
+                  "resourceId": {
+                    "anyOf": [
+                      {
+                        "type": "string",
+                        "format": "uuid",
+                        "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "result": {
+                    "anyOf": [
+                      {
+                        "type": "object",
+                        "properties": {
+                          "solution": {
+                            "anyOf": [
+                              {
+                                "type": "object",
+                                "properties": {
+                                  "id": {
+                                    "type": "string",
+                                    "format": "uuid",
+                                    "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                                  },
+                                  "name": {
+                                    "type": "string"
+                                  },
+                                  "type": {
+                                    "type": "string",
+                                    "enum": [
+                                      "FLOW",
+                                      "AGENT",
+                                      "APP"
+                                    ]
+                                  },
+                                  "inputSchema": {
+                                    "type": "object",
+                                    "propertyNames": {
+                                      "type": "string"
+                                    },
+                                    "additionalProperties": {}
+                                  },
+                                  "outputSchema": {
+                                    "type": "object",
+                                    "propertyNames": {
+                                      "type": "string"
+                                    },
+                                    "additionalProperties": {}
+                                  }
+                                },
+                                "required": [
+                                  "id",
+                                  "name",
+                                  "type",
+                                  "inputSchema",
+                                  "outputSchema"
+                                ],
+                                "additionalProperties": false
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          }
+                        },
+                        "required": [
+                          "solution"
+                        ],
+                        "additionalProperties": false
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "error": {
+                    "anyOf": [
+                      {
+                        "type": "object",
+                        "properties": {
+                          "code": {
+                            "type": "string",
+                            "enum": [
+                              "LIVE_NOT_ENABLED",
+                              "CONTRACT_UNSUPPORTED",
+                              "HEAD_DRIFT",
+                              "CAPACITY",
+                              "OUTCOME_UNKNOWN",
+                              "SERVICE_ACCOUNT_UNAVAILABLE",
+                              "DEADLINE_EXCEEDED",
+                              "SUBMISSION_INVALID",
+                              "CI_FAILED",
+                              "BUILD_FAILED",
+                              "TOKEN_LIMIT_REACHED",
+                              "MICROVM_LOST",
+                              "INVALID_INPUT",
+                              "INVALID_OUTPUT",
+                              "SOLUTION_FAILED",
+                              "BUNDLE_INTEGRITY_FAILED",
+                              "BUNDLE_LOAD_FAILED",
+                              "MCP_HANDSHAKE_FAILED",
+                              "SOLUTION_DELETED",
+                              "INTERNAL_ERROR"
+                            ]
+                          },
+                          "message": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 500
+                          },
+                          "retryable": {
+                            "type": "boolean"
+                          }
+                        },
+                        "required": [
+                          "code",
+                          "message",
+                          "retryable"
+                        ],
+                        "additionalProperties": false
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "createdAt": {
+                    "type": "string",
+                    "format": "date-time",
+                    "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$"
+                  },
+                  "updatedAt": {
+                    "type": "string",
+                    "format": "date-time",
+                    "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$"
+                  },
+                  "solutionId": {
+                    "type": "string",
+                    "format": "uuid",
+                    "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                  }
+                },
+                "required": [
+                  "jobId",
+                  "type",
+                  "status",
+                  "phase",
+                  "resourceId",
+                  "result",
+                  "error",
+                  "createdAt",
+                  "updatedAt",
+                  "solutionId"
+                ],
+                "additionalProperties": false
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "summary",
+          "data"
+        ],
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false
+      },
+      "annotations": {
+        "title": "Create Studio solution",
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "openWorldHint": false
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      }
+    },
+    {
+      "name": "studio_solutions_list",
+      "title": "List Studio solutions",
+      "description": "Lists the DataDoe Studio solutions of this Organization, with their type, status, trigger and whether they are paused. Use studio_solutions_get for the input and output schema of a solution.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "summary": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 1024,
+            "description": "Brief summary of the tool response."
+          },
+          "isError": {
+            "description": "True if the tool response is an error.",
+            "type": "boolean"
+          },
+          "data": {
+            "anyOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "solutions": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "format": "uuid",
+                          "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                        },
+                        "name": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        },
+                        "type": {
+                          "anyOf": [
+                            {
+                              "type": "string",
+                              "enum": [
+                                "FLOW",
+                                "AGENT",
+                                "APP"
+                              ]
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        },
+                        "status": {
+                          "type": "string",
+                          "enum": [
+                            "CREATING",
+                            "ACTIVE",
+                            "FAILED",
+                            "DELETING",
+                            "DELETED"
+                          ]
+                        },
+                        "enabled": {
+                          "type": "boolean"
+                        },
+                        "pauseReason": {
+                          "anyOf": [
+                            {
+                              "type": "string",
+                              "enum": [
+                                "USER",
+                                "SERVICE_ACCOUNT_UNAVAILABLE"
+                              ]
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        },
+                        "description": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        },
+                        "trigger": {
+                          "oneOf": [
+                            {
+                              "type": "object",
+                              "properties": {
+                                "type": {
+                                  "type": "string",
+                                  "const": "HTTP_REQUEST"
+                                }
+                              },
+                              "required": [
+                                "type"
+                              ],
+                              "additionalProperties": false,
+                              "description": "Runs when you send a request to the solution execution endpoint."
+                            },
+                            {
+                              "type": "object",
+                              "properties": {
+                                "type": {
+                                  "type": "string",
+                                  "const": "SCHEDULE"
+                                },
+                                "cron": {
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 120,
+                                  "pattern": "^[0-9A-Za-z*/,-]+( [0-9A-Za-z*/,-]+){4}$",
+                                  "description": "Schedule as a 5-field cron expression in UTC: minute, hour, day of month, month and day of week, separated by single spaces. For example \"0 6 * * 1\" runs every Monday at 06:00 UTC. It can run at most every 15 minutes."
+                                }
+                              },
+                              "required": [
+                                "type",
+                                "cron"
+                              ],
+                              "additionalProperties": false,
+                              "description": "Runs on a UTC schedule. The solution must accept an empty object as input."
+                            }
+                          ]
+                        },
+                        "nextRunAt": {
+                          "anyOf": [
+                            {
+                              "type": "string",
+                              "format": "date-time",
+                              "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$"
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        },
+                        "createdAt": {
+                          "type": "string",
+                          "format": "date-time",
+                          "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$"
+                        },
+                        "updatedAt": {
+                          "type": "string",
+                          "format": "date-time",
+                          "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$"
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "name",
+                        "type",
+                        "status",
+                        "enabled",
+                        "pauseReason",
+                        "description",
+                        "trigger",
+                        "nextRunAt",
+                        "createdAt",
+                        "updatedAt"
+                      ],
+                      "additionalProperties": false
+                    }
+                  }
+                },
+                "required": [
+                  "solutions"
+                ],
+                "additionalProperties": false
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "summary",
+          "data"
+        ],
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false
+      },
+      "annotations": {
+        "title": "List Studio solutions",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      }
+    },
+    {
+      "name": "studio_solutions_get",
+      "title": "Get Studio solution",
+      "description": "Gets one DataDoe Studio solution by solutionId: name, type, status, trigger, input and output JSON Schema, execution endpoint and service account.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "solutionId": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+          }
+        },
+        "required": [
+          "solutionId"
+        ],
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "summary": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 1024,
+            "description": "Brief summary of the tool response."
+          },
+          "isError": {
+            "description": "True if the tool response is an error.",
+            "type": "boolean"
+          },
+          "data": {
+            "anyOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "format": "uuid",
+                    "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                  },
+                  "name": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "type": {
+                    "anyOf": [
+                      {
+                        "type": "string",
+                        "enum": [
+                          "FLOW",
+                          "AGENT",
+                          "APP"
+                        ]
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "status": {
+                    "type": "string",
+                    "enum": [
+                      "CREATING",
+                      "ACTIVE",
+                      "FAILED",
+                      "DELETING",
+                      "DELETED"
+                    ]
+                  },
+                  "enabled": {
+                    "type": "boolean"
+                  },
+                  "pauseReason": {
+                    "anyOf": [
+                      {
+                        "type": "string",
+                        "enum": [
+                          "USER",
+                          "SERVICE_ACCOUNT_UNAVAILABLE"
+                        ]
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "description": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "trigger": {
+                    "oneOf": [
+                      {
+                        "type": "object",
+                        "properties": {
+                          "type": {
+                            "type": "string",
+                            "const": "HTTP_REQUEST"
+                          }
+                        },
+                        "required": [
+                          "type"
+                        ],
+                        "additionalProperties": false,
+                        "description": "Runs when you send a request to the solution execution endpoint."
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "type": {
+                            "type": "string",
+                            "const": "SCHEDULE"
+                          },
+                          "cron": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 120,
+                            "pattern": "^[0-9A-Za-z*/,-]+( [0-9A-Za-z*/,-]+){4}$",
+                            "description": "Schedule as a 5-field cron expression in UTC: minute, hour, day of month, month and day of week, separated by single spaces. For example \"0 6 * * 1\" runs every Monday at 06:00 UTC. It can run at most every 15 minutes."
+                          }
+                        },
+                        "required": [
+                          "type",
+                          "cron"
+                        ],
+                        "additionalProperties": false,
+                        "description": "Runs on a UTC schedule. The solution must accept an empty object as input."
+                      }
+                    ]
+                  },
+                  "nextRunAt": {
+                    "anyOf": [
+                      {
+                        "type": "string",
+                        "format": "date-time",
+                        "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "createdAt": {
+                    "type": "string",
+                    "format": "date-time",
+                    "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$"
+                  },
+                  "updatedAt": {
+                    "type": "string",
+                    "format": "date-time",
+                    "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$"
+                  },
+                  "inputSchema": {
+                    "anyOf": [
+                      {
+                        "type": "object",
+                        "propertyNames": {
+                          "type": "string"
+                        },
+                        "additionalProperties": {}
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "outputSchema": {
+                    "anyOf": [
+                      {
+                        "type": "object",
+                        "propertyNames": {
+                          "type": "string"
+                        },
+                        "additionalProperties": {}
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "endpoint": {
+                    "anyOf": [
+                      {
+                        "type": "object",
+                        "properties": {
+                          "method": {
+                            "type": "string",
+                            "const": "POST"
+                          },
+                          "url": {
+                            "type": "string",
+                            "format": "uri"
+                          }
+                        },
+                        "required": [
+                          "method",
+                          "url"
+                        ],
+                        "additionalProperties": false
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "serviceAccount": {
+                    "anyOf": [
+                      {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "format": "uuid",
+                            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                          },
+                          "name": {
+                            "type": "string",
+                            "minLength": 1
+                          },
+                          "active": {
+                            "type": "boolean"
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "name",
+                          "active"
+                        ],
+                        "additionalProperties": false
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "currentVersionId": {
+                    "anyOf": [
+                      {
+                        "type": "string",
+                        "format": "uuid",
+                        "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  }
+                },
+                "required": [
+                  "id",
+                  "name",
+                  "type",
+                  "status",
+                  "enabled",
+                  "pauseReason",
+                  "description",
+                  "trigger",
+                  "nextRunAt",
+                  "createdAt",
+                  "updatedAt",
+                  "inputSchema",
+                  "outputSchema",
+                  "endpoint",
+                  "serviceAccount",
+                  "currentVersionId"
+                ],
+                "additionalProperties": false
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "summary",
+          "data"
+        ],
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false
+      },
+      "annotations": {
+        "title": "Get Studio solution",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      }
+    },
+    {
+      "name": "studio_solutions_configure",
+      "title": "Configure Studio solution",
+      "description": "Pauses or resumes an active DataDoe Studio solution, or changes its trigger or schedule. Send enabled, trigger or both. The change applies straight away. A SCHEDULE solution must accept {} as input.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "solutionId": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+          },
+          "enabled": {
+            "description": "false pauses the solution. true resumes it.",
+            "type": "boolean"
+          },
+          "trigger": {
+            "oneOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "const": "HTTP_REQUEST"
+                  }
+                },
+                "required": [
+                  "type"
+                ],
+                "additionalProperties": false,
+                "description": "Runs when you send a request to the solution execution endpoint."
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "const": "SCHEDULE"
+                  },
+                  "cron": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 120,
+                    "pattern": "^[0-9A-Za-z*/,-]+( [0-9A-Za-z*/,-]+){4}$",
+                    "description": "Schedule as a 5-field cron expression in UTC: minute, hour, day of month, month and day of week, separated by single spaces. For example \"0 6 * * 1\" runs every Monday at 06:00 UTC. It can run at most every 15 minutes."
+                  }
+                },
+                "required": [
+                  "type",
+                  "cron"
+                ],
+                "additionalProperties": false,
+                "description": "Runs on a UTC schedule. The solution must accept an empty object as input."
+              }
+            ]
+          }
+        },
+        "required": [
+          "solutionId"
+        ],
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "summary": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 1024,
+            "description": "Brief summary of the tool response."
+          },
+          "isError": {
+            "description": "True if the tool response is an error.",
+            "type": "boolean"
+          },
+          "data": {
+            "anyOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "format": "uuid",
+                    "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                  },
+                  "name": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "type": {
+                    "anyOf": [
+                      {
+                        "type": "string",
+                        "enum": [
+                          "FLOW",
+                          "AGENT",
+                          "APP"
+                        ]
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "status": {
+                    "type": "string",
+                    "enum": [
+                      "CREATING",
+                      "ACTIVE",
+                      "FAILED",
+                      "DELETING",
+                      "DELETED"
+                    ]
+                  },
+                  "enabled": {
+                    "type": "boolean"
+                  },
+                  "pauseReason": {
+                    "anyOf": [
+                      {
+                        "type": "string",
+                        "enum": [
+                          "USER",
+                          "SERVICE_ACCOUNT_UNAVAILABLE"
+                        ]
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "description": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "trigger": {
+                    "oneOf": [
+                      {
+                        "type": "object",
+                        "properties": {
+                          "type": {
+                            "type": "string",
+                            "const": "HTTP_REQUEST"
+                          }
+                        },
+                        "required": [
+                          "type"
+                        ],
+                        "additionalProperties": false,
+                        "description": "Runs when you send a request to the solution execution endpoint."
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "type": {
+                            "type": "string",
+                            "const": "SCHEDULE"
+                          },
+                          "cron": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 120,
+                            "pattern": "^[0-9A-Za-z*/,-]+( [0-9A-Za-z*/,-]+){4}$",
+                            "description": "Schedule as a 5-field cron expression in UTC: minute, hour, day of month, month and day of week, separated by single spaces. For example \"0 6 * * 1\" runs every Monday at 06:00 UTC. It can run at most every 15 minutes."
+                          }
+                        },
+                        "required": [
+                          "type",
+                          "cron"
+                        ],
+                        "additionalProperties": false,
+                        "description": "Runs on a UTC schedule. The solution must accept an empty object as input."
+                      }
+                    ]
+                  },
+                  "nextRunAt": {
+                    "anyOf": [
+                      {
+                        "type": "string",
+                        "format": "date-time",
+                        "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "createdAt": {
+                    "type": "string",
+                    "format": "date-time",
+                    "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$"
+                  },
+                  "updatedAt": {
+                    "type": "string",
+                    "format": "date-time",
+                    "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$"
+                  },
+                  "inputSchema": {
+                    "anyOf": [
+                      {
+                        "type": "object",
+                        "propertyNames": {
+                          "type": "string"
+                        },
+                        "additionalProperties": {}
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "outputSchema": {
+                    "anyOf": [
+                      {
+                        "type": "object",
+                        "propertyNames": {
+                          "type": "string"
+                        },
+                        "additionalProperties": {}
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "endpoint": {
+                    "anyOf": [
+                      {
+                        "type": "object",
+                        "properties": {
+                          "method": {
+                            "type": "string",
+                            "const": "POST"
+                          },
+                          "url": {
+                            "type": "string",
+                            "format": "uri"
+                          }
+                        },
+                        "required": [
+                          "method",
+                          "url"
+                        ],
+                        "additionalProperties": false
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "serviceAccount": {
+                    "anyOf": [
+                      {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "format": "uuid",
+                            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                          },
+                          "name": {
+                            "type": "string",
+                            "minLength": 1
+                          },
+                          "active": {
+                            "type": "boolean"
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "name",
+                          "active"
+                        ],
+                        "additionalProperties": false
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "currentVersionId": {
+                    "anyOf": [
+                      {
+                        "type": "string",
+                        "format": "uuid",
+                        "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  }
+                },
+                "required": [
+                  "id",
+                  "name",
+                  "type",
+                  "status",
+                  "enabled",
+                  "pauseReason",
+                  "description",
+                  "trigger",
+                  "nextRunAt",
+                  "createdAt",
+                  "updatedAt",
+                  "inputSchema",
+                  "outputSchema",
+                  "endpoint",
+                  "serviceAccount",
+                  "currentVersionId"
+                ],
+                "additionalProperties": false
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "summary",
+          "data"
+        ],
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false
+      },
+      "annotations": {
+        "title": "Configure Studio solution",
+        "readOnlyHint": false,
+        "destructiveHint": true,
+        "idempotentHint": true,
+        "openWorldHint": false
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      }
+    },
+    {
+      "name": "studio_solutions_update",
+      "title": "Update Studio solution",
+      "description": "Asks DataDoe Studio to change an active solution. Describe only the change in the prompt. It returns a job straight away. Call studio_jobs_get with jobId until the status is SUCCEEDED, FAILED or CANCELED.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "solutionId": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+          },
+          "prompt": {
+            "type": "string",
+            "minLength": 50,
+            "maxLength": 8000,
+            "description": "What the solution must do, in plain English, between 50 and 8,000 characters. Write a good brief:\n- Ask for one outcome per request.\n- Say what starts it: a request to its endpoint or a schedule.\n- Name the DataDoe data it reads, such as tables and Sellers or Vendors.\n- List each input with its type and an example value.\n- List the exact output fields and their types.\n- Describe edge cases, such as missing data or no results.\n- Say what it must not do.\n- Do not include passwords, keys or personal data.\n- For an update, describe only the change."
+          },
+          "requestId": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+            "description": "Optional UUID that makes the request safe to retry. Send the same requestId only with an identical request."
+          }
+        },
+        "required": [
+          "solutionId",
+          "prompt"
+        ],
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "summary": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 1024,
+            "description": "Brief summary of the tool response."
+          },
+          "isError": {
+            "description": "True if the tool response is an error.",
+            "type": "boolean"
+          },
+          "data": {
+            "anyOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "jobId": {
+                    "type": "string",
+                    "format": "uuid",
+                    "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                  },
+                  "type": {
+                    "type": "string",
+                    "enum": [
+                      "WORKSPACE_SETUP",
+                      "SOLUTION_CREATE",
+                      "SOLUTION_UPDATE",
+                      "SOLUTION_DELETE",
+                      "WORKSPACE_DELETE"
+                    ]
+                  },
+                  "status": {
+                    "type": "string",
+                    "enum": [
+                      "PENDING",
+                      "RUNNING",
+                      "SUCCEEDED",
+                      "FAILED",
+                      "CANCELED"
+                    ]
+                  },
+                  "phase": {
+                    "type": "string",
+                    "enum": [
+                      "QUEUED",
+                      "SEEDING",
+                      "BUILDING",
+                      "VALIDATING",
+                      "TESTING",
+                      "PUBLISH",
+                      "COMMIT",
+                      "SNAPSHOT",
+                      "ACTIVATE",
+                      "DRAINING",
+                      "REMOVING",
+                      "DONE"
+                    ]
+                  },
+                  "resourceId": {
+                    "anyOf": [
+                      {
+                        "type": "string",
+                        "format": "uuid",
+                        "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "result": {
+                    "anyOf": [
+                      {
+                        "type": "object",
+                        "properties": {
+                          "solution": {
+                            "anyOf": [
+                              {
+                                "type": "object",
+                                "properties": {
+                                  "id": {
+                                    "type": "string",
+                                    "format": "uuid",
+                                    "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                                  },
+                                  "name": {
+                                    "type": "string"
+                                  },
+                                  "type": {
+                                    "type": "string",
+                                    "enum": [
+                                      "FLOW",
+                                      "AGENT",
+                                      "APP"
+                                    ]
+                                  },
+                                  "inputSchema": {
+                                    "type": "object",
+                                    "propertyNames": {
+                                      "type": "string"
+                                    },
+                                    "additionalProperties": {}
+                                  },
+                                  "outputSchema": {
+                                    "type": "object",
+                                    "propertyNames": {
+                                      "type": "string"
+                                    },
+                                    "additionalProperties": {}
+                                  }
+                                },
+                                "required": [
+                                  "id",
+                                  "name",
+                                  "type",
+                                  "inputSchema",
+                                  "outputSchema"
+                                ],
+                                "additionalProperties": false
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          }
+                        },
+                        "required": [
+                          "solution"
+                        ],
+                        "additionalProperties": false
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "error": {
+                    "anyOf": [
+                      {
+                        "type": "object",
+                        "properties": {
+                          "code": {
+                            "type": "string",
+                            "enum": [
+                              "LIVE_NOT_ENABLED",
+                              "CONTRACT_UNSUPPORTED",
+                              "HEAD_DRIFT",
+                              "CAPACITY",
+                              "OUTCOME_UNKNOWN",
+                              "SERVICE_ACCOUNT_UNAVAILABLE",
+                              "DEADLINE_EXCEEDED",
+                              "SUBMISSION_INVALID",
+                              "CI_FAILED",
+                              "BUILD_FAILED",
+                              "TOKEN_LIMIT_REACHED",
+                              "MICROVM_LOST",
+                              "INVALID_INPUT",
+                              "INVALID_OUTPUT",
+                              "SOLUTION_FAILED",
+                              "BUNDLE_INTEGRITY_FAILED",
+                              "BUNDLE_LOAD_FAILED",
+                              "MCP_HANDSHAKE_FAILED",
+                              "SOLUTION_DELETED",
+                              "INTERNAL_ERROR"
+                            ]
+                          },
+                          "message": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 500
+                          },
+                          "retryable": {
+                            "type": "boolean"
+                          }
+                        },
+                        "required": [
+                          "code",
+                          "message",
+                          "retryable"
+                        ],
+                        "additionalProperties": false
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "createdAt": {
+                    "type": "string",
+                    "format": "date-time",
+                    "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$"
+                  },
+                  "updatedAt": {
+                    "type": "string",
+                    "format": "date-time",
+                    "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$"
+                  }
+                },
+                "required": [
+                  "jobId",
+                  "type",
+                  "status",
+                  "phase",
+                  "resourceId",
+                  "result",
+                  "error",
+                  "createdAt",
+                  "updatedAt"
+                ],
+                "additionalProperties": false
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "summary",
+          "data"
+        ],
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false
+      },
+      "annotations": {
+        "title": "Update Studio solution",
+        "readOnlyHint": false,
+        "destructiveHint": true,
+        "idempotentHint": false,
+        "openWorldHint": false
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      }
+    },
+    {
+      "name": "studio_solutions_delete",
+      "title": "Delete Studio solution",
+      "description": "Deletes a DataDoe Studio solution. You cannot undo this. It returns a job straight away. Call studio_jobs_get with jobId until the status is SUCCEEDED or FAILED.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "solutionId": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+          },
+          "requestId": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+            "description": "Optional UUID that makes the request safe to retry. Send the same requestId only with an identical request."
+          }
+        },
+        "required": [
+          "solutionId"
+        ],
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "summary": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 1024,
+            "description": "Brief summary of the tool response."
+          },
+          "isError": {
+            "description": "True if the tool response is an error.",
+            "type": "boolean"
+          },
+          "data": {
+            "anyOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "jobId": {
+                    "type": "string",
+                    "format": "uuid",
+                    "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                  },
+                  "type": {
+                    "type": "string",
+                    "enum": [
+                      "WORKSPACE_SETUP",
+                      "SOLUTION_CREATE",
+                      "SOLUTION_UPDATE",
+                      "SOLUTION_DELETE",
+                      "WORKSPACE_DELETE"
+                    ]
+                  },
+                  "status": {
+                    "type": "string",
+                    "enum": [
+                      "PENDING",
+                      "RUNNING",
+                      "SUCCEEDED",
+                      "FAILED",
+                      "CANCELED"
+                    ]
+                  },
+                  "phase": {
+                    "type": "string",
+                    "enum": [
+                      "QUEUED",
+                      "SEEDING",
+                      "BUILDING",
+                      "VALIDATING",
+                      "TESTING",
+                      "PUBLISH",
+                      "COMMIT",
+                      "SNAPSHOT",
+                      "ACTIVATE",
+                      "DRAINING",
+                      "REMOVING",
+                      "DONE"
+                    ]
+                  },
+                  "resourceId": {
+                    "anyOf": [
+                      {
+                        "type": "string",
+                        "format": "uuid",
+                        "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "result": {
+                    "anyOf": [
+                      {
+                        "type": "object",
+                        "properties": {
+                          "solution": {
+                            "anyOf": [
+                              {
+                                "type": "object",
+                                "properties": {
+                                  "id": {
+                                    "type": "string",
+                                    "format": "uuid",
+                                    "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                                  },
+                                  "name": {
+                                    "type": "string"
+                                  },
+                                  "type": {
+                                    "type": "string",
+                                    "enum": [
+                                      "FLOW",
+                                      "AGENT",
+                                      "APP"
+                                    ]
+                                  },
+                                  "inputSchema": {
+                                    "type": "object",
+                                    "propertyNames": {
+                                      "type": "string"
+                                    },
+                                    "additionalProperties": {}
+                                  },
+                                  "outputSchema": {
+                                    "type": "object",
+                                    "propertyNames": {
+                                      "type": "string"
+                                    },
+                                    "additionalProperties": {}
+                                  }
+                                },
+                                "required": [
+                                  "id",
+                                  "name",
+                                  "type",
+                                  "inputSchema",
+                                  "outputSchema"
+                                ],
+                                "additionalProperties": false
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          }
+                        },
+                        "required": [
+                          "solution"
+                        ],
+                        "additionalProperties": false
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "error": {
+                    "anyOf": [
+                      {
+                        "type": "object",
+                        "properties": {
+                          "code": {
+                            "type": "string",
+                            "enum": [
+                              "LIVE_NOT_ENABLED",
+                              "CONTRACT_UNSUPPORTED",
+                              "HEAD_DRIFT",
+                              "CAPACITY",
+                              "OUTCOME_UNKNOWN",
+                              "SERVICE_ACCOUNT_UNAVAILABLE",
+                              "DEADLINE_EXCEEDED",
+                              "SUBMISSION_INVALID",
+                              "CI_FAILED",
+                              "BUILD_FAILED",
+                              "TOKEN_LIMIT_REACHED",
+                              "MICROVM_LOST",
+                              "INVALID_INPUT",
+                              "INVALID_OUTPUT",
+                              "SOLUTION_FAILED",
+                              "BUNDLE_INTEGRITY_FAILED",
+                              "BUNDLE_LOAD_FAILED",
+                              "MCP_HANDSHAKE_FAILED",
+                              "SOLUTION_DELETED",
+                              "INTERNAL_ERROR"
+                            ]
+                          },
+                          "message": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 500
+                          },
+                          "retryable": {
+                            "type": "boolean"
+                          }
+                        },
+                        "required": [
+                          "code",
+                          "message",
+                          "retryable"
+                        ],
+                        "additionalProperties": false
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "createdAt": {
+                    "type": "string",
+                    "format": "date-time",
+                    "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$"
+                  },
+                  "updatedAt": {
+                    "type": "string",
+                    "format": "date-time",
+                    "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$"
+                  }
+                },
+                "required": [
+                  "jobId",
+                  "type",
+                  "status",
+                  "phase",
+                  "resourceId",
+                  "result",
+                  "error",
+                  "createdAt",
+                  "updatedAt"
+                ],
+                "additionalProperties": false
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "summary",
+          "data"
+        ],
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false
+      },
+      "annotations": {
+        "title": "Delete Studio solution",
+        "readOnlyHint": false,
+        "destructiveHint": true,
+        "idempotentHint": false,
+        "openWorldHint": false
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      }
+    },
+    {
+      "name": "studio_jobs_get",
+      "title": "Get Studio job",
+      "description": "Gets a DataDoe Studio job by jobId: its status, phase, result and error. Jobs build, change and remove solutions in the background. When a create or update job has SUCCEEDED, result.solution has the solution id and its input and output schema. While the status is PENDING or RUNNING, check again in 15 seconds.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "jobId": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+          }
+        },
+        "required": [
+          "jobId"
+        ],
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "summary": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 1024,
+            "description": "Brief summary of the tool response."
+          },
+          "isError": {
+            "description": "True if the tool response is an error.",
+            "type": "boolean"
+          },
+          "data": {
+            "anyOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "jobId": {
+                    "type": "string",
+                    "format": "uuid",
+                    "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                  },
+                  "type": {
+                    "type": "string",
+                    "enum": [
+                      "WORKSPACE_SETUP",
+                      "SOLUTION_CREATE",
+                      "SOLUTION_UPDATE",
+                      "SOLUTION_DELETE",
+                      "WORKSPACE_DELETE"
+                    ]
+                  },
+                  "status": {
+                    "type": "string",
+                    "enum": [
+                      "PENDING",
+                      "RUNNING",
+                      "SUCCEEDED",
+                      "FAILED",
+                      "CANCELED"
+                    ]
+                  },
+                  "phase": {
+                    "type": "string",
+                    "enum": [
+                      "QUEUED",
+                      "SEEDING",
+                      "BUILDING",
+                      "VALIDATING",
+                      "TESTING",
+                      "PUBLISH",
+                      "COMMIT",
+                      "SNAPSHOT",
+                      "ACTIVATE",
+                      "DRAINING",
+                      "REMOVING",
+                      "DONE"
+                    ]
+                  },
+                  "resourceId": {
+                    "anyOf": [
+                      {
+                        "type": "string",
+                        "format": "uuid",
+                        "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "result": {
+                    "anyOf": [
+                      {
+                        "type": "object",
+                        "properties": {
+                          "solution": {
+                            "anyOf": [
+                              {
+                                "type": "object",
+                                "properties": {
+                                  "id": {
+                                    "type": "string",
+                                    "format": "uuid",
+                                    "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                                  },
+                                  "name": {
+                                    "type": "string"
+                                  },
+                                  "type": {
+                                    "type": "string",
+                                    "enum": [
+                                      "FLOW",
+                                      "AGENT",
+                                      "APP"
+                                    ]
+                                  },
+                                  "inputSchema": {
+                                    "type": "object",
+                                    "propertyNames": {
+                                      "type": "string"
+                                    },
+                                    "additionalProperties": {}
+                                  },
+                                  "outputSchema": {
+                                    "type": "object",
+                                    "propertyNames": {
+                                      "type": "string"
+                                    },
+                                    "additionalProperties": {}
+                                  }
+                                },
+                                "required": [
+                                  "id",
+                                  "name",
+                                  "type",
+                                  "inputSchema",
+                                  "outputSchema"
+                                ],
+                                "additionalProperties": false
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          }
+                        },
+                        "required": [
+                          "solution"
+                        ],
+                        "additionalProperties": false
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "error": {
+                    "anyOf": [
+                      {
+                        "type": "object",
+                        "properties": {
+                          "code": {
+                            "type": "string",
+                            "enum": [
+                              "LIVE_NOT_ENABLED",
+                              "CONTRACT_UNSUPPORTED",
+                              "HEAD_DRIFT",
+                              "CAPACITY",
+                              "OUTCOME_UNKNOWN",
+                              "SERVICE_ACCOUNT_UNAVAILABLE",
+                              "DEADLINE_EXCEEDED",
+                              "SUBMISSION_INVALID",
+                              "CI_FAILED",
+                              "BUILD_FAILED",
+                              "TOKEN_LIMIT_REACHED",
+                              "MICROVM_LOST",
+                              "INVALID_INPUT",
+                              "INVALID_OUTPUT",
+                              "SOLUTION_FAILED",
+                              "BUNDLE_INTEGRITY_FAILED",
+                              "BUNDLE_LOAD_FAILED",
+                              "MCP_HANDSHAKE_FAILED",
+                              "SOLUTION_DELETED",
+                              "INTERNAL_ERROR"
+                            ]
+                          },
+                          "message": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 500
+                          },
+                          "retryable": {
+                            "type": "boolean"
+                          }
+                        },
+                        "required": [
+                          "code",
+                          "message",
+                          "retryable"
+                        ],
+                        "additionalProperties": false
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "createdAt": {
+                    "type": "string",
+                    "format": "date-time",
+                    "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$"
+                  },
+                  "updatedAt": {
+                    "type": "string",
+                    "format": "date-time",
+                    "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$"
+                  }
+                },
+                "required": [
+                  "jobId",
+                  "type",
+                  "status",
+                  "phase",
+                  "resourceId",
+                  "result",
+                  "error",
+                  "createdAt",
+                  "updatedAt"
+                ],
+                "additionalProperties": false
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "summary",
+          "data"
+        ],
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false
+      },
+      "annotations": {
+        "title": "Get Studio job",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      }
+    },
+    {
+      "name": "studio_solutions_execute",
+      "title": "Run Studio solution",
+      "description": "Runs an active, enabled DataDoe Studio solution that has an HTTP_REQUEST trigger. Send input as a JSON object that matches the solution input schema, at most 256 KB. It returns executionId straight away. Call studio_executions_get until the status is COMPLETED, FAILED, TIMED_OUT or CANCELED.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "solutionId": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+          },
+          "input": {
+            "type": "object",
+            "propertyNames": {
+              "type": "string"
+            },
+            "additionalProperties": {},
+            "description": "Input of the solution as a JSON object. It must match the solution input schema. Use {} when the solution takes no input."
+          }
+        },
+        "required": [
+          "solutionId",
+          "input"
+        ],
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "summary": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 1024,
+            "description": "Brief summary of the tool response."
+          },
+          "isError": {
+            "description": "True if the tool response is an error.",
+            "type": "boolean"
+          },
+          "data": {
+            "anyOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "executionId": {
+                    "type": "string",
+                    "format": "uuid",
+                    "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                  },
+                  "status": {
+                    "type": "string",
+                    "enum": [
+                      "PENDING",
+                      "RUNNING",
+                      "COMPLETED",
+                      "FAILED",
+                      "TIMED_OUT",
+                      "CANCELED"
+                    ]
+                  },
+                  "mode": {
+                    "type": "string",
+                    "enum": [
+                      "MOCK",
+                      "LIVE"
+                    ]
+                  }
+                },
+                "required": [
+                  "executionId",
+                  "status",
+                  "mode"
+                ],
+                "additionalProperties": false
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "summary",
+          "data"
+        ],
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false
+      },
+      "annotations": {
+        "title": "Run Studio solution",
+        "readOnlyHint": false,
+        "destructiveHint": true,
+        "idempotentHint": false,
+        "openWorldHint": true
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      }
+    },
+    {
+      "name": "studio_executions_get",
+      "title": "Get Studio execution",
+      "description": "Gets a DataDoe Studio execution by executionId: its status, output and error. When mock is true, the run skipped the solution logic and returned sample output. While the status is PENDING or RUNNING, check again in 5 seconds.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "executionId": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+          }
+        },
+        "required": [
+          "executionId"
+        ],
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "summary": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 1024,
+            "description": "Brief summary of the tool response."
+          },
+          "isError": {
+            "description": "True if the tool response is an error.",
+            "type": "boolean"
+          },
+          "data": {
+            "anyOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "executionId": {
+                    "type": "string",
+                    "format": "uuid",
+                    "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                  },
+                  "solutionId": {
+                    "type": "string",
+                    "format": "uuid",
+                    "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                  },
+                  "trigger": {
+                    "type": "string",
+                    "enum": [
+                      "HTTP_REQUEST",
+                      "SCHEDULE",
+                      "MANUAL"
+                    ]
+                  },
+                  "mode": {
+                    "type": "string",
+                    "enum": [
+                      "MOCK",
+                      "LIVE"
+                    ]
+                  },
+                  "status": {
+                    "type": "string",
+                    "enum": [
+                      "PENDING",
+                      "RUNNING",
+                      "COMPLETED",
+                      "FAILED",
+                      "TIMED_OUT",
+                      "CANCELED"
+                    ]
+                  },
+                  "scheduledFor": {
+                    "anyOf": [
+                      {
+                        "type": "string",
+                        "format": "date-time",
+                        "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "queuedAt": {
+                    "type": "string",
+                    "format": "date-time",
+                    "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$"
+                  },
+                  "startedAt": {
+                    "anyOf": [
+                      {
+                        "type": "string",
+                        "format": "date-time",
+                        "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "completedAt": {
+                    "anyOf": [
+                      {
+                        "type": "string",
+                        "format": "date-time",
+                        "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "versionId": {
+                    "type": "string",
+                    "format": "uuid",
+                    "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                  },
+                  "mock": {
+                    "type": "boolean"
+                  },
+                  "output": {
+                    "anyOf": [
+                      {
+                        "type": "object",
+                        "propertyNames": {
+                          "type": "string"
+                        },
+                        "additionalProperties": {}
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "error": {
+                    "anyOf": [
+                      {
+                        "type": "object",
+                        "properties": {
+                          "code": {
+                            "type": "string",
+                            "enum": [
+                              "LIVE_NOT_ENABLED",
+                              "CONTRACT_UNSUPPORTED",
+                              "HEAD_DRIFT",
+                              "CAPACITY",
+                              "OUTCOME_UNKNOWN",
+                              "SERVICE_ACCOUNT_UNAVAILABLE",
+                              "DEADLINE_EXCEEDED",
+                              "SUBMISSION_INVALID",
+                              "CI_FAILED",
+                              "BUILD_FAILED",
+                              "TOKEN_LIMIT_REACHED",
+                              "MICROVM_LOST",
+                              "INVALID_INPUT",
+                              "INVALID_OUTPUT",
+                              "SOLUTION_FAILED",
+                              "BUNDLE_INTEGRITY_FAILED",
+                              "BUNDLE_LOAD_FAILED",
+                              "MCP_HANDSHAKE_FAILED",
+                              "SOLUTION_DELETED",
+                              "INTERNAL_ERROR"
+                            ]
+                          },
+                          "message": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 500
+                          },
+                          "retryable": {
+                            "type": "boolean"
+                          }
+                        },
+                        "required": [
+                          "code",
+                          "message",
+                          "retryable"
+                        ],
+                        "additionalProperties": false
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  }
+                },
+                "required": [
+                  "executionId",
+                  "solutionId",
+                  "trigger",
+                  "mode",
+                  "status",
+                  "scheduledFor",
+                  "queuedAt",
+                  "startedAt",
+                  "completedAt",
+                  "versionId",
+                  "mock",
+                  "output",
+                  "error"
+                ],
+                "additionalProperties": false
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "summary",
+          "data"
+        ],
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false
+      },
+      "annotations": {
+        "title": "Get Studio execution",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      }
+    },
+    {
+      "name": "studio_executions_list",
+      "title": "List Studio executions",
+      "description": "Lists the executions of a DataDoe Studio solution, newest first. Use page and pageSize. pageSize is 25 by default and at most 100.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "solutionId": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+          },
+          "page": {
+            "default": 1,
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 10000
+          },
+          "pageSize": {
+            "default": 25,
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 100
+          }
+        },
+        "required": [
+          "solutionId"
+        ],
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "summary": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 1024,
+            "description": "Brief summary of the tool response."
+          },
+          "isError": {
+            "description": "True if the tool response is an error.",
+            "type": "boolean"
+          },
+          "data": {
+            "anyOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "executions": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "executionId": {
+                          "type": "string",
+                          "format": "uuid",
+                          "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                        },
+                        "solutionId": {
+                          "type": "string",
+                          "format": "uuid",
+                          "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                        },
+                        "trigger": {
+                          "type": "string",
+                          "enum": [
+                            "HTTP_REQUEST",
+                            "SCHEDULE",
+                            "MANUAL"
+                          ]
+                        },
+                        "mode": {
+                          "type": "string",
+                          "enum": [
+                            "MOCK",
+                            "LIVE"
+                          ]
+                        },
+                        "status": {
+                          "type": "string",
+                          "enum": [
+                            "PENDING",
+                            "RUNNING",
+                            "COMPLETED",
+                            "FAILED",
+                            "TIMED_OUT",
+                            "CANCELED"
+                          ]
+                        },
+                        "scheduledFor": {
+                          "anyOf": [
+                            {
+                              "type": "string",
+                              "format": "date-time",
+                              "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$"
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        },
+                        "queuedAt": {
+                          "type": "string",
+                          "format": "date-time",
+                          "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$"
+                        },
+                        "startedAt": {
+                          "anyOf": [
+                            {
+                              "type": "string",
+                              "format": "date-time",
+                              "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$"
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        },
+                        "completedAt": {
+                          "anyOf": [
+                            {
+                              "type": "string",
+                              "format": "date-time",
+                              "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$"
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        }
+                      },
+                      "required": [
+                        "executionId",
+                        "solutionId",
+                        "trigger",
+                        "mode",
+                        "status",
+                        "scheduledFor",
+                        "queuedAt",
+                        "startedAt",
+                        "completedAt"
+                      ],
+                      "additionalProperties": false
+                    }
+                  },
+                  "meta": {
+                    "type": "object",
+                    "properties": {
+                      "page": {
+                        "type": "integer",
+                        "minimum": 1,
+                        "maximum": 9007199254740991
+                      },
+                      "pageSize": {
+                        "type": "integer",
+                        "minimum": 1,
+                        "maximum": 9007199254740991
+                      },
+                      "totalItems": {
+                        "type": "integer",
+                        "minimum": 0,
+                        "maximum": 9007199254740991
+                      },
+                      "totalPages": {
+                        "type": "integer",
+                        "minimum": 0,
+                        "maximum": 9007199254740991
+                      }
+                    },
+                    "required": [
+                      "page",
+                      "pageSize",
+                      "totalItems",
+                      "totalPages"
+                    ],
+                    "additionalProperties": false
+                  }
+                },
+                "required": [
+                  "executions",
+                  "meta"
+                ],
+                "additionalProperties": false
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "summary",
+          "data"
+        ],
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false
+      },
+      "annotations": {
+        "title": "List Studio executions",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      }
+    },
+    {
       "name": "datadoe_support_ticket_create",
       "title": "Submit a DataDoe support ticket",
       "description": "Sends a support request to the DataDoe team as the authenticated user; service accounts cannot create support tickets. Optional contactEmails must belong to active members of the current Organization. Sends confirmation emails to the ticket recipients. Tell the user that the request was sent. No follow-up to the DataDoe team is needed. DataDoe recommends polling datadoe_support_ticket_check every hour. This does not open or read Amazon Selling Partner Support cases.",
@@ -7898,13 +10687,9 @@
                 }
               },
               "responseMessage": {
-                "anyOf": [
-                  {
-                    "type": "string"
-                  },
-                  {
-                    "type": "null"
-                  }
+                "type": [
+                  "string",
+                  "null"
                 ]
               }
             },
@@ -8051,13 +10836,9 @@
                 }
               },
               "responseMessage": {
-                "anyOf": [
-                  {
-                    "type": "string"
-                  },
-                  {
-                    "type": "null"
-                  }
+                "type": [
+                  "string",
+                  "null"
                 ]
               }
             },
