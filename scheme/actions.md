@@ -1,6 +1,6 @@
 # DataDoe Actions
 
-Actions let AI agents and integrations read and change Amazon data through DataDoe. This page lists 225 Action types by group, with their limits, results, and group guides.
+Actions let AI agents and integrations read and change Amazon data through DataDoe. This page lists 226 Action types by group, with their limits, results, and group guides.
 
 - How to enable and run Actions: https://www.datadoe.com/hub/docs/datadoe-actions/introduction.md
 - Full JSON, including the JSON Schema of each Action's `details` (`detailsJsonSchema`): https://api.datadoe.com/api/v1/spec/action-scheme
@@ -145,6 +145,15 @@ Actions let AI agents and integrations read and change Amazon data through DataD
 - Max items: 60 (API) / 20 (MCP)
 - Description: Find the current competitive summary for ASINs, including featured buying options, reference prices, lowest-priced offers, and similar items. Promotions are inside the offer arrays. Supports optional per-ASIN lowest-priced-offer filters.
 - Result: Full Amazon competitive summary body per ASIN, including nested promotions.
+
+#### `AMAZON_LISTINGS_PRICING_FIND`: Find SKU prices
+
+- Access: Read
+- Accounts: Sellers only
+- Requires PII access: no
+- Max items: 20 (API) / 20 (MCP)
+- Description: Find the current price of the seller's own offer for up to 20 SKUs. The buying price includes active promotions. The regular price does not. Each offer includes the fulfillment channel and item condition.
+- Result: Buying price, regular price, fulfillment channel, and item condition for each SKU.
 
 #### `AMAZON_LISTINGS_PRODUCT_TYPES_FIND`: Find product types
 
@@ -360,6 +369,8 @@ A+ Content Actions accept Standard (`STANDARD_*`), Premium (`PREMIUM_*`), and Br
 Premium video modules (`PREMIUM_VIDEO_TEXT`, `PREMIUM_HERO_VIDEO`, `PREMIUM_VIDEO_IMAGE_CAROUSEL`) reference a video and its thumbnail by `videoMediaId` and `imageMediaId`. Register the pairing with `AMAZON_APLUS_MEDIA_ADD`: pass the existing video `mediaId`, its `descriptions` (one per locale), and a thumbnail image as an `APLUS_IMAGES` file, an existing media library path, or a `mediaId`. DataDoe does not upload video files. Amazon can take up to 48 hours to process a video; check its status with `AMAZON_APLUS_MEDIA_FIND`.
 
 You can send `AMAZON_APLUS_CONTENT_FIND` output back to `AMAZON_APLUS_CONTENT_UPDATE` after your changes. Every image needs `imageCropSpecification`, except catalog images (`/images/I/…`) that Amazon fills in for ASIN cards.
+
+Each `AMAZON_APLUS_CONTENT_FIND` result also has `publicImageUrls`, next to `data`. It maps each A+ media library image path, such as `aplus-media-library-service-media/…`, to a public image URL that you can open in a browser. It leaves out Brand Story and catalog image paths. Leave out `publicImageUrls` when you send the output to `AMAZON_APLUS_CONTENT_UPDATE`.
 
 `AMAZON_APLUS_CONTENT_FIND` skips documents with premium modules that Amazon SP-API does not expose. Those documents are listed under `skipped` and do not fail the Action.
 
@@ -1322,7 +1333,7 @@ Ship Seller Flex, Easy Ship and Self Delivery orders through External Fulfillmen
 - Accounts: Sellers only
 - Requires PII access: yes
 - Max items: 1 (API) / 1 (MCP)
-- Description: Seller Central only. One Action handles one shipment operation. Requires the Amazon role Direct-to-Consumer Shipping (Restricted) on a Seller Central account. Requires PII access because a shipment can include a recipient. Use status ACCEPTED for new merchant-fulfilled shipments. CREATED means Amazon could not auto-accept the order. Optional filters are location, marketplace, channel name, last-updated range, page size and pagination token. Repeat the same filters when a page is empty but a next token is present. Amazon operation getShipments. Next, read one shipment. See [External Fulfillment shipping](https://www.datadoe.com/hub/docs/datadoe-actions/external-fulfillment).
+- Description: Seller Central only. One Action handles one shipment operation. Requires the Amazon role Direct-to-Consumer Shipping (Restricted) on a Seller Central account. Requires PII access because a shipment can include a recipient. Use status ACCEPTED for new merchant-fulfilled shipments. Amazon has deprecated CREATED; do not use it to find new shipments. Optional filters are location, marketplace, channel name, last-updated range, page size and pagination token. Repeat the same filters when a page is empty but a next token is present. Amazon operation getShipments. Next, read one shipment. See [External Fulfillment shipping](https://www.datadoe.com/hub/docs/datadoe-actions/external-fulfillment).
 - Result: Returns the Amazon response with document content and temporary download URLs removed, plus stored File IDs and authenticated download links. Includes observation time, warnings and Amazon error details. An HTTP 204 response has no body. Label results include each package status. A mixed label result is partial, not a full success.
 
 #### `AMAZON_EXTERNAL_FULFILLMENT_SHIPMENTS_GET`: Get External Fulfillment shipment
