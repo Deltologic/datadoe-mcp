@@ -2807,6 +2807,10 @@
         {
           "type": "AMAZON_LISTINGS_FIND",
           "relation": "live"
+        },
+        {
+          "type": "AMAZON_LISTINGS_PRICING_FIND",
+          "relation": "live"
         }
       ],
       "fetchPeriods": [
@@ -3773,6 +3777,10 @@
         },
         {
           "type": "AMAZON_LISTINGS_FIND",
+          "relation": "live"
+        },
+        {
+          "type": "AMAZON_LISTINGS_PRICING_FIND",
           "relation": "live"
         }
       ],
