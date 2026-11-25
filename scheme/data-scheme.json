@@ -2175,6 +2175,281 @@
       ]
     },
     {
+      "id": "8b30b1db5cb33ff5d18405ee8e7a6e335e6a1b974abf91cf8fbd2dc79931f9b5",
+      "name": "Conversion by ASIN & Date",
+      "tableName": "amazon_conversion_by_asin_and_date",
+      "type": "SELLER_CENTRAL",
+      "columns": [
+        {
+          "name": "date",
+          "type": "DATE",
+          "nullable": false,
+          "description": "Purchase date in the marketplace time zone. This is also the Sales and Traffic report date."
+        },
+        {
+          "name": "marketplace_id",
+          "type": "TEXT",
+          "nullable": false,
+          "description": "Amazon provided ID that represents a specific country where the Seller or Vendor operates."
+        },
+        {
+          "name": "marketplace_country_code",
+          "type": "TEXT",
+          "nullable": false,
+          "description": "ISO country code for the Amazon marketplace."
+        },
+        {
+          "name": "marketplace_country_name",
+          "type": "TEXT",
+          "nullable": false,
+          "description": "Human-readable country name for the marketplace (derived from marketplace_id)."
+        },
+        {
+          "name": "seller_or_vendor_id",
+          "type": "TEXT",
+          "nullable": false,
+          "description": "DataDoe account identifier used by MCP/API calls (sellers_and_vendors_list, exports). Not unique in amazon_sellers_and_vendors_context when one account has multiple connection contexts — join that table on connection_context_id instead."
+        },
+        {
+          "name": "seller_or_vendor_name",
+          "type": "TEXT",
+          "nullable": false,
+          "description": "DataDoe connection context display name for the seller or vendor."
+        },
+        {
+          "name": "marketplace_seller_id",
+          "type": "TEXT",
+          "nullable": true,
+          "description": "Amazon Seller Central seller ID from the connection (connection_seller_id). Null when the connection has no seller ID."
+        },
+        {
+          "name": "child_asin",
+          "type": "TEXT",
+          "nullable": false,
+          "description": null
+        },
+        {
+          "name": "parent_asin",
+          "type": "TEXT",
+          "nullable": true,
+          "description": "Parent ASIN from Sales and Traffic. Empty when this child ASIN has no traffic row."
+        },
+        {
+          "name": "product_name",
+          "type": "TEXT",
+          "nullable": true,
+          "description": "Product name from Sales and Traffic when that row exists, otherwise the order line."
+        },
+        {
+          "name": "sessions",
+          "type": "NUMBER",
+          "nullable": true,
+          "description": "Sales and Traffic sessions. 0 when Amazon published traffic for the connection, marketplace and day but this ASIN has no row. Empty when traffic for that day is not published yet."
+        },
+        {
+          "name": "sessions_b2b",
+          "type": "NUMBER",
+          "nullable": true,
+          "description": "Amazon Business sessions. Same empty-versus-zero rule as sessions."
+        },
+        {
+          "name": "page_views",
+          "type": "NUMBER",
+          "nullable": true,
+          "description": "Sales and Traffic page views. Same empty-versus-zero rule as sessions."
+        },
+        {
+          "name": "units_ordered",
+          "type": "NUMBER",
+          "nullable": true,
+          "description": "Business Reports units ordered. Same empty-versus-zero rule as sessions. Kept separate from order_units."
+        },
+        {
+          "name": "amazon_total_order_items",
+          "type": "NUMBER",
+          "nullable": true,
+          "description": "Amazon Total Order Items from Sales and Traffic, kept so you can reconcile it with distinct_valid_orders."
+        },
+        {
+          "name": "traffic_status",
+          "type": "TEXT",
+          "nullable": false,
+          "description": "reported when this ASIN has a Sales and Traffic row. zero when Amazon published traffic for the connection, marketplace and day but this ASIN has no row. not_published when that day has no published traffic."
+        },
+        {
+          "name": "order_units",
+          "type": "NUMBER",
+          "nullable": false,
+          "description": "Sum of quantity on valid order lines. Kept separate from units_ordered."
+        },
+        {
+          "name": "distinct_valid_orders",
+          "type": "NUMBER",
+          "nullable": false,
+          "description": "Distinct valid orders for this child ASIN. An order with several units counts once. An order with several ASINs counts once per ASIN."
+        },
+        {
+          "name": "regular_orders",
+          "type": "NUMBER",
+          "nullable": false,
+          "description": "Valid orders whose lines are regular purchases."
+        },
+        {
+          "name": "initial_subscription_orders",
+          "type": "NUMBER",
+          "nullable": false,
+          "description": "Valid orders whose promotion IDs contain Subscribe and Save Promotion V2."
+        },
+        {
+          "name": "recurring_subscription_orders",
+          "type": "NUMBER",
+          "nullable": false,
+          "description": "Valid orders whose promotion IDs contain FBA Subscribe & Save Discount. These are automatic renewals."
+        },
+        {
+          "name": "top_off_orders",
+          "type": "NUMBER",
+          "nullable": false,
+          "description": "Valid orders whose promotion IDs contain top_off."
+        },
+        {
+          "name": "unknown_classification_orders",
+          "type": "NUMBER",
+          "nullable": false,
+          "description": "Valid orders with more than one Subscribe and Save marker, conflicting line classes, or a Pending line with an empty promotion string."
+        },
+        {
+          "name": "customer_initiated_orders",
+          "type": "NUMBER",
+          "nullable": false,
+          "description": "regular_orders plus initial_subscription_orders plus top_off_orders."
+        },
+        {
+          "name": "pending_orders",
+          "type": "NUMBER",
+          "nullable": false,
+          "description": "Valid orders with at least one Pending line."
+        },
+        {
+          "name": "pending_regular_orders",
+          "type": "NUMBER",
+          "nullable": false,
+          "description": "pending_orders classified regular."
+        },
+        {
+          "name": "pending_initial_subscription_orders",
+          "type": "NUMBER",
+          "nullable": false,
+          "description": "pending_orders classified initial_subscription."
+        },
+        {
+          "name": "pending_recurring_subscription_orders",
+          "type": "NUMBER",
+          "nullable": false,
+          "description": "pending_orders classified recurring."
+        },
+        {
+          "name": "pending_top_off_orders",
+          "type": "NUMBER",
+          "nullable": false,
+          "description": "pending_orders classified top_off."
+        },
+        {
+          "name": "pending_unknown_classification_orders",
+          "type": "NUMBER",
+          "nullable": false,
+          "description": "pending_orders classified unknown."
+        },
+        {
+          "name": "unit_session_percentage",
+          "type": "NUMBER",
+          "nullable": true,
+          "description": "100 times units_ordered divided by sessions, rounded to two decimal places. Empty when sessions are empty or 0."
+        },
+        {
+          "name": "order_cvr",
+          "type": "NUMBER",
+          "nullable": true,
+          "description": "100 times distinct_valid_orders divided by sessions, rounded to two decimal places. Empty when sessions are empty or 0."
+        },
+        {
+          "name": "true_cvr",
+          "type": "NUMBER",
+          "nullable": true,
+          "description": "100 times customer_initiated_orders divided by sessions, rounded to two decimal places. Empty when unknown_classification_orders is not 0, or when sessions are empty or 0."
+        },
+        {
+          "name": "true_cvr_lower",
+          "type": "NUMBER",
+          "nullable": true,
+          "description": "100 times customer_initiated_orders divided by sessions, rounded to two decimal places. Unknown orders stay out of the numerator. Empty when sessions are empty or 0."
+        },
+        {
+          "name": "true_cvr_upper",
+          "type": "NUMBER",
+          "nullable": true,
+          "description": "100 times customer_initiated_orders plus unknown_classification_orders, divided by sessions, rounded to two decimal places. Empty when sessions are empty or 0."
+        },
+        {
+          "name": "recurring_order_share",
+          "type": "NUMBER",
+          "nullable": true,
+          "description": "100 times recurring_subscription_orders divided by distinct_valid_orders, rounded to two decimal places. Empty when distinct_valid_orders is 0."
+        },
+        {
+          "name": "data_as_of",
+          "type": "DATE",
+          "nullable": true,
+          "description": "Latest order-line or Sales and Traffic update time for this row."
+        },
+        {
+          "name": "maturity_status",
+          "type": "TEXT",
+          "nullable": false,
+          "description": "provisional for 0 to 7 days, maturing for 8 to 14 days, mature for 15 to 30 days, and stable after 30 days. It uses the current date, so it can change when the data does not."
+        },
+        {
+          "name": "methodology_version",
+          "type": "TEXT",
+          "nullable": false,
+          "description": "Classification and metric rules version. v1 classifies Subscribe and Save from promotion IDs."
+        }
+      ],
+      "userManaged": false,
+      "isPremium": true,
+      "defaultDataset": true,
+      "enabled": true,
+      "rowCountBilling": true,
+      "description": "Daily child ASIN conversion for Amazon seller accounts. The BigQuery view grain is organization_id, store_id, sp_connection_id, marketplace, child ASIN and purchase date in the marketplace time zone. Exports, the REST API and MCP do not return organization_id, store_id or sp_connection_id. They identify the account with seller_or_vendor_id and marketplace_seller_id. True CVR counts each valid order once per child ASIN. Automatic Subscribe and Save renewals stay in recurring_subscription_orders. Amazon Unit Session Percentage counts units, including renewals and orders with several units. Sum the count columns, then divide, when you roll up a week, a month or several ASINs. Do not average the daily percentages. Include a day in both sums, or in neither. For example, 10 customer-initiated orders and 100 sessions on one day, then 10 orders on a day whose sessions are not published, is not a 20% rate. SQL skips empty sessions, so the summed orders would include both days while the sessions include only the first. Add orders and sessions for the same published days, or leave the period rate empty. When a period includes unknown orders, leave true_cvr empty for that period, or use true_cvr_lower and true_cvr_upper. The lower bound leaves unknown orders out. The upper bound counts them as customer-initiated. maturity_status uses the current date, so it can change when the data does not. Sales and Traffic usually arrives one or two days after the purchase date, so recent days can show orders with traffic_status not_published and blank rates. methodology_version is v1. This is a premium table.",
+      "requiresDatePeriod": true,
+      "issues": [],
+      "fetchPeriods": [
+        {
+          "type": "CONTINUOUS"
+        }
+      ],
+      "dataAvailability": {
+        "type": "REAL_TIME",
+        "description": "Orders are available up to 1 hour after being placed. Sales and Traffic usually arrives one or two days after the purchase date, so recent days can show orders without sessions.",
+        "refreshAt": "Orders at 10am, 1pm, 4pm and 7pm. Sales and Traffic at 10am, 1pm and 4pm."
+      },
+      "sources": [
+        "connections",
+        "raw_sp_api_report_orders",
+        "raw_sp_api_report_sales_and_traffic",
+        "refined_products_by_child_asin"
+      ],
+      "containsPii": false,
+      "initialLoadProgress": null,
+      "searchAliases": [
+        "true cvr",
+        "conversion rate",
+        "unit session percentage",
+        "subscribe and save",
+        "subscription renewal"
+      ]
+    },
+    {
       "id": "89b27535d27c2a94db5ae39af4717f542624ff4df7802fd633e16c78674a1778",
       "name": "Order Line Items",
       "tableName": "amazon_order_items_with_cogs",
@@ -19947,7 +20222,7 @@
       "defaultDataset": false,
       "enabled": true,
       "rowCountBilling": true,
-      "description": "Successful Amazon Catalog Items observations per child ASIN and marketplace for items the Organization tracks. A later successful response is retained even when unchanged; a retry keeps the original observation_id and checked_at without adding a duplicate. History starts after the Organization enables it and tracks the item. A newly associated item receives its next successful observation, without older shared-cache history. The source stays off until a staged Connector rollout enables it. History follows the existing catalog refresh. DataDoe can request an item again one day after its last cache update. The catalog worker runs every 15 minutes in each region and stops at its time limit, so a tracked item can go more than one day without a new observation. A history delivery backlog does not stop current catalog refreshes. Failed, throttled, empty and hard-failed attempts and items Amazon omits create no history observation. Missing days and source values remain unknown: a missing item or rank does not mean deletion or a zero rank. Observations are per item, not an atomic snapshot of the whole catalog. Changes occurred between observations; checked_at is not the exact time Amazon edited the item. Use amazon_products_by_child_asin and amazon_products_raw for current-state joins to sales, inventory and profit. They keep one latest row per ASIN and marketplace and provide the cached onboarding baseline. Legacy rows can have null checked_at and observation_id; overwritten payloads are not recovered or assigned invented times. When Amazon omits an item, its current row is created or cleared without a new checked_at and without a history observation. Filter history by child_asin, marketplace_id and a date range; date and snapshot_date are the UTC date of checked_at. For rank trends, order by checked_at and observation_id and compare category names and raw category identifiers, which can change. To compare observations, join on child_asin and marketplace_id and filter the two observation_id values; an absent observation produces no comparison. For the last observed state at a chosen time, filter checked_at <= the chosen timestamp, then use QUALIFY ROW_NUMBER() OVER (PARTITION BY child_asin, marketplace_id ORDER BY checked_at DESC, observation_id DESC) = 1. This returns only items observed by that time and does not fill gaps with current content.",
+      "description": "Successful Amazon Catalog Items observations per child ASIN and marketplace for items the Organization tracks. A later successful response is retained even when unchanged; a retry keeps the original observation_id and checked_at without adding a duplicate. History starts with the first successful observation after the Organization tracks the item. A newly associated item receives its next successful observation, without older shared-cache history. History follows the existing catalog refresh. DataDoe can request an item again one day after its last cache update. The catalog worker runs every 15 minutes in each region and stops at its time limit, so a tracked item can go more than one day without a new observation. A history delivery backlog does not stop current catalog refreshes. Failed, throttled, empty and hard-failed attempts and items Amazon omits create no history observation. Missing days and source values remain unknown: a missing item or rank does not mean deletion or a zero rank. Observations are per item, not an atomic snapshot of the whole catalog. Changes occurred between observations; checked_at is not the exact time Amazon edited the item. Use amazon_products_by_child_asin and amazon_products_raw for current-state joins to sales, inventory and profit. They keep one latest row per ASIN and marketplace and provide the cached onboarding baseline. Legacy rows can have null checked_at and observation_id; overwritten payloads are not recovered or assigned invented times. When Amazon omits an item, its current row is created or cleared without a new checked_at and without a history observation. Filter history by child_asin, marketplace_id and a date range; date and snapshot_date are the UTC date of checked_at. For rank trends, order by checked_at and observation_id and compare category names and raw category identifiers, which can change. To compare observations, join on child_asin and marketplace_id and filter the two observation_id values; an absent observation produces no comparison. For the last observed state at a chosen time, filter checked_at <= the chosen timestamp, then use QUALIFY ROW_NUMBER() OVER (PARTITION BY child_asin, marketplace_id ORDER BY checked_at DESC, observation_id DESC) = 1. This returns only items observed by that time and does not fill gaps with current content.",
       "requiresDatePeriod": true,
       "issues": [],
       "fetchPeriods": [
@@ -20109,7 +20384,7 @@
       "defaultDataset": false,
       "enabled": true,
       "rowCountBilling": true,
-      "description": "Successful Amazon Catalog Items observations per child ASIN and marketplace for items the Organization tracks. A later successful response is retained even when unchanged; a retry keeps the original observation_id and checked_at without adding a duplicate. History starts after the Organization enables it and tracks the item. A newly associated item receives its next successful observation, without older shared-cache history. The source stays off until a staged Connector rollout enables it. History follows the existing catalog refresh. DataDoe can request an item again one day after its last cache update. The catalog worker runs every 15 minutes in each region and stops at its time limit, so a tracked item can go more than one day without a new observation. A history delivery backlog does not stop current catalog refreshes. Failed, throttled, empty and hard-failed attempts and items Amazon omits create no history observation. Missing days and source values remain unknown: a missing item or rank does not mean deletion or a zero rank. Observations are per item, not an atomic snapshot of the whole catalog. Changes occurred between observations; checked_at is not the exact time Amazon edited the item. Use amazon_products_by_child_asin and amazon_products_raw for current-state joins to sales, inventory and profit. They keep one latest row per ASIN and marketplace and provide the cached onboarding baseline. Legacy rows can have null checked_at and observation_id; overwritten payloads are not recovered or assigned invented times. When Amazon omits an item, its current row is created or cleared without a new checked_at and without a history observation. Filter history by child_asin, marketplace_id and a date range; date and snapshot_date are the UTC date of checked_at. For rank trends, order by checked_at and observation_id and compare category names and raw category identifiers, which can change. To compare observations, join on child_asin and marketplace_id and filter the two observation_id values; an absent observation produces no comparison. For the last observed state at a chosen time, filter checked_at <= the chosen timestamp, then use QUALIFY ROW_NUMBER() OVER (PARTITION BY child_asin, marketplace_id ORDER BY checked_at DESC, observation_id DESC) = 1. This returns only items observed by that time and does not fill gaps with current content. Listing-specific prices, inventory, the advertising product catalog, Search Catalog Performance and A+ content are separate data sources. Matches amazon_products_by_child_asin_history by child_asin, marketplace_id and observation_id. Full product_data preserves the complete source JSON, including sales-rank arrays and category identifiers; missing values remain null. Rows are large; download payloads to a file. For MCP raw-history exports, paginate with limit and skip: at most 100 rows in JSON or 250 rows in CSV. REST file generation and direct BigQuery queries use their own policies.",
+      "description": "Successful Amazon Catalog Items observations per child ASIN and marketplace for items the Organization tracks. A later successful response is retained even when unchanged; a retry keeps the original observation_id and checked_at without adding a duplicate. History starts with the first successful observation after the Organization tracks the item. A newly associated item receives its next successful observation, without older shared-cache history. History follows the existing catalog refresh. DataDoe can request an item again one day after its last cache update. The catalog worker runs every 15 minutes in each region and stops at its time limit, so a tracked item can go more than one day without a new observation. A history delivery backlog does not stop current catalog refreshes. Failed, throttled, empty and hard-failed attempts and items Amazon omits create no history observation. Missing days and source values remain unknown: a missing item or rank does not mean deletion or a zero rank. Observations are per item, not an atomic snapshot of the whole catalog. Changes occurred between observations; checked_at is not the exact time Amazon edited the item. Use amazon_products_by_child_asin and amazon_products_raw for current-state joins to sales, inventory and profit. They keep one latest row per ASIN and marketplace and provide the cached onboarding baseline. Legacy rows can have null checked_at and observation_id; overwritten payloads are not recovered or assigned invented times. When Amazon omits an item, its current row is created or cleared without a new checked_at and without a history observation. Filter history by child_asin, marketplace_id and a date range; date and snapshot_date are the UTC date of checked_at. For rank trends, order by checked_at and observation_id and compare category names and raw category identifiers, which can change. To compare observations, join on child_asin and marketplace_id and filter the two observation_id values; an absent observation produces no comparison. For the last observed state at a chosen time, filter checked_at <= the chosen timestamp, then use QUALIFY ROW_NUMBER() OVER (PARTITION BY child_asin, marketplace_id ORDER BY checked_at DESC, observation_id DESC) = 1. This returns only items observed by that time and does not fill gaps with current content. Listing-specific prices, inventory, the advertising product catalog, Search Catalog Performance and A+ content are separate data sources. Matches amazon_products_by_child_asin_history by child_asin, marketplace_id and observation_id. Full product_data preserves the complete source JSON, including sales-rank arrays and category identifiers; missing values remain null. Rows are large; download payloads to a file. For MCP raw-history exports, paginate with limit and skip: at most 100 rows in JSON or 250 rows in CSV. REST file generation and direct BigQuery queries use their own policies.",
       "requiresDatePeriod": true,
       "issues": [],
       "fetchPeriods": [
@@ -23765,7 +24040,7 @@
       "defaultDataset": false,
       "enabled": true,
       "rowCountBilling": true,
-      "description": "Successful Amazon Catalog Items observations per child ASIN and marketplace for items the Organization tracks. A later successful response is retained even when unchanged; a retry keeps the original observation_id and checked_at without adding a duplicate. History starts after the Organization enables it and tracks the item. A newly associated item receives its next successful observation, without older shared-cache history. The source stays off until a staged Connector rollout enables it. History follows the existing catalog refresh. DataDoe can request an item again one day after its last cache update. The catalog worker runs every 15 minutes in each region and stops at its time limit, so a tracked item can go more than one day without a new observation. A history delivery backlog does not stop current catalog refreshes. Failed, throttled, empty and hard-failed attempts and items Amazon omits create no history observation. Missing days and source values remain unknown: a missing item or rank does not mean deletion or a zero rank. Observations are per item, not an atomic snapshot of the whole catalog. Changes occurred between observations; checked_at is not the exact time Amazon edited the item. Use amazon_products_by_child_asin and amazon_products_raw for current-state joins to sales, inventory and profit. They keep one latest row per ASIN and marketplace and provide the cached onboarding baseline. Legacy rows can have null checked_at and observation_id; overwritten payloads are not recovered or assigned invented times. When Amazon omits an item, its current row is created or cleared without a new checked_at and without a history observation. Filter history by child_asin, marketplace_id and a date range; date and snapshot_date are the UTC date of checked_at. For rank trends, order by checked_at and observation_id and compare category names and raw category identifiers, which can change. To compare observations, join on child_asin and marketplace_id and filter the two observation_id values; an absent observation produces no comparison. For the last observed state at a chosen time, filter checked_at <= the chosen timestamp, then use QUALIFY ROW_NUMBER() OVER (PARTITION BY child_asin, marketplace_id ORDER BY checked_at DESC, observation_id DESC) = 1. This returns only items observed by that time and does not fill gaps with current content.",
+      "description": "Successful Amazon Catalog Items observations per child ASIN and marketplace for items the Organization tracks. A later successful response is retained even when unchanged; a retry keeps the original observation_id and checked_at without adding a duplicate. History starts with the first successful observation after the Organization tracks the item. A newly associated item receives its next successful observation, without older shared-cache history. History follows the existing catalog refresh. DataDoe can request an item again one day after its last cache update. The catalog worker runs every 15 minutes in each region and stops at its time limit, so a tracked item can go more than one day without a new observation. A history delivery backlog does not stop current catalog refreshes. Failed, throttled, empty and hard-failed attempts and items Amazon omits create no history observation. Missing days and source values remain unknown: a missing item or rank does not mean deletion or a zero rank. Observations are per item, not an atomic snapshot of the whole catalog. Changes occurred between observations; checked_at is not the exact time Amazon edited the item. Use amazon_products_by_child_asin and amazon_products_raw for current-state joins to sales, inventory and profit. They keep one latest row per ASIN and marketplace and provide the cached onboarding baseline. Legacy rows can have null checked_at and observation_id; overwritten payloads are not recovered or assigned invented times. When Amazon omits an item, its current row is created or cleared without a new checked_at and without a history observation. Filter history by child_asin, marketplace_id and a date range; date and snapshot_date are the UTC date of checked_at. For rank trends, order by checked_at and observation_id and compare category names and raw category identifiers, which can change. To compare observations, join on child_asin and marketplace_id and filter the two observation_id values; an absent observation produces no comparison. For the last observed state at a chosen time, filter checked_at <= the chosen timestamp, then use QUALIFY ROW_NUMBER() OVER (PARTITION BY child_asin, marketplace_id ORDER BY checked_at DESC, observation_id DESC) = 1. This returns only items observed by that time and does not fill gaps with current content.",
       "requiresDatePeriod": true,
       "issues": [],
       "fetchPeriods": [
@@ -23927,7 +24202,7 @@
       "defaultDataset": false,
       "enabled": true,
       "rowCountBilling": true,
-      "description": "Successful Amazon Catalog Items observations per child ASIN and marketplace for items the Organization tracks. A later successful response is retained even when unchanged; a retry keeps the original observation_id and checked_at without adding a duplicate. History starts after the Organization enables it and tracks the item. A newly associated item receives its next successful observation, without older shared-cache history. The source stays off until a staged Connector rollout enables it. History follows the existing catalog refresh. DataDoe can request an item again one day after its last cache update. The catalog worker runs every 15 minutes in each region and stops at its time limit, so a tracked item can go more than one day without a new observation. A history delivery backlog does not stop current catalog refreshes. Failed, throttled, empty and hard-failed attempts and items Amazon omits create no history observation. Missing days and source values remain unknown: a missing item or rank does not mean deletion or a zero rank. Observations are per item, not an atomic snapshot of the whole catalog. Changes occurred between observations; checked_at is not the exact time Amazon edited the item. Use amazon_products_by_child_asin and amazon_products_raw for current-state joins to sales, inventory and profit. They keep one latest row per ASIN and marketplace and provide the cached onboarding baseline. Legacy rows can have null checked_at and observation_id; overwritten payloads are not recovered or assigned invented times. When Amazon omits an item, its current row is created or cleared without a new checked_at and without a history observation. Filter history by child_asin, marketplace_id and a date range; date and snapshot_date are the UTC date of checked_at. For rank trends, order by checked_at and observation_id and compare category names and raw category identifiers, which can change. To compare observations, join on child_asin and marketplace_id and filter the two observation_id values; an absent observation produces no comparison. For the last observed state at a chosen time, filter checked_at <= the chosen timestamp, then use QUALIFY ROW_NUMBER() OVER (PARTITION BY child_asin, marketplace_id ORDER BY checked_at DESC, observation_id DESC) = 1. This returns only items observed by that time and does not fill gaps with current content. Listing-specific prices, inventory, the advertising product catalog, Search Catalog Performance and A+ content are separate data sources. Matches amazon_products_by_child_asin_history by child_asin, marketplace_id and observation_id. Full product_data preserves the complete source JSON, including sales-rank arrays and category identifiers; missing values remain null. Rows are large; download payloads to a file. For MCP raw-history exports, paginate with limit and skip: at most 100 rows in JSON or 250 rows in CSV. REST file generation and direct BigQuery queries use their own policies.",
+      "description": "Successful Amazon Catalog Items observations per child ASIN and marketplace for items the Organization tracks. A later successful response is retained even when unchanged; a retry keeps the original observation_id and checked_at without adding a duplicate. History starts with the first successful observation after the Organization tracks the item. A newly associated item receives its next successful observation, without older shared-cache history. History follows the existing catalog refresh. DataDoe can request an item again one day after its last cache update. The catalog worker runs every 15 minutes in each region and stops at its time limit, so a tracked item can go more than one day without a new observation. A history delivery backlog does not stop current catalog refreshes. Failed, throttled, empty and hard-failed attempts and items Amazon omits create no history observation. Missing days and source values remain unknown: a missing item or rank does not mean deletion or a zero rank. Observations are per item, not an atomic snapshot of the whole catalog. Changes occurred between observations; checked_at is not the exact time Amazon edited the item. Use amazon_products_by_child_asin and amazon_products_raw for current-state joins to sales, inventory and profit. They keep one latest row per ASIN and marketplace and provide the cached onboarding baseline. Legacy rows can have null checked_at and observation_id; overwritten payloads are not recovered or assigned invented times. When Amazon omits an item, its current row is created or cleared without a new checked_at and without a history observation. Filter history by child_asin, marketplace_id and a date range; date and snapshot_date are the UTC date of checked_at. For rank trends, order by checked_at and observation_id and compare category names and raw category identifiers, which can change. To compare observations, join on child_asin and marketplace_id and filter the two observation_id values; an absent observation produces no comparison. For the last observed state at a chosen time, filter checked_at <= the chosen timestamp, then use QUALIFY ROW_NUMBER() OVER (PARTITION BY child_asin, marketplace_id ORDER BY checked_at DESC, observation_id DESC) = 1. This returns only items observed by that time and does not fill gaps with current content. Listing-specific prices, inventory, the advertising product catalog, Search Catalog Performance and A+ content are separate data sources. Matches amazon_products_by_child_asin_history by child_asin, marketplace_id and observation_id. Full product_data preserves the complete source JSON, including sales-rank arrays and category identifiers; missing values remain null. Rows are large; download payloads to a file. For MCP raw-history exports, paginate with limit and skip: at most 100 rows in JSON or 250 rows in CSV. REST file generation and direct BigQuery queries use their own policies.",
       "requiresDatePeriod": true,
       "issues": [],
       "fetchPeriods": [
