@@ -259,7 +259,7 @@ If your Organization uses its own domain prefix, copy the full server URL from t
 | `files_get` | Files | Returns details of one file. |
 | `files_download_url_get` | Files | Returns a download link for a file. |
 | `files_delete` | Files | Deletes a file. |
-| `actions_details_schema_get` | Actions | Returns the fields an Action type needs and whether it is enabled. |
+| `actions_details_schema_get` | Actions | Returns the fields an Action type needs, whether it is enabled, and its description, result, group, item limit and guides. |
 | `actions_start` | Actions | Starts an Action, or tests it with `dryRun: true`. |
 | `actions_acknowledge` | Actions | Releases an Action whose submission to Amazon was uncertain, after you have checked it on Amazon. |
 | `actions_get` | Actions | Returns the status and result of an Action. |
@@ -294,11 +294,22 @@ If your Organization uses its own domain prefix, copy the full server URL from t
 | `amc_operation_get` | Amazon Marketing Cloud | Returns the status of an AMC operation. |
 | `amc_query_templates_find` | Amazon Marketing Cloud | Lists ready-made AMC query templates. |
 | `amc_query_template_get` | Amazon Marketing Cloud | Returns one AMC query template. |
+| `studio_get` | Studio | Returns whether DataDoe Studio is available for the Organization. |
+| `studio_solutions_create` | Studio | Asks DataDoe Studio to create a solution and returns a job. |
+| `studio_solutions_list` | Studio | Lists Studio solutions, with type, status, trigger and whether they are paused. |
+| `studio_solutions_get` | Studio | Returns one Studio solution, including its input and output schema. |
+| `studio_solutions_configure` | Studio | Pauses or resumes a solution, or changes its trigger or schedule. |
+| `studio_solutions_update` | Studio | Asks DataDoe Studio to change an active solution and returns a job. |
+| `studio_solutions_delete` | Studio | Deletes a Studio solution and returns a job. |
+| `studio_jobs_get` | Studio | Returns the status and result of a Studio job. |
+| `studio_solutions_execute` | Studio | Runs an active Studio solution that has an HTTP request trigger. |
+| `studio_executions_get` | Studio | Returns the status and output of a Studio execution. |
+| `studio_executions_list` | Studio | Lists executions of a Studio solution, newest first. |
 | `datadoe_support_ticket_create` | Support | Sends a request to DataDoe support. |
 | `datadoe_support_ticket_check` | Support | Reads a support request and its reply. |
 | `datadoe_support_ticket_update` | Support | Adds information to a support request. |
 
-The [tool definitions file](scheme/mcp-tools.json) has the input and output schema of every tool. Amazon Marketing Cloud (AMC) is in beta. Read the [Amazon Marketing Cloud guide](https://www.datadoe.com/hub/docs/datadoe-features/amc).
+The [tool definitions file](scheme/mcp-tools.json) has the input and output schema of every tool. Amazon Marketing Cloud (AMC) is in beta. Read the [Amazon Marketing Cloud guide](https://www.datadoe.com/hub/docs/datadoe-features/amc). DataDoe Studio builds and runs solutions for an Organization. Only Organization admins can use it.
 
 ---
 
