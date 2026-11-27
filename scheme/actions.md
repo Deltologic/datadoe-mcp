@@ -393,8 +393,8 @@ Each `AMAZON_APLUS_CONTENT_FIND` result also has `publicImageUrls`, next to `dat
 - Accounts: Sellers only
 - Requires PII access: no
 - Max items: 5000 (API) / 50 (MCP)
-- Description: Confirm shipment for an Amazon order item and upload tracking information.
-- Result: Confirmation that Amazon accepted the Action.
+- Description: Confirm shipment for an Amazon order item and upload tracking information. Optional Transparency codes and a package reference confirm a package through Amazon shipment confirmation. Ordinary lines stay on the fulfillment feed.
+- Result: Each Transparency package is accepted, rejected, or unknown. Retry an unknown package with the same package reference. An ordinary shipment confirms that Amazon accepted the feed.
 
 #### `AMAZON_ORDERS_FIND`: Find orders
 
