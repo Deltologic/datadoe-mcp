@@ -948,7 +948,7 @@
                     "min",
                     "max"
                   ],
-                  "description": "sum requires a numeric column. min, max, and avg accept numeric or date/datetime columns. count/countDistinct accept any column."
+                  "description": "sum requires a numeric column. min, max, and avg accept numeric or date/datetime columns. count accepts any column. countDistinct accepts any column except JSON."
                 },
                 "alias": {
                   "anyOf": [
@@ -8011,7 +8011,7 @@
     {
       "name": "studio_solutions_create",
       "title": "Create Studio solution",
-      "description": "DataDoe Studio builds and runs solutions for this Organization. A Flow is scripted logic that calls the DataDoe API. An Agent is an AI agent that uses DataDoe MCP. Only Organization admins can use DataDoe Studio. Asks DataDoe Studio to build a new solution from your brief. It returns a job straight away. Building takes several minutes. Call studio_jobs_get with jobId until the status is SUCCEEDED, FAILED or CANCELED. An HTTP_REQUEST trigger runs the solution when you call studio_solutions_execute. A SCHEDULE trigger runs it on a UTC cron schedule. Send a requestId to make the request safe to retry.",
+      "description": "DataDoe Studio builds and runs solutions for this Organization. A Flow is scripted logic that calls the DataDoe API. An Agent is an AI agent that uses DataDoe MCP. Only Organization admins can use DataDoe Studio. Asks DataDoe Studio to build a new solution from your brief. It returns a job straight away. Building takes several minutes. Call studio_jobs_get with jobId until the status is SUCCEEDED, FAILED or CANCELED. An HTTP_REQUEST trigger enables both the REST endpoint and studio_solutions_execute. A SCHEDULE trigger runs it on a UTC cron schedule. Send a requestId to make the request safe to retry.",
       "inputSchema": {
         "type": "object",
         "properties": {
@@ -8238,7 +8238,6 @@
                           "code": {
                             "type": "string",
                             "enum": [
-                              "LIVE_NOT_ENABLED",
                               "CONTRACT_UNSUPPORTED",
                               "HEAD_DRIFT",
                               "CAPACITY",
@@ -8252,7 +8251,10 @@
                               "MICROVM_LOST",
                               "INVALID_INPUT",
                               "INVALID_OUTPUT",
+                              "OUTPUT_TOO_LARGE",
+                              "DATADOE_API_ERROR",
                               "SOLUTION_FAILED",
+                              "AGENT_EXECUTION_UNAVAILABLE",
                               "BUNDLE_INTEGRITY_FAILED",
                               "BUNDLE_LOAD_FAILED",
                               "MCP_HANDSHAKE_FAILED",
@@ -8338,7 +8340,7 @@
     {
       "name": "studio_solutions_list",
       "title": "List Studio solutions",
-      "description": "Lists the DataDoe Studio solutions of this Organization, with their type, status, trigger and whether they are paused. Use studio_solutions_get for the input and output schema of a solution.",
+      "description": "Lists the DataDoe Studio solutions of this Organization, with their type, status, enabled triggers and whether they are paused. Use studio_solutions_get for the input and output schema of a solution.",
       "inputSchema": {
         "type": "object",
         "properties": {},
@@ -8465,7 +8467,39 @@
                               "additionalProperties": false,
                               "description": "Runs on a UTC schedule. The solution must accept an empty object as input."
                             }
-                          ]
+                          ],
+                          "description": "Legacy trigger view. Use triggers for the enabled channels."
+                        },
+                        "triggers": {
+                          "type": "object",
+                          "properties": {
+                            "endpoint": {
+                              "type": "boolean"
+                            },
+                            "mcp": {
+                              "type": "boolean"
+                            },
+                            "cron": {
+                              "anyOf": [
+                                {
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 120,
+                                  "pattern": "^[0-9A-Za-z*/,-]+( [0-9A-Za-z*/,-]+){4}$",
+                                  "description": "Schedule as a 5-field cron expression in UTC: minute, hour, day of month, month and day of week, separated by single spaces. For example \"0 6 * * 1\" runs every Monday at 06:00 UTC. It can run at most every 15 minutes."
+                                },
+                                {
+                                  "type": "null"
+                                }
+                              ]
+                            }
+                          },
+                          "required": [
+                            "endpoint",
+                            "mcp",
+                            "cron"
+                          ],
+                          "additionalProperties": false
                         },
                         "nextRunAt": {
                           "anyOf": [
@@ -8499,6 +8533,7 @@
                         "pauseReason",
                         "description",
                         "trigger",
+                        "triggers",
                         "nextRunAt",
                         "createdAt",
                         "updatedAt"
@@ -8539,7 +8574,7 @@
     {
       "name": "studio_solutions_get",
       "title": "Get Studio solution",
-      "description": "Gets one DataDoe Studio solution by solutionId: name, type, status, trigger, input and output JSON Schema, execution endpoint and service account.",
+      "description": "Gets one DataDoe Studio solution by solutionId: name, type, status, enabled triggers, input and output JSON Schema, execution endpoint and service account.",
       "inputSchema": {
         "type": "object",
         "properties": {
@@ -8670,7 +8705,39 @@
                         "additionalProperties": false,
                         "description": "Runs on a UTC schedule. The solution must accept an empty object as input."
                       }
-                    ]
+                    ],
+                    "description": "Legacy trigger view. Use triggers for the enabled channels."
+                  },
+                  "triggers": {
+                    "type": "object",
+                    "properties": {
+                      "endpoint": {
+                        "type": "boolean"
+                      },
+                      "mcp": {
+                        "type": "boolean"
+                      },
+                      "cron": {
+                        "anyOf": [
+                          {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 120,
+                            "pattern": "^[0-9A-Za-z*/,-]+( [0-9A-Za-z*/,-]+){4}$",
+                            "description": "Schedule as a 5-field cron expression in UTC: minute, hour, day of month, month and day of week, separated by single spaces. For example \"0 6 * * 1\" runs every Monday at 06:00 UTC. It can run at most every 15 minutes."
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      }
+                    },
+                    "required": [
+                      "endpoint",
+                      "mcp",
+                      "cron"
+                    ],
+                    "additionalProperties": false
                   },
                   "nextRunAt": {
                     "anyOf": [
@@ -8799,6 +8866,7 @@
                   "pauseReason",
                   "description",
                   "trigger",
+                  "triggers",
                   "nextRunAt",
                   "createdAt",
                   "updatedAt",
@@ -8837,7 +8905,7 @@
     {
       "name": "studio_solutions_configure",
       "title": "Configure Studio solution",
-      "description": "Pauses or resumes an active DataDoe Studio solution, or changes its trigger or schedule. Send enabled, trigger or both. The change applies straight away. A SCHEDULE solution must accept {} as input.",
+      "description": "Pauses or resumes an active DataDoe Studio solution with enabled. To change triggers independently, send triggers with endpoint or mcp set to true or false, or cron set to a UTC cron expression or null. A cron schedule requires the solution to accept {} as input.",
       "inputSchema": {
         "type": "object",
         "properties": {
@@ -8889,6 +8957,32 @@
                 "description": "Runs on a UTC schedule. The solution must accept an empty object as input."
               }
             ]
+          },
+          "triggers": {
+            "type": "object",
+            "properties": {
+              "endpoint": {
+                "type": "boolean"
+              },
+              "mcp": {
+                "type": "boolean"
+              },
+              "cron": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 120,
+                    "pattern": "^[0-9A-Za-z*/,-]+( [0-9A-Za-z*/,-]+){4}$",
+                    "description": "Schedule as a 5-field cron expression in UTC: minute, hour, day of month, month and day of week, separated by single spaces. For example \"0 6 * * 1\" runs every Monday at 06:00 UTC. It can run at most every 15 minutes."
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              }
+            },
+            "additionalProperties": false
           }
         },
         "required": [
@@ -9012,7 +9106,39 @@
                         "additionalProperties": false,
                         "description": "Runs on a UTC schedule. The solution must accept an empty object as input."
                       }
-                    ]
+                    ],
+                    "description": "Legacy trigger view. Use triggers for the enabled channels."
+                  },
+                  "triggers": {
+                    "type": "object",
+                    "properties": {
+                      "endpoint": {
+                        "type": "boolean"
+                      },
+                      "mcp": {
+                        "type": "boolean"
+                      },
+                      "cron": {
+                        "anyOf": [
+                          {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 120,
+                            "pattern": "^[0-9A-Za-z*/,-]+( [0-9A-Za-z*/,-]+){4}$",
+                            "description": "Schedule as a 5-field cron expression in UTC: minute, hour, day of month, month and day of week, separated by single spaces. For example \"0 6 * * 1\" runs every Monday at 06:00 UTC. It can run at most every 15 minutes."
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      }
+                    },
+                    "required": [
+                      "endpoint",
+                      "mcp",
+                      "cron"
+                    ],
+                    "additionalProperties": false
                   },
                   "nextRunAt": {
                     "anyOf": [
@@ -9141,6 +9267,7 @@
                   "pauseReason",
                   "description",
                   "trigger",
+                  "triggers",
                   "nextRunAt",
                   "createdAt",
                   "updatedAt",
@@ -9354,7 +9481,6 @@
                           "code": {
                             "type": "string",
                             "enum": [
-                              "LIVE_NOT_ENABLED",
                               "CONTRACT_UNSUPPORTED",
                               "HEAD_DRIFT",
                               "CAPACITY",
@@ -9368,7 +9494,10 @@
                               "MICROVM_LOST",
                               "INVALID_INPUT",
                               "INVALID_OUTPUT",
+                              "OUTPUT_TOO_LARGE",
+                              "DATADOE_API_ERROR",
                               "SOLUTION_FAILED",
+                              "AGENT_EXECUTION_UNAVAILABLE",
                               "BUNDLE_INTEGRITY_FAILED",
                               "BUNDLE_LOAD_FAILED",
                               "MCP_HANDSHAKE_FAILED",
@@ -9616,7 +9745,6 @@
                           "code": {
                             "type": "string",
                             "enum": [
-                              "LIVE_NOT_ENABLED",
                               "CONTRACT_UNSUPPORTED",
                               "HEAD_DRIFT",
                               "CAPACITY",
@@ -9630,7 +9758,10 @@
                               "MICROVM_LOST",
                               "INVALID_INPUT",
                               "INVALID_OUTPUT",
+                              "OUTPUT_TOO_LARGE",
+                              "DATADOE_API_ERROR",
                               "SOLUTION_FAILED",
+                              "AGENT_EXECUTION_UNAVAILABLE",
                               "BUNDLE_INTEGRITY_FAILED",
                               "BUNDLE_LOAD_FAILED",
                               "MCP_HANDSHAKE_FAILED",
@@ -9872,7 +10003,6 @@
                           "code": {
                             "type": "string",
                             "enum": [
-                              "LIVE_NOT_ENABLED",
                               "CONTRACT_UNSUPPORTED",
                               "HEAD_DRIFT",
                               "CAPACITY",
@@ -9886,7 +10016,10 @@
                               "MICROVM_LOST",
                               "INVALID_INPUT",
                               "INVALID_OUTPUT",
+                              "OUTPUT_TOO_LARGE",
+                              "DATADOE_API_ERROR",
                               "SOLUTION_FAILED",
+                              "AGENT_EXECUTION_UNAVAILABLE",
                               "BUNDLE_INTEGRITY_FAILED",
                               "BUNDLE_LOAD_FAILED",
                               "MCP_HANDSHAKE_FAILED",
@@ -9966,7 +10099,7 @@
     {
       "name": "studio_solutions_execute",
       "title": "Run Studio solution",
-      "description": "Runs an active, enabled DataDoe Studio solution that has an HTTP_REQUEST trigger. Send input as a JSON object that matches the solution input schema, at most 256 KB. It returns executionId straight away. Call studio_executions_get until the status is COMPLETED, FAILED, TIMED_OUT or CANCELED.",
+      "description": "Runs an active, enabled DataDoe Studio Flow that has its MCP trigger enabled. Agents cannot be run yet. Send input as a JSON object that matches the solution input schema, at most 256 KB. It returns executionId straight away. Call studio_executions_get until the status is COMPLETED, FAILED, TIMED_OUT or CANCELED.",
       "inputSchema": {
         "type": "object",
         "properties": {
@@ -10024,19 +10157,11 @@
                       "TIMED_OUT",
                       "CANCELED"
                     ]
-                  },
-                  "mode": {
-                    "type": "string",
-                    "enum": [
-                      "MOCK",
-                      "LIVE"
-                    ]
                   }
                 },
                 "required": [
                   "executionId",
-                  "status",
-                  "mode"
+                  "status"
                 ],
                 "additionalProperties": false
               },
@@ -10067,7 +10192,7 @@
     {
       "name": "studio_executions_get",
       "title": "Get Studio execution",
-      "description": "Gets a DataDoe Studio execution by executionId: its status, output and error. When mock is true, the run skipped the solution logic and returned sample output. While the status is PENDING or RUNNING, check again in 5 seconds.",
+      "description": "Gets a DataDoe Studio execution by executionId: its status, output and error. While the status is PENDING or RUNNING, check again in 5 seconds.",
       "inputSchema": {
         "type": "object",
         "properties": {
@@ -10115,15 +10240,8 @@
                     "type": "string",
                     "enum": [
                       "HTTP_REQUEST",
-                      "SCHEDULE",
-                      "MANUAL"
-                    ]
-                  },
-                  "mode": {
-                    "type": "string",
-                    "enum": [
-                      "MOCK",
-                      "LIVE"
+                      "MCP",
+                      "SCHEDULE"
                     ]
                   },
                   "status": {
@@ -10183,9 +10301,6 @@
                     "format": "uuid",
                     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
                   },
-                  "mock": {
-                    "type": "boolean"
-                  },
                   "output": {
                     "anyOf": [
                       {
@@ -10208,7 +10323,6 @@
                           "code": {
                             "type": "string",
                             "enum": [
-                              "LIVE_NOT_ENABLED",
                               "CONTRACT_UNSUPPORTED",
                               "HEAD_DRIFT",
                               "CAPACITY",
@@ -10222,7 +10336,10 @@
                               "MICROVM_LOST",
                               "INVALID_INPUT",
                               "INVALID_OUTPUT",
+                              "OUTPUT_TOO_LARGE",
+                              "DATADOE_API_ERROR",
                               "SOLUTION_FAILED",
+                              "AGENT_EXECUTION_UNAVAILABLE",
                               "BUNDLE_INTEGRITY_FAILED",
                               "BUNDLE_LOAD_FAILED",
                               "MCP_HANDSHAKE_FAILED",
@@ -10256,14 +10373,12 @@
                   "executionId",
                   "solutionId",
                   "trigger",
-                  "mode",
                   "status",
                   "scheduledFor",
                   "queuedAt",
                   "startedAt",
                   "completedAt",
                   "versionId",
-                  "mock",
                   "output",
                   "error"
                 ],
@@ -10361,15 +10476,8 @@
                           "type": "string",
                           "enum": [
                             "HTTP_REQUEST",
-                            "SCHEDULE",
-                            "MANUAL"
-                          ]
-                        },
-                        "mode": {
-                          "type": "string",
-                          "enum": [
-                            "MOCK",
-                            "LIVE"
+                            "MCP",
+                            "SCHEDULE"
                           ]
                         },
                         "status": {
@@ -10429,7 +10537,6 @@
                         "executionId",
                         "solutionId",
                         "trigger",
-                        "mode",
                         "status",
                         "scheduledFor",
                         "queuedAt",

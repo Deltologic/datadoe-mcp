@@ -396,7 +396,7 @@ The [tool definitions file](scheme/mcp-tools.json) has the input and output sche
 | `studio_solutions_update` | Studio | Asks DataDoe Studio to change an active solution and returns a job. |
 | `studio_solutions_delete` | Studio | Deletes a Studio solution and returns a job. |
 | `studio_jobs_get` | Studio | Returns the status and result of a Studio job. |
-| `studio_solutions_execute` | Studio | Runs an active Studio solution that has an HTTP request trigger. |
+| `studio_solutions_execute` | Studio | Runs an active Flow that has its MCP trigger turned on. Agents cannot be run yet. |
 | `studio_executions_get` | Studio | Returns the status and output of a Studio execution. |
 | `studio_executions_list` | Studio | Lists executions of a Studio solution, newest first. |
 | `datadoe_support_ticket_create` | Support | Sends a request to DataDoe support. |
