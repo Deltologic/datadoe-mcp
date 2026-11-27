@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 24" width="1000" height="24" role="img">
+<style>
+@media (prefers-reduced-motion: reduce) { * { animation: none !important; } }</style>
+
+<defs>
+  <linearGradient id="fade" x1="0" x2="1">
+    <stop offset="0" stop-color="#00ffdd" stop-opacity="0"/>
+    <stop offset=".5" stop-color="#00ffdd" stop-opacity=".7"/>
+    <stop offset="1" stop-color="#00ffdd" stop-opacity="0"/>
+  </linearGradient>
+  <radialGradient id="spark"><stop offset="0" stop-color="#ffffff"/><stop offset=".4" stop-color="#00ffdd"/><stop offset="1" stop-color="#00ffdd" stop-opacity="0"/></radialGradient>
+</defs>
+<rect x="0" y="11" width="1000" height="2" fill="url(#fade)"/>
+<ellipse cx="0" cy="12" rx="60" ry="6" fill="url(#spark)">
+  <animate attributeName="cx" values="-60;1060" dur="3.6s" repeatCount="indefinite"/>
+</ellipse>
+<ellipse cx="0" cy="12" rx="30" ry="4" fill="url(#spark)" opacity=".7">
+  <animate attributeName="cx" values="1060;-60" dur="5.2s" repeatCount="indefinite"/>
+</ellipse>
+</svg>
