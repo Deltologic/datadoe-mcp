@@ -334,7 +334,7 @@ To set listing images on create or update, upload files to the `LISTING_IMAGES` 
 - Accounts: Sellers and Vendors
 - Requires PII access: no
 - Max items: 10 (API) / 5 (MCP)
-- Description: Register A+ media assets: images, and video thumbnail pairings for Premium video modules.
+- Description: Register A+ media assets: images, videos from APLUS_VIDEOS files, and video thumbnail pairings for Premium video modules.
 - Result: Media IDs, status, and related media per asset.
 
 #### `AMAZON_APLUS_MEDIA_FIND`: Find A+ media
@@ -355,9 +355,11 @@ To set listing images on create or update, upload files to the `LISTING_IMAGES` 
 - Description: Update the title or the accessibility descriptions of A+ media assets.
 - Result: Updated media metadata per asset.
 
-#### Guide: A+ Content images
+#### Guide: A+ Content images and videos
 
 To include images in A+ Content documents, upload files to the `APLUS_IMAGES` group first, then reference file UUIDs in image components inside `AMAZON_APLUS_CONTENT_ADD`, `AMAZON_APLUS_CONTENT_UPDATE`, or `AMAZON_APLUS_CONTENT_VALIDATE`.
+
+To add a Premium A+ video, upload an MP4 file of up to 200 MB to the `APLUS_VIDEOS` group and register it with `AMAZON_APLUS_MEDIA_ADD`. One Action uploads up to 3 videos. Use `uploadMode: UPLOAD_URL` in MCP `files_create` for videos.
 
 #### Guide: Premium A+ and Brand Story
 
@@ -366,7 +368,7 @@ A+ Content Actions accept Standard (`STANDARD_*`), Premium (`PREMIUM_*`), and Br
 - Standard and Premium documents use `contentType` `EBC` (sellers) or `EMC` (vendors) and take up to seven modules. Standard documents of vendors take up to five.
 - Brand Story documents use `contentType` `BrandStory`: exactly one `BRAND_STORY_IMAGE_WITH_LOGO` background module plus up to 19 cards, for sellers and vendors.
 
-Premium video modules (`PREMIUM_VIDEO_TEXT`, `PREMIUM_HERO_VIDEO`, `PREMIUM_VIDEO_IMAGE_CAROUSEL`) reference a video and its thumbnail by `videoMediaId` and `imageMediaId`. Register the pairing with `AMAZON_APLUS_MEDIA_ADD`: pass the existing video `mediaId`, its `descriptions` (one per locale), and a thumbnail image as an `APLUS_IMAGES` file, an existing media library path, or a `mediaId`. DataDoe does not upload video files. Amazon can take up to 48 hours to process a video; check its status with `AMAZON_APLUS_MEDIA_FIND`.
+Premium video modules (`PREMIUM_VIDEO_TEXT`, `PREMIUM_HERO_VIDEO`, `PREMIUM_VIDEO_IMAGE_CAROUSEL`) reference a video and its thumbnail by `videoMediaId` and `imageMediaId`. Register a video with `AMAZON_APLUS_MEDIA_ADD`: pass an `APLUS_VIDEOS` file as `fileId` to upload a new video, or the `mediaId` of an existing one, plus `descriptions` (one per locale) and a thumbnail. The thumbnail can be an `APLUS_IMAGES` file, an existing media library path, or a `mediaId`. Amazon can take up to 48 hours to process a video; check its status with `AMAZON_APLUS_MEDIA_FIND`.
 
 You can send `AMAZON_APLUS_CONTENT_FIND` output back to `AMAZON_APLUS_CONTENT_UPDATE` after your changes. Every image needs `imageCropSpecification`, except catalog images (`/images/I/…`) that Amazon fills in for ASIN cards.
 

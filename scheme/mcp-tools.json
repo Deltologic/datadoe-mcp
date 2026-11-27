@@ -1721,7 +1721,7 @@
     {
       "name": "files_create",
       "title": "Create file",
-      "description": "Creates a utility file. uploadMode INLINE (default) uploads base64 contentBase64, up to 0.5MB. uploadMode UPLOAD_URL returns { file, uploadUrl } for a direct PUT and does not require contentBase64. Use UPLOAD_URL for video ad assets.",
+      "description": "Creates a utility file. uploadMode INLINE (default) uploads base64 contentBase64, up to 0.5MB. uploadMode UPLOAD_URL returns { file, uploadUrl } for a direct PUT and does not require contentBase64. Use UPLOAD_URL for videos (AD_ASSETS, APLUS_VIDEOS).",
       "inputSchema": {
         "type": "object",
         "properties": {
@@ -1735,6 +1735,7 @@
             "enum": [
               "LISTING_IMAGES",
               "APLUS_IMAGES",
+              "APLUS_VIDEOS",
               "AD_ASSETS",
               "ORDER_MESSAGE_FILES"
             ]
@@ -1806,6 +1807,7 @@
             "enum": [
               "LISTING_IMAGES",
               "APLUS_IMAGES",
+              "APLUS_VIDEOS",
               "AD_ASSETS",
               "ORDER_MESSAGE_FILES"
             ]
