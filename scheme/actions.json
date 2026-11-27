@@ -58,13 +58,13 @@
       "guides": [
         {
           "id": "a-content-images",
-          "title": "A+ Content images",
-          "markdown": "To include images in A+ Content documents, upload files to the `APLUS_IMAGES` group first, then reference file UUIDs in image components inside `AMAZON_APLUS_CONTENT_ADD`, `AMAZON_APLUS_CONTENT_UPDATE`, or `AMAZON_APLUS_CONTENT_VALIDATE`."
+          "title": "A+ Content images and videos",
+          "markdown": "To include images in A+ Content documents, upload files to the `APLUS_IMAGES` group first, then reference file UUIDs in image components inside `AMAZON_APLUS_CONTENT_ADD`, `AMAZON_APLUS_CONTENT_UPDATE`, or `AMAZON_APLUS_CONTENT_VALIDATE`.\n\nTo add a Premium A+ video, upload an MP4 file of up to 200 MB to the `APLUS_VIDEOS` group and register it with `AMAZON_APLUS_MEDIA_ADD`. One Action uploads up to 3 videos. Use `uploadMode: UPLOAD_URL` in MCP `files_create` for videos."
         },
         {
           "id": "premium-a-and-brand-story",
           "title": "Premium A+ and Brand Story",
-          "markdown": "A+ Content Actions accept Standard (`STANDARD_*`), Premium (`PREMIUM_*`), and Brand Story (`BRAND_STORY_*`) modules. Keep one module family per document:\n\n- Standard and Premium documents use `contentType` `EBC` (sellers) or `EMC` (vendors) and take up to seven modules. Standard documents of vendors take up to five.\n- Brand Story documents use `contentType` `BrandStory`: exactly one `BRAND_STORY_IMAGE_WITH_LOGO` background module plus up to 19 cards, for sellers and vendors.\n\nPremium video modules (`PREMIUM_VIDEO_TEXT`, `PREMIUM_HERO_VIDEO`, `PREMIUM_VIDEO_IMAGE_CAROUSEL`) reference a video and its thumbnail by `videoMediaId` and `imageMediaId`. Register the pairing with `AMAZON_APLUS_MEDIA_ADD`: pass the existing video `mediaId`, its `descriptions` (one per locale), and a thumbnail image as an `APLUS_IMAGES` file, an existing media library path, or a `mediaId`. DataDoe does not upload video files. Amazon can take up to 48 hours to process a video; check its status with `AMAZON_APLUS_MEDIA_FIND`.\n\nYou can send `AMAZON_APLUS_CONTENT_FIND` output back to `AMAZON_APLUS_CONTENT_UPDATE` after your changes. Every image needs `imageCropSpecification`, except catalog images (`/images/I/…`) that Amazon fills in for ASIN cards.\n\nEach `AMAZON_APLUS_CONTENT_FIND` result also has `publicImageUrls`, next to `data`. It maps each A+ media library image path, such as `aplus-media-library-service-media/…`, to a public image URL that you can open in a browser. It leaves out Brand Story and catalog image paths. Leave out `publicImageUrls` when you send the output to `AMAZON_APLUS_CONTENT_UPDATE`.\n\n`AMAZON_APLUS_CONTENT_FIND` skips documents with premium modules that Amazon SP-API does not expose. Those documents are listed under `skipped` and do not fail the Action."
+          "markdown": "A+ Content Actions accept Standard (`STANDARD_*`), Premium (`PREMIUM_*`), and Brand Story (`BRAND_STORY_*`) modules. Keep one module family per document:\n\n- Standard and Premium documents use `contentType` `EBC` (sellers) or `EMC` (vendors) and take up to seven modules. Standard documents of vendors take up to five.\n- Brand Story documents use `contentType` `BrandStory`: exactly one `BRAND_STORY_IMAGE_WITH_LOGO` background module plus up to 19 cards, for sellers and vendors.\n\nPremium video modules (`PREMIUM_VIDEO_TEXT`, `PREMIUM_HERO_VIDEO`, `PREMIUM_VIDEO_IMAGE_CAROUSEL`) reference a video and its thumbnail by `videoMediaId` and `imageMediaId`. Register a video with `AMAZON_APLUS_MEDIA_ADD`: pass an `APLUS_VIDEOS` file as `fileId` to upload a new video, or the `mediaId` of an existing one, plus `descriptions` (one per locale) and a thumbnail. The thumbnail can be an `APLUS_IMAGES` file, an existing media library path, or a `mediaId`. Amazon can take up to 48 hours to process a video; check its status with `AMAZON_APLUS_MEDIA_FIND`.\n\nYou can send `AMAZON_APLUS_CONTENT_FIND` output back to `AMAZON_APLUS_CONTENT_UPDATE` after your changes. Every image needs `imageCropSpecification`, except catalog images (`/images/I/…`) that Amazon fills in for ASIN cards.\n\nEach `AMAZON_APLUS_CONTENT_FIND` result also has `publicImageUrls`, next to `data`. It maps each A+ media library image path, such as `aplus-media-library-service-media/…`, to a public image URL that you can open in a browser. It leaves out Brand Story and catalog image paths. Leave out `publicImageUrls` when you send the output to `AMAZON_APLUS_CONTENT_UPDATE`.\n\n`AMAZON_APLUS_CONTENT_FIND` skips documents with premium modules that Amazon SP-API does not expose. Those documents are listed under `skipped` and do not fail the Action."
         }
       ]
     },
@@ -11249,7 +11249,7 @@
         "api": 10,
         "mcp": 5
       },
-      "description": "Register A+ media assets: images, and video thumbnail pairings for Premium video modules.",
+      "description": "Register A+ media assets: images, videos from APLUS_VIDEOS files, and video thumbnail pairings for Premium video modules.",
       "result": "Media IDs, status, and related media per asset.",
       "detailsJsonSchema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -11312,11 +11312,17 @@
                     "type": "string",
                     "const": "VIDEO"
                   },
+                  "fileId": {
+                    "type": "string",
+                    "format": "uuid",
+                    "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+                    "description": "UUID of an uploaded APLUS_VIDEOS DataFile (MP4) owned by the action seller or vendor. DataDoe uploads the video to Amazon and registers it. Amazon can take up to 48 hours to process a new video. Check its status with AMAZON_APLUS_MEDIA_FIND."
+                  },
                   "mediaId": {
                     "type": "string",
                     "minLength": 1,
                     "maxLength": 100,
-                    "description": "mediaId of an existing A+ video asset, for example videoMediaId from AMAZON_APLUS_CONTENT_FIND. DataDoe does not upload video files."
+                    "description": "mediaId of an existing A+ video asset, for example videoMediaId from AMAZON_APLUS_CONTENT_FIND."
                   },
                   "relatedMedia": {
                     "minItems": 1,
@@ -11400,19 +11406,18 @@
                       ],
                       "additionalProperties": false
                     },
-                    "description": "Required by Amazon for every video registration. Must match the existing video-level descriptions; change them with AMAZON_APLUS_MEDIA_UPDATE."
+                    "description": "Required by Amazon for every video registration. For an existing mediaId, they must match the current video-level descriptions; change them with AMAZON_APLUS_MEDIA_UPDATE."
                   }
                 },
                 "required": [
                   "mediaType",
-                  "mediaId",
                   "relatedMedia",
                   "descriptions"
                 ],
                 "additionalProperties": false
               }
             ],
-            "description": "A+ media asset to register. IMAGE: exactly one of fileId, uploadDestinationId, or mediaId. VIDEO: an existing video mediaId with descriptions and one thumbnail pairing; the response returns the videoMediaId and imageMediaId used by Premium video modules."
+            "description": "A+ media asset to register. IMAGE: exactly one of fileId, uploadDestinationId, or mediaId. VIDEO: exactly one of fileId (new APLUS_VIDEOS upload) or mediaId (existing video), with descriptions and one thumbnail pairing; the response returns the videoMediaId and imageMediaId used by Premium video modules."
           }
         }
       }
