@@ -45,6 +45,8 @@ export const EXPORT_SOURCE_COLUMNS_MAX_PAGE_SIZE = 40 as const;
 export const PUBLIC_SOURCE_ID_LENGTH = 10 as const;
 
 const FACADE_NOTICE = `This is the public DataDoe MCP schema facade. It returns the public DataDoe scheme, not your account data. Connect to ${HOSTED_MCP_URL} for live data: ${MCP_SETUP_DOCS_URL}.`;
+const PUBLIC_HUB_BASE_URL = 'https://www.datadoe.com' as const;
+const ACTION_ACCOUNT_AVAILABILITY = ['SELLERS_AND_VENDORS', 'SELLERS_ONLY', 'VENDORS_ONLY'] as const;
 const SCHEME_DIRECTORY_URL = new URL('../scheme/', import.meta.url);
 
 export interface DataSchemeColumn {
@@ -78,18 +80,44 @@ export interface DataScheme {
     readonly sources: readonly DataSchemeSource[];
 }
 
+export interface ActionSchemeGuide {
+    readonly id: string;
+    readonly title: string;
+    readonly markdown: string;
+}
+
+export interface ActionSchemeGroup {
+    readonly id: string;
+    readonly label: string;
+    readonly platform: string;
+    readonly description: string | null;
+    readonly guides: readonly ActionSchemeGuide[];
+}
+
+export interface ActionSchemeMaxItems {
+    readonly api: number;
+    readonly mcp: number;
+}
+
 export interface ActionSchemeEntry {
     readonly type: string;
     readonly label: string;
     readonly group: string;
+    readonly entity: string;
     readonly access: string;
+    readonly requiresPii: boolean;
+    readonly accountAvailability: string;
+    readonly marketplaceNote: string | null;
+    /** Null when every call counts as one item. */
+    readonly maxItems: ActionSchemeMaxItems | null;
+    readonly description: string;
+    readonly result: string;
     readonly detailsJsonSchema: unknown;
-    readonly [key: string]: unknown;
 }
 
 export interface ActionScheme {
     readonly platforms: readonly unknown[];
-    readonly groups: readonly unknown[];
+    readonly groups: readonly ActionSchemeGroup[];
     readonly actions: readonly ActionSchemeEntry[];
 }
 
@@ -368,26 +396,77 @@ function getExportSource(input: unknown): CallToolResult {
     );
 }
 
+function absolutizeHubLinks(markdown: string): string {
+    return markdown.replace(/\]\((\/hub[^)\s]*)\)/g, `](${PUBLIC_HUB_BASE_URL}$1)`);
+}
+
+function buildActionGroupDocsPageName(group: ActionSchemeGroup): string {
+    const label = group.platform === 'AMAZON_ADS' ? `Amazon Ads ${group.label}` : group.label;
+    return `Action types: ${label}`;
+}
+
+function resolveMcpItemLimit(maxItems: ActionSchemeMaxItems | null): number | null {
+    if (maxItems === null) {
+        return null;
+    }
+    if (!Number.isInteger(maxItems.mcp) || maxItems.mcp <= 0) {
+        throw new Error('Action scheme item limit is invalid.');
+    }
+    return maxItems.mcp;
+}
+
 function getActionDetailsSchema(input: unknown): CallToolResult {
     const type = requireString(asRecord(input), 'type').toUpperCase();
-    const action = getActionScheme().actions.find(candidate => candidate.type === type);
+    const scheme = getActionScheme();
+    const action = scheme.actions.find(candidate => candidate.type === type);
     if (!action) {
         throw new FacadeInputError(
             `Action type is not in the public Action scheme: type=${type}. Some Action types are in private beta. See the datadoe://scheme/actions.json resource.`
         );
     }
-    // Same shape as the hosted server. Action types are disabled until an Organization owner enables them.
-    return toSuccessResult(
-        `Returned the details schema of ${action.type} (${action.label}, ${action.access}). An Organization owner enables each Action type in the DataDoe app under Settings > Actions.`,
-        {
-            accessAllowed: true,
-            type: action.type,
-            access: action.access,
-            requiresPii: action.requiresPii === true,
-            startTool: 'actions_start',
-            enabled: false,
-            jsonSchema: action.detailsJsonSchema
+    const group = scheme.groups.find(candidate => candidate.id === action.group);
+    const accountAvailabilityKnown = (
+        ACTION_ACCOUNT_AVAILABILITY as readonly string[]
+    ).includes(action.accountAvailability);
+    if (!group || !accountAvailabilityKnown) {
+        throw new Error(`Action scheme metadata is incomplete: type=${action.type}.`);
+    }
+    const guides = group.guides.map(guide => {
+        if (guide.title.trim().length === 0) {
+            throw new Error(`Action scheme guide title is missing: type=${action.type}.`);
         }
+        return { title: guide.title };
+    });
+    const documentation = {
+        label: action.label,
+        description: absolutizeHubLinks(action.description),
+        result: absolutizeHubLinks(action.result),
+        group: {
+            id: group.id,
+            label: group.label
+        },
+        entity: action.entity,
+        accountAvailability: action.accountAvailability,
+        marketplaceNote: action.marketplaceNote,
+        maxItems: resolveMcpItemLimit(action.maxItems),
+        guides,
+        docsPageName: buildActionGroupDocsPageName(group)
+    };
+    // Same shape as the hosted server. Action types are disabled until an Organization owner enables them.
+    // The public scheme has no Organization, so enabled stays false and accessAllowed stays true.
+    const data = {
+        accessAllowed: true,
+        type: action.type,
+        access: action.access,
+        requiresPii: action.requiresPii === true,
+        startTool: 'actions_start',
+        enabled: false,
+        ...documentation,
+        jsonSchema: action.detailsJsonSchema
+    };
+    return toSuccessResult(
+        `Returned the details schema of ${action.type} (${action.label}, ${action.access}), including its description, result, group, item limit and group guides. An Organization owner enables each Action type in the DataDoe app under Settings > Actions.`,
+        data
     );
 }
 

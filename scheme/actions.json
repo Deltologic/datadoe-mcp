@@ -64,7 +64,7 @@
         {
           "id": "premium-a-and-brand-story",
           "title": "Premium A+ and Brand Story",
-          "markdown": "A+ Content Actions accept Standard (`STANDARD_*`), Premium (`PREMIUM_*`), and Brand Story (`BRAND_STORY_*`) modules. Keep one module family per document:\n\n- Standard and Premium documents use `contentType` `EBC` (sellers) or `EMC` (vendors) and take up to seven modules. Standard documents of vendors take up to five.\n- Brand Story documents use `contentType` `BrandStory`: exactly one `BRAND_STORY_IMAGE_WITH_LOGO` background module plus up to 19 cards, for sellers and vendors.\n\nPremium video modules (`PREMIUM_VIDEO_TEXT`, `PREMIUM_HERO_VIDEO`, `PREMIUM_VIDEO_IMAGE_CAROUSEL`) reference a video and its thumbnail by `videoMediaId` and `imageMediaId`. Register the pairing with `AMAZON_APLUS_MEDIA_ADD`: pass the existing video `mediaId`, its `descriptions` (one per locale), and a thumbnail image as an `APLUS_IMAGES` file, an existing media library path, or a `mediaId`. DataDoe does not upload video files. Amazon can take up to 48 hours to process a video; check its status with `AMAZON_APLUS_MEDIA_FIND`.\n\nYou can send `AMAZON_APLUS_CONTENT_FIND` output back to `AMAZON_APLUS_CONTENT_UPDATE` after your changes. Every image needs `imageCropSpecification`, except catalog images (`/images/I/…`) that Amazon fills in for ASIN cards.\n\n`AMAZON_APLUS_CONTENT_FIND` skips documents with premium modules that Amazon SP-API does not expose. Those documents are listed under `skipped` and do not fail the Action."
+          "markdown": "A+ Content Actions accept Standard (`STANDARD_*`), Premium (`PREMIUM_*`), and Brand Story (`BRAND_STORY_*`) modules. Keep one module family per document:\n\n- Standard and Premium documents use `contentType` `EBC` (sellers) or `EMC` (vendors) and take up to seven modules. Standard documents of vendors take up to five.\n- Brand Story documents use `contentType` `BrandStory`: exactly one `BRAND_STORY_IMAGE_WITH_LOGO` background module plus up to 19 cards, for sellers and vendors.\n\nPremium video modules (`PREMIUM_VIDEO_TEXT`, `PREMIUM_HERO_VIDEO`, `PREMIUM_VIDEO_IMAGE_CAROUSEL`) reference a video and its thumbnail by `videoMediaId` and `imageMediaId`. Register the pairing with `AMAZON_APLUS_MEDIA_ADD`: pass the existing video `mediaId`, its `descriptions` (one per locale), and a thumbnail image as an `APLUS_IMAGES` file, an existing media library path, or a `mediaId`. DataDoe does not upload video files. Amazon can take up to 48 hours to process a video; check its status with `AMAZON_APLUS_MEDIA_FIND`.\n\nYou can send `AMAZON_APLUS_CONTENT_FIND` output back to `AMAZON_APLUS_CONTENT_UPDATE` after your changes. Every image needs `imageCropSpecification`, except catalog images (`/images/I/…`) that Amazon fills in for ASIN cards.\n\nEach `AMAZON_APLUS_CONTENT_FIND` result also has `publicImageUrls`, next to `data`. It maps each A+ media library image path, such as `aplus-media-library-service-media/…`, to a public image URL that you can open in a browser. It leaves out Brand Story and catalog image paths. Leave out `publicImageUrls` when you send the output to `AMAZON_APLUS_CONTENT_UPDATE`.\n\n`AMAZON_APLUS_CONTENT_FIND` skips documents with premium modules that Amazon SP-API does not expose. Those documents are listed under `skipped` and do not fail the Action."
         }
       ]
     },
@@ -2713,6 +2713,63 @@
             "additionalProperties": false
           }
         }
+      }
+    },
+    {
+      "type": "AMAZON_LISTINGS_PRICING_FIND",
+      "label": "Find SKU prices",
+      "group": "listings",
+      "entity": "Pricing insights",
+      "access": "READ",
+      "requiresPii": false,
+      "accountAvailability": "SELLERS_ONLY",
+      "marketplaceNote": null,
+      "maxItems": {
+        "api": 20,
+        "mcp": 20
+      },
+      "description": "Find the current price of the seller's own offer for up to 20 SKUs. The buying price includes active promotions. The regular price does not. Each offer includes the fulfillment channel and item condition.",
+      "result": "Buying price, regular price, fulfillment channel, and item condition for each SKU.",
+      "detailsJsonSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "skus": {
+            "minItems": 1,
+            "maxItems": 20,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 64,
+              "description": "Seller SKU to price."
+            },
+            "description": "Seller SKUs to price. One call accepts up to 20 SKUs."
+          },
+          "itemCondition": {
+            "description": "Item condition filter. Leave this empty to use Amazon's default.",
+            "type": "string",
+            "enum": [
+              "New",
+              "Used",
+              "Collectible",
+              "Refurbished",
+              "Club"
+            ]
+          },
+          "offerType": {
+            "description": "B2C is the consumer offer. B2B is the Amazon Business offer. Leave this empty for the consumer offer.",
+            "type": "string",
+            "enum": [
+              "B2C",
+              "B2B"
+            ]
+          }
+        },
+        "required": [
+          "skus"
+        ],
+        "additionalProperties": false
       }
     },
     {
@@ -11572,8 +11629,8 @@
         "api": 5000,
         "mcp": 50
       },
-      "description": "Confirm shipment for an Amazon order item and upload tracking information.",
-      "result": "Confirmation that Amazon accepted the Action.",
+      "description": "Confirm shipment for an Amazon order item and upload tracking information. Optional Transparency codes and a package reference confirm a package through Amazon shipment confirmation. Ordinary lines stay on the fulfillment feed.",
+      "result": "Each Transparency package is accepted, rejected, or unknown. Retry an unknown package with the same package reference. An ordinary shipment confirms that Amazon accepted the feed.",
       "detailsJsonSchema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
         "type": "object",
@@ -11635,6 +11692,19 @@
               "shipFromSupplySourceId": {
                 "type": "string",
                 "maxLength": 64
+              },
+              "transparencyCodes": {
+                "maxItems": 100,
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 128
+                }
+              },
+              "packageReference": {
+                "type": "string",
+                "pattern": "^[1-9][0-9]{0,19}$"
               }
             },
             "required": [
@@ -19659,7 +19729,7 @@
         "api": 1,
         "mcp": 1
       },
-      "description": "Seller Central only. One Action handles one shipment operation. Requires the Amazon role Direct-to-Consumer Shipping (Restricted) on a Seller Central account. Requires PII access because a shipment can include a recipient. Use status ACCEPTED for new merchant-fulfilled shipments. CREATED means Amazon could not auto-accept the order. Optional filters are location, marketplace, channel name, last-updated range, page size and pagination token. Repeat the same filters when a page is empty but a next token is present. Amazon operation getShipments. Next, read one shipment. See [External Fulfillment shipping](/hub/docs/datadoe-actions/external-fulfillment).",
+      "description": "Seller Central only. One Action handles one shipment operation. Requires the Amazon role Direct-to-Consumer Shipping (Restricted) on a Seller Central account. Requires PII access because a shipment can include a recipient. Use status ACCEPTED for new merchant-fulfilled shipments. Amazon has deprecated CREATED; do not use it to find new shipments. Optional filters are location, marketplace, channel name, last-updated range, page size and pagination token. Repeat the same filters when a page is empty but a next token is present. Amazon operation getShipments. Next, read one shipment. See [External Fulfillment shipping](/hub/docs/datadoe-actions/external-fulfillment).",
       "result": "Returns the Amazon response with document content and temporary download URLs removed, plus stored File IDs and authenticated download links. Includes observation time, warnings and Amazon error details. An HTTP 204 response has no body. Label results include each package status. A mixed label result is partial, not a full success.",
       "detailsJsonSchema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -19679,7 +19749,7 @@
               "SHIPPED",
               "DELIVERED"
             ],
-            "description": "Shipment status to list. Use ACCEPTED for new merchant-fulfilled shipments. CREATED means Amazon could not auto-accept the order because inventory was insufficient."
+            "description": "Shipment status to list. Use ACCEPTED for new merchant-fulfilled shipments. Amazon has deprecated CREATED; do not use it to find new shipments."
           },
           "locationId": {
             "type": "string",

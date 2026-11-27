@@ -32,6 +32,7 @@ Raw listings payload per SKU and marketplace. Recommended for advanced use cases
 - `AMAZON_LISTINGS_PRICING_UPDATE_VERIFY` — live: reads a fresher live value
 - `AMAZON_LISTINGS_DETAILS_UPDATE_VERIFY` — live: reads a fresher live value
 - `AMAZON_LISTINGS_FIND` — live: reads a fresher live value. When a FIND Action's entity is in the DataDoe data scheme, use an Export or a BigQuery query. Use FIND only when you need live Amazon data that the warehouse does not have yet. One standard Export costs 2 AI Tokens. One integrated BigQuery query costs 0.2 AI Tokens. Compare the total cost of repeated FIND Actions with one Export or query.
+- `AMAZON_LISTINGS_PRICING_FIND` — live: reads a fresher live value. When a FIND Action's entity is in the DataDoe data scheme, use an Export or a BigQuery query. Use FIND only when you need live Amazon data that the warehouse does not have yet. One standard Export costs 2 AI Tokens. One integrated BigQuery query costs 0.2 AI Tokens. Compare the total cost of repeated FIND Actions with one Export or query.
 
 actions_details_schema_get reports whether each Action type is enabled for the Organization. An Organization owner enables a type in the DataDoe app under Settings > Actions.
 

@@ -948,7 +948,7 @@
                     "min",
                     "max"
                   ],
-                  "description": "sum requires a numeric column. min, max, and avg accept numeric or date/datetime columns. count/countDistinct accept any column."
+                  "description": "sum requires a numeric column. min, max, and avg accept numeric or date/datetime columns. count accepts any column. countDistinct accepts any column except JSON."
                 },
                 "alias": {
                   "anyOf": [
@@ -2399,7 +2399,7 @@
     {
       "name": "actions_start",
       "title": "Start an Action",
-      "description": "Starts a READ or WRITE Action for a selected Seller or Vendor. Live Actions create tracked jobs and incur usage charges. Optional caller key, recommended for live writes and retries. Scoped to the Organization and principal. The same key and request return the original Action, including failures; a different request conflicts. Replayed reads are not fresh. Dry runs do not reserve keys. Receipts do not expire automatically; purged results return 410. Use a UUID or stable operation ID without credentials or personal data. Group items into one Action. A standard read Action costs 0.5 AI Tokens for up to 100 items, then 0.25 AI Tokens for each additional 100 items. A standard write Action costs 3 AI Tokens for up to 100 items, then 1 AI Token for each additional 100 items. Each separate Action pays the starting price again. A dry run does not spend AI Tokens. FBA inbound Actions have fixed prices of 0.1 AI Token per read Action and 0.3 AI Token per write Action, regardless of item or shipment count. Campaign, ad group, target, ad, ad association, ad extension, portfolio, brand, and communication FIND Actions count as 1 item per call. Per-audience AMC prices and free AMC audience Actions stay the same. When a FIND Action's entity is in the DataDoe data scheme, use an Export or a BigQuery query. Use FIND only when you need live Amazon data that the warehouse does not have yet. One standard Export costs 2 AI Tokens. One integrated BigQuery query costs 0.2 AI Tokens. Compare the total cost of repeated FIND Actions with one Export or query. Seller Central accounts support non-Ads listing, order, FBA, A+, and MCF action types. For accountType VENDOR (Vendor Central), non-Ads actions are limited to AMAZON_LISTINGS_UPDATE, AMAZON_LISTINGS_UPDATE_VERIFY, AMAZON_LISTINGS_DETAILS_UPDATE, AMAZON_LISTINGS_DETAILS_UPDATE_VERIFY, AMAZON_LISTINGS_CREATE, AMAZON_LISTINGS_CREATE_VERIFY, AMAZON_LISTINGS_DELETE, AMAZON_LISTINGS_FIND, AMAZON_LISTINGS_PRODUCT_TYPES_FIND, AMAZON_LISTINGS_PRODUCT_TYPE_SUGGEST, AMAZON_LISTINGS_PRODUCT_TYPE_DEFINITION_FIND, AMAZON_APLUS_CONTENT_*, AMAZON_APLUS_MEDIA_*, AMAZON_SHIPMENT_TRACKING_SUBSCRIBE and AMAZON_SHIPMENT_TRACKING_GET (US Tracking API only), and AMAZON_VENDOR_* purchase order Actions (Retail Procurement and Direct Fulfillment acknowledgements, shipments, labels, packing slips, invoices, and transaction status). AMAZON_VENDOR_DF_SHIPPING_LABELS_CREATE, AMAZON_VENDOR_DF_SHIPPING_LABEL_GET, AMAZON_VENDOR_DF_PACKING_SLIP_GET, and AMAZON_VENDOR_DF_CUSTOMER_INVOICE_GET require PII access. AMAZON_VENDOR_DF_CUSTOMER_INVOICE_GET is India only. Vendor Central rejects order, FBA, MCF, AMAZON_SHOP_DIRECT_LISTINGS_UPSERT, AMAZON_LISTINGS_RESTRICTIONS_FIND, AMAZON_LISTINGS_PRICING_UPDATE, AMAZON_LISTINGS_FEES_ESTIMATE, AMAZON_LISTINGS_FEATURED_PRICE_ESTIMATE, AMAZON_LISTINGS_COMPETITIVE_SUMMARY_FIND, AMAZON_FINANCES_BALANCES_FIND, AMAZON_FINANCES_PAYOUTS_FIND, AMAZON_FINANCES_EXPECTED_PAYOUTS_FIND, AMAZON_ACTION_ITEMS_FIND, AMAZON_ACTION_ITEMS_GET, AMAZON_ACTION_ITEMS_DISMISS, AMAZON_ACTION_PLANS_FIND, AMAZON_ACTION_PLANS_GET, AMAZON_ACTION_PLANS_PREVIEW, AMAZON_ACTION_PLANS_ADD, and any other unlisted non-Ads action type. Amazon Ads actions require amazonAdsConnection (accountType SELLER, VENDOR, or ADS_ONLY with Ads attached). Each action type has a specific details schema, which you can retrieve with the actions_details_schema_get tool. Check enabled on that result before a live start. A live start is rejected when the Action type is disabled for the Organization. A start, including dryRun, is rejected when the Action is disabled for the selected Seller or Vendor. Users also need access through their roles. An Organization owner enables the type in the DataDoe app under Settings > Actions. A live write Action is rejected when the Seller or Vendor access level is Read only. Read Actions can run with Read only access. Set the access level to Read and write on the Accounts page to run write Actions. The access mode comes from actions_details_schema_get. An Action with requiresPii true is rejected, including dryRun, unless PII access is enabled for the Organization and the principal has data.pii permission. AMAZON_ORDERS_FIND also requires PII access when includedData has BUYER, RECIPIENT, or TAX. MCF, FBA inbound, FBA removal order, and Buy Shipping (AMAZON_ORDERS_GET_SHIPPING_RATES, AMAZON_ORDERS_GET_SHIPPING_ADDITIONAL_INPUTS, AMAZON_ORDERS_CREATE_SHIPMENT, AMAZON_ORDERS_GET_SHIPMENT_DOCS) Actions do not require PII access. You can validate the request without creating or queuing the action by setting dryRun=true. A request with dryRun set to true still validates a disabled Action type. Listing VERIFY Actions (AMAZON_LISTINGS_CREATE_VERIFY, AMAZON_LISTINGS_UPDATE_VERIFY, AMAZON_LISTINGS_DETAILS_UPDATE_VERIFY, and AMAZON_LISTINGS_PRICING_UPDATE_VERIFY) call Amazon Listings Items with mode=VALIDATION_PREVIEW and return status, submissionId, and issues. They do not submit the listing. Amazon validation preview does not accept merge. DataDoe previews a merge with replace and the same values. The write still sends merge. dryRun does not submit the listing. It checks the DataDoe request and, for create, details, and pricing changes that include productType, the product-type schema. Preview before a write by running dryRun, then the matching VERIFY Action, then the write Action. One SKU per Amazon call. Limits count distinct SKUs; all changes for a SKU are validated together. AMAZON_ORDERS_FIND and AMAZON_ORDERS_GET_METRICS are a live preview of current orders. For large volumes and long-term analysis, use Exports or a direct BigQuery integration, which also refresh during the day. AMAZON_ORDERS_FIND accepts one search per Action. Its marketplaceIds can include only marketplaces connected as Sellers in the same Organization for the same selling partner. AMAZON_ORDERS_GET_METRICS fills marketplaceIds from the connection and uses from and to instead of an interval string. For campaign, ad group, target, and ad FIND actions, adProductFilter.include must contain exactly one ad product type; use separate requests to query multiple product types. One ID filter (for example campaignIdFilter) in these FIND actions can have more than 100 IDs; DataDoe queries them in groups of 100, and you page with the returned nextToken and the same query. AMC audience Actions (AMAZON_ADS_AMC_AUDIENCES_*, AMAZON_ADS_AMC_LOOKALIKE_AUDIENCES_ADD) need AMC enabled for the Seller or Vendor. Amazon builds an audience asynchronously and lists it in Sponsored Ads about 24 to 48 hours after it SUCCEEDED; DataDoe does not attach it later, so poll AMAZON_ADS_AMC_AUDIENCES_FIND, then get the audienceId with AMAZON_ADS_TARGETABLE_AUDIENCES_FIND and attach it with AMAZON_ADS_CAMPAIGNS_UPDATE audienceBidAdjustments or AMAZON_ADS_TARGETS_ADD. Details, flows, and best practices for Actions are available in the Actions documentation.",
+      "description": "Starts a READ or WRITE Action for a selected Seller or Vendor. Live Actions create tracked jobs and incur usage charges. Optional caller key, recommended for live writes and retries. Scoped to the Organization and principal. The same key and request return the original Action, including failures; a different request conflicts. Replayed reads are not fresh. Dry runs do not reserve keys. Receipts do not expire automatically; purged results return 410. Use a UUID or stable operation ID without credentials or personal data. Group items into one Action. A standard read Action costs 0.5 AI Tokens for up to 100 items, then 0.25 AI Tokens for each additional 100 items. A standard write Action costs 3 AI Tokens for up to 100 items, then 1 AI Token for each additional 100 items. Each separate Action pays the starting price again. A dry run does not spend AI Tokens. FBA inbound Actions have fixed prices of 0.1 AI Token per read Action and 0.3 AI Token per write Action, regardless of item or shipment count. Campaign, ad group, target, ad, ad association, ad extension, portfolio, brand, and communication FIND Actions count as 1 item per call. Per-audience AMC prices and free AMC audience Actions stay the same. When a FIND Action's entity is in the DataDoe data scheme, use an Export or a BigQuery query. Use FIND only when you need live Amazon data that the warehouse does not have yet. One standard Export costs 2 AI Tokens. One integrated BigQuery query costs 0.2 AI Tokens. Compare the total cost of repeated FIND Actions with one Export or query. Seller Central accounts support non-Ads listing, order, FBA, A+, and MCF action types. For accountType VENDOR (Vendor Central), non-Ads actions are limited to AMAZON_LISTINGS_UPDATE, AMAZON_LISTINGS_UPDATE_VERIFY, AMAZON_LISTINGS_DETAILS_UPDATE, AMAZON_LISTINGS_DETAILS_UPDATE_VERIFY, AMAZON_LISTINGS_CREATE, AMAZON_LISTINGS_CREATE_VERIFY, AMAZON_LISTINGS_DELETE, AMAZON_LISTINGS_FIND, AMAZON_LISTINGS_PRODUCT_TYPES_FIND, AMAZON_LISTINGS_PRODUCT_TYPE_SUGGEST, AMAZON_LISTINGS_PRODUCT_TYPE_DEFINITION_FIND, AMAZON_APLUS_CONTENT_*, AMAZON_APLUS_MEDIA_*, AMAZON_SHIPMENT_TRACKING_SUBSCRIBE and AMAZON_SHIPMENT_TRACKING_GET (US Tracking API only), and AMAZON_VENDOR_* purchase order Actions (Retail Procurement and Direct Fulfillment acknowledgements, shipments, labels, packing slips, invoices, and transaction status). AMAZON_VENDOR_DF_SHIPPING_LABELS_CREATE, AMAZON_VENDOR_DF_SHIPPING_LABEL_GET, AMAZON_VENDOR_DF_PACKING_SLIP_GET, and AMAZON_VENDOR_DF_CUSTOMER_INVOICE_GET require PII access. AMAZON_VENDOR_DF_CUSTOMER_INVOICE_GET is India only. Vendor Central rejects order, FBA, MCF, AMAZON_SHOP_DIRECT_LISTINGS_UPSERT, AMAZON_LISTINGS_RESTRICTIONS_FIND, AMAZON_LISTINGS_PRICING_UPDATE, AMAZON_LISTINGS_FEES_ESTIMATE, AMAZON_LISTINGS_FEATURED_PRICE_ESTIMATE, AMAZON_LISTINGS_COMPETITIVE_SUMMARY_FIND, AMAZON_FINANCES_BALANCES_FIND, AMAZON_FINANCES_PAYOUTS_FIND, AMAZON_FINANCES_EXPECTED_PAYOUTS_FIND, AMAZON_ACTION_ITEMS_FIND, AMAZON_ACTION_ITEMS_GET, AMAZON_ACTION_ITEMS_DISMISS, AMAZON_ACTION_PLANS_FIND, AMAZON_ACTION_PLANS_GET, AMAZON_ACTION_PLANS_PREVIEW, AMAZON_ACTION_PLANS_ADD, and any other unlisted non-Ads action type. Amazon Ads actions require amazonAdsConnection (accountType SELLER, VENDOR, or ADS_ONLY with Ads attached). Each action type has a specific details schema, which you can retrieve with the actions_details_schema_get tool. Check enabled on that result before a live start. A live start is rejected when the Action type is disabled for the Organization. A start, including dryRun, is rejected when the Action is disabled for the selected Seller or Vendor. Users also need access through their roles. An Organization owner enables the type in the DataDoe app under Settings > Actions. A live write Action is rejected when a Seller or Vendor access level is Read only. The rejection names the first account that blocks the request. Another Read only account in the same request can still block the next live start. An account connected in the app includes a link to its Access level on the Organization app address. An account added with an invitation link cannot change Access level on the Accounts page, and another invitation cannot change it while the account stays connected. Ask an Organization owner. Deleting the account removes its ID, can delete its connections, and removes it from webhook subscriptions. Read Actions can run with Read only access. A dry run of a write Action still validates and returns a warning for each Read only account the caller can access. The access mode comes from actions_details_schema_get. An Action with requiresPii true is rejected, including dryRun, unless PII access is enabled for the Organization and the principal has data.pii permission. AMAZON_ORDERS_FIND also requires PII access when includedData has BUYER, RECIPIENT, or TAX. MCF, FBA inbound, FBA removal order, and Buy Shipping (AMAZON_ORDERS_GET_SHIPPING_RATES, AMAZON_ORDERS_GET_SHIPPING_ADDITIONAL_INPUTS, AMAZON_ORDERS_CREATE_SHIPMENT, AMAZON_ORDERS_GET_SHIPMENT_DOCS) Actions do not require PII access. You can validate the request without creating or queuing the action by setting dryRun=true. A request with dryRun set to true still validates a disabled Action type. Listing VERIFY Actions (AMAZON_LISTINGS_CREATE_VERIFY, AMAZON_LISTINGS_UPDATE_VERIFY, AMAZON_LISTINGS_DETAILS_UPDATE_VERIFY, and AMAZON_LISTINGS_PRICING_UPDATE_VERIFY) call Amazon Listings Items with mode=VALIDATION_PREVIEW and return status, submissionId, and issues. They do not submit the listing. Amazon validation preview does not accept merge. DataDoe previews a merge with replace and the same values. The write still sends merge. dryRun does not submit the listing. It checks the DataDoe request and, for create, details, and pricing changes that include productType, the product-type schema. Preview before a write by running dryRun, then the matching VERIFY Action, then the write Action. One SKU per Amazon call. Limits count distinct SKUs; all changes for a SKU are validated together. AMAZON_ORDERS_FIND and AMAZON_ORDERS_GET_METRICS are a live preview of current orders. For large volumes and long-term analysis, use Exports or a direct BigQuery integration, which also refresh during the day. AMAZON_ORDERS_FIND accepts one search per Action. Its marketplaceIds can include only marketplaces connected as Sellers in the same Organization for the same selling partner. AMAZON_ORDERS_GET_METRICS fills marketplaceIds from the connection and uses from and to instead of an interval string. For campaign, ad group, target, and ad FIND actions, adProductFilter.include must contain exactly one ad product type; use separate requests to query multiple product types. One ID filter (for example campaignIdFilter) in these FIND actions can have more than 100 IDs; DataDoe queries them in groups of 100, and you page with the returned nextToken and the same query. AMC audience Actions (AMAZON_ADS_AMC_AUDIENCES_*, AMAZON_ADS_AMC_LOOKALIKE_AUDIENCES_ADD) need AMC enabled for the Seller or Vendor. Amazon builds an audience asynchronously and lists it in Sponsored Ads about 24 to 48 hours after it SUCCEEDED; DataDoe does not attach it later, so poll AMAZON_ADS_AMC_AUDIENCES_FIND, then get the audienceId with AMAZON_ADS_TARGETABLE_AUDIENCES_FIND and attach it with AMAZON_ADS_CAMPAIGNS_UPDATE audienceBidAdjustments or AMAZON_ADS_TARGETS_ADD. Details, flows, and best practices for Actions are available in the Actions documentation.",
       "inputSchema": {
         "type": "object",
         "properties": {
@@ -2755,7 +2755,7 @@
     {
       "name": "actions_get",
       "title": "Get an Action by ID",
-      "description": "Returns the current status and result of a specific action. DataDoe removes personal data from a PII Action 30 days after the Action is created. details is then {\"piiRedacted\": true}, and result is null. The Action stays in history. A null result means DataDoe removed that personal data, so leave the completed Action as it is. An Action that is still running keeps its request and result until it finishes. Finished AMAZON_ORDERS_SOLICITATION_FEEDBACK_SEND actions include totalCount, successCount, errorCount, and orders in request order. Each order has amazonOrderId, status (ACCEPTED or REFUSED), and errors with code and message. Accepted orders have an empty errors array. Error codes may be null for older results or failures without an Amazon response.",
+      "description": "Returns the current status and result of a specific action. Action history covers the last 90 days. DataDoe deletes older Actions. Lists leave them out, and reading one returns not found. DataDoe removes personal data from a PII Action 30 days after the Action is created. details is then {\"piiRedacted\": true}, and result is null. The Action stays in history. A null result means DataDoe removed that personal data, so leave the completed Action as it is. An Action that is still running keeps its request and result until it finishes. Finished AMAZON_ORDERS_SOLICITATION_FEEDBACK_SEND actions include totalCount, successCount, errorCount, and orders in request order. Each order has amazonOrderId, status (ACCEPTED or REFUSED), and errors with code and message. Accepted orders have an empty errors array. Error codes may be null for older results or failures without an Amazon response.",
       "inputSchema": {
         "type": "object",
         "properties": {
@@ -2811,7 +2811,7 @@
     {
       "name": "actions_list",
       "title": "Lists history of Actions",
-      "description": "Returns paginated action history for the current organization. Supports filtering by status, type, createdAt, and updatedAt ranges. Max page size is 5 due to memory usage. DataDoe removes personal data from a PII Action 30 days after the Action is created. details is then {\"piiRedacted\": true}, and result is null. The Action stays in history. A null result means DataDoe removed that personal data, so leave the completed Action as it is. An Action that is still running keeps its request and result until it finishes. Details, flows, and best practices for Actions are available in the Actions documentation.",
+      "description": "Returns paginated action history for the current organization. Supports filtering by status, type, createdAt, and updatedAt ranges. Max page size is 5 due to memory usage. Action history covers the last 90 days. DataDoe deletes older Actions. Lists leave them out, and reading one returns not found. DataDoe removes personal data from a PII Action 30 days after the Action is created. details is then {\"piiRedacted\": true}, and result is null. The Action stays in history. A null result means DataDoe removed that personal data, so leave the completed Action as it is. An Action that is still running keeps its request and result until it finishes. Details, flows, and best practices for Actions are available in the Actions documentation.",
       "inputSchema": {
         "type": "object",
         "properties": {
@@ -3098,6 +3098,7 @@
             }
           },
           "createdAtFrom": {
+            "description": "Earliest createdAt to include. If you omit it or set an earlier date, the list starts 90 days ago.",
             "type": "string",
             "format": "date-time",
             "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$"
@@ -8237,7 +8238,6 @@
                           "code": {
                             "type": "string",
                             "enum": [
-                              "LIVE_NOT_ENABLED",
                               "CONTRACT_UNSUPPORTED",
                               "HEAD_DRIFT",
                               "CAPACITY",
@@ -8251,7 +8251,10 @@
                               "MICROVM_LOST",
                               "INVALID_INPUT",
                               "INVALID_OUTPUT",
+                              "OUTPUT_TOO_LARGE",
+                              "DATADOE_API_ERROR",
                               "SOLUTION_FAILED",
+                              "AGENT_EXECUTION_UNAVAILABLE",
                               "BUNDLE_INTEGRITY_FAILED",
                               "BUNDLE_LOAD_FAILED",
                               "MCP_HANDSHAKE_FAILED",
@@ -9478,7 +9481,6 @@
                           "code": {
                             "type": "string",
                             "enum": [
-                              "LIVE_NOT_ENABLED",
                               "CONTRACT_UNSUPPORTED",
                               "HEAD_DRIFT",
                               "CAPACITY",
@@ -9492,7 +9494,10 @@
                               "MICROVM_LOST",
                               "INVALID_INPUT",
                               "INVALID_OUTPUT",
+                              "OUTPUT_TOO_LARGE",
+                              "DATADOE_API_ERROR",
                               "SOLUTION_FAILED",
+                              "AGENT_EXECUTION_UNAVAILABLE",
                               "BUNDLE_INTEGRITY_FAILED",
                               "BUNDLE_LOAD_FAILED",
                               "MCP_HANDSHAKE_FAILED",
@@ -9740,7 +9745,6 @@
                           "code": {
                             "type": "string",
                             "enum": [
-                              "LIVE_NOT_ENABLED",
                               "CONTRACT_UNSUPPORTED",
                               "HEAD_DRIFT",
                               "CAPACITY",
@@ -9754,7 +9758,10 @@
                               "MICROVM_LOST",
                               "INVALID_INPUT",
                               "INVALID_OUTPUT",
+                              "OUTPUT_TOO_LARGE",
+                              "DATADOE_API_ERROR",
                               "SOLUTION_FAILED",
+                              "AGENT_EXECUTION_UNAVAILABLE",
                               "BUNDLE_INTEGRITY_FAILED",
                               "BUNDLE_LOAD_FAILED",
                               "MCP_HANDSHAKE_FAILED",
@@ -9996,7 +10003,6 @@
                           "code": {
                             "type": "string",
                             "enum": [
-                              "LIVE_NOT_ENABLED",
                               "CONTRACT_UNSUPPORTED",
                               "HEAD_DRIFT",
                               "CAPACITY",
@@ -10010,7 +10016,10 @@
                               "MICROVM_LOST",
                               "INVALID_INPUT",
                               "INVALID_OUTPUT",
+                              "OUTPUT_TOO_LARGE",
+                              "DATADOE_API_ERROR",
                               "SOLUTION_FAILED",
+                              "AGENT_EXECUTION_UNAVAILABLE",
                               "BUNDLE_INTEGRITY_FAILED",
                               "BUNDLE_LOAD_FAILED",
                               "MCP_HANDSHAKE_FAILED",
@@ -10090,7 +10099,7 @@
     {
       "name": "studio_solutions_execute",
       "title": "Run Studio solution",
-      "description": "Runs an active, enabled DataDoe Studio solution that has its MCP trigger enabled. Send input as a JSON object that matches the solution input schema, at most 256 KB. It returns executionId straight away. Call studio_executions_get until the status is COMPLETED, FAILED, TIMED_OUT or CANCELED.",
+      "description": "Runs an active, enabled DataDoe Studio Flow that has its MCP trigger enabled. Agents cannot be run yet. Send input as a JSON object that matches the solution input schema, at most 256 KB. It returns executionId straight away. Call studio_executions_get until the status is COMPLETED, FAILED, TIMED_OUT or CANCELED.",
       "inputSchema": {
         "type": "object",
         "properties": {
@@ -10148,19 +10157,11 @@
                       "TIMED_OUT",
                       "CANCELED"
                     ]
-                  },
-                  "mode": {
-                    "type": "string",
-                    "enum": [
-                      "MOCK",
-                      "LIVE"
-                    ]
                   }
                 },
                 "required": [
                   "executionId",
-                  "status",
-                  "mode"
+                  "status"
                 ],
                 "additionalProperties": false
               },
@@ -10191,7 +10192,7 @@
     {
       "name": "studio_executions_get",
       "title": "Get Studio execution",
-      "description": "Gets a DataDoe Studio execution by executionId: its status, output and error. When mock is true, the run skipped the solution logic and returned sample output. While the status is PENDING or RUNNING, check again in 5 seconds.",
+      "description": "Gets a DataDoe Studio execution by executionId: its status, output and error. While the status is PENDING or RUNNING, check again in 5 seconds.",
       "inputSchema": {
         "type": "object",
         "properties": {
@@ -10240,15 +10241,7 @@
                     "enum": [
                       "HTTP_REQUEST",
                       "MCP",
-                      "SCHEDULE",
-                      "MANUAL"
-                    ]
-                  },
-                  "mode": {
-                    "type": "string",
-                    "enum": [
-                      "MOCK",
-                      "LIVE"
+                      "SCHEDULE"
                     ]
                   },
                   "status": {
@@ -10308,9 +10301,6 @@
                     "format": "uuid",
                     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
                   },
-                  "mock": {
-                    "type": "boolean"
-                  },
                   "output": {
                     "anyOf": [
                       {
@@ -10333,7 +10323,6 @@
                           "code": {
                             "type": "string",
                             "enum": [
-                              "LIVE_NOT_ENABLED",
                               "CONTRACT_UNSUPPORTED",
                               "HEAD_DRIFT",
                               "CAPACITY",
@@ -10347,7 +10336,10 @@
                               "MICROVM_LOST",
                               "INVALID_INPUT",
                               "INVALID_OUTPUT",
+                              "OUTPUT_TOO_LARGE",
+                              "DATADOE_API_ERROR",
                               "SOLUTION_FAILED",
+                              "AGENT_EXECUTION_UNAVAILABLE",
                               "BUNDLE_INTEGRITY_FAILED",
                               "BUNDLE_LOAD_FAILED",
                               "MCP_HANDSHAKE_FAILED",
@@ -10381,14 +10373,12 @@
                   "executionId",
                   "solutionId",
                   "trigger",
-                  "mode",
                   "status",
                   "scheduledFor",
                   "queuedAt",
                   "startedAt",
                   "completedAt",
                   "versionId",
-                  "mock",
                   "output",
                   "error"
                 ],
@@ -10487,15 +10477,7 @@
                           "enum": [
                             "HTTP_REQUEST",
                             "MCP",
-                            "SCHEDULE",
-                            "MANUAL"
-                          ]
-                        },
-                        "mode": {
-                          "type": "string",
-                          "enum": [
-                            "MOCK",
-                            "LIVE"
+                            "SCHEDULE"
                           ]
                         },
                         "status": {
@@ -10555,7 +10537,6 @@
                         "executionId",
                         "solutionId",
                         "trigger",
-                        "mode",
                         "status",
                         "scheduledFor",
                         "queuedAt",

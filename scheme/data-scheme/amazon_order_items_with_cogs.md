@@ -46,7 +46,7 @@ actions_details_schema_get reports whether each Action type is enabled for the O
 - line items
 - units sold
 
-## Columns (50)
+## Columns (52)
 
 - `date` (`DATE`, required) — Purchase date in the connection country's time zone, including off-Amazon MCF lines.
 - `order_purchased_at_utc` (`DATE`, required) — Date and time of purchase in UTC timezone. May be different than the timezone of the marketplace or of the user.
@@ -96,6 +96,8 @@ actions_details_schema_get reports whether each Action type is enabled for the O
 - `cogs_total_value` (`NUMBER`, nullable) — Sum of cogs_item_value and cogs_shipping_value. — definition: `((amazon_cogs.cost_item_value ?? 0) + (amazon_cogs.cost_item_shipping_value ?? 0)) * (amazon_order_items_with_cogs.quantity ?? 0)`
 - `cogs_present` (`LOGIC`, required) — True when an uploaded COGS record applies to this row. Zero cost can still be valid. To list SKUs sold in the last 30 days without COGS, use GET /api/v1/cogs/missing or the MCP tool cogs_missing_list.
 - `cogs_currency` (`TEXT`, nullable) — Currency code for COGS.
+- `is_transparency` (`LOGIC`, nullable) — True when Amazon reports the Transparency program on this order line. Contact DataDoe Support to enable Amazon Transparency data for your organization. Blank means the value is unavailable.
+- `serial_number_required` (`LOGIC`, nullable) — True when Amazon requires a serial number for this order line. Contact DataDoe Support to enable Amazon Transparency data for your organization. Blank means the value is unavailable.
 - `item_supplier_name` (`TEXT`, nullable) — Supplier name for the item COGS, if provided in COGS upload.
 - `order_date` (`DATE`, required) — Duplicate of date column. Prefer to use date column for date filtering.
 
