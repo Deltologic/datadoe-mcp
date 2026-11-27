@@ -43,7 +43,7 @@ Daily child ASIN conversion for Amazon seller accounts. The BigQuery view grain 
 ### Order Line Items
 
 - Table name: `amazon_order_items_with_cogs`
-- Columns: 50
+- Columns: 52
 - Markdown: data-scheme/amazon_order_items_with_cogs.md
 
 Order line items from Amazon order reports and recent ORDER_CHANGE updates, one row per order line. Marketplace orders belong to their marketplace connection. Off-Amazon Multi-Channel Fulfillment (MCF) lines belong to the seller account and appear once per account, with regional attribution and null marketplace columns. Exports include them for any selected marketplace of that account; combining separate marketplace exports can count them more than once. sales_channel preserves Amazon's value, such as Non-Amazon. A generic value does not identify an external store, and a missing value does not identify MCF. Off-Amazon item_price_value is a fulfillment or declared amount, not verified external sales revenue. COGS uses the kept connection's uploaded costs. Profit tables and marketplace-filtered app reports omit off-Amazon lines. Initial reports cover 105 weeks of last-update time. Recurring reports re-read 8 days daily and 1 day intraday.

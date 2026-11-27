@@ -2748,6 +2748,18 @@
           "description": "Currency code for COGS."
         },
         {
+          "name": "is_transparency",
+          "type": "LOGIC",
+          "nullable": true,
+          "description": "True when Amazon reports the Transparency program on this order line. Contact DataDoe Support to enable Amazon Transparency data for your organization. Blank means the value is unavailable."
+        },
+        {
+          "name": "serial_number_required",
+          "type": "LOGIC",
+          "nullable": true,
+          "description": "True when Amazon requires a serial number for this order line. Contact DataDoe Support to enable Amazon Transparency data for your organization. Blank means the value is unavailable."
+        },
+        {
           "name": "item_supplier_name",
           "type": "TEXT",
           "nullable": true,
